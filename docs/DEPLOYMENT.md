@@ -12,9 +12,9 @@ pip install -r requirements.txt
 cd frontend && npm install && npm run build && cd ..
 
 # 3. Start server
-python3 -m uvicorn backend.app.main:app --host 0.0.0.0 --port 8000
+python3 -m uvicorn backend.app.main:app --host 0.0.0.0 --port 8080
 ```
-Open `http://localhost:8000/`.
+Open `http://localhost:8080/`.
 
 ---
 
@@ -24,7 +24,7 @@ Open `http://localhost:8000/`.
 docker-compose up -d --build
 ```
 Services started:
-- `backend`: FastAPI Python 3.12 container on port 8000
+- `backend`: FastAPI Python 3.12 container on port 8080
 - `frontend`: Nginx Alpine serving optimized React production bundle on port 3000
 
 ---

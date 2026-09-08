@@ -93,9 +93,9 @@ python3 -m pytest backend/tests -v
 
 ### 3. Start Application
 ```bash
-python3 -m uvicorn backend.app.main:app --host 127.0.0.1 --port 8000
+python3 -m uvicorn backend.app.main:app --host 127.0.0.1 --port 8080
 ```
-Open your browser at **`http://127.0.0.1:8000/`** to access the complete institutional trading terminal!
+Open your browser at **`http://127.0.0.1:8080/`** to access the complete institutional trading terminal!
 
 For frontend hot-module reloading during development:
 ```bash
