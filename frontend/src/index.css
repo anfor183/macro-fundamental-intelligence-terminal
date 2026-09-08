@@ -1,0 +1,292 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap');
+
+/* ==========================================================================
+   DESIGN TOKENS — INSTITUTIONAL MACRO INTELLIGENCE TERMINAL
+   ========================================================================== */
+
+:root,
+[data-theme="dark"],
+body.theme-dark {
+  /* Surfaces & Backgrounds (Dark Mode - Default) */
+  --bg-main: #05080f;
+  --bg-void: #030712;
+  --bg-base: #090d16;
+  --bg-sidebar: #0b1120;
+  --bg-card: #0e1524;
+  --bg-card-hover: rgba(33, 49, 82, 0.45);
+
+  --surface-1: #0e1524;
+  --surface-2: #141e33;
+  --surface-3: #1a2742;
+  --surface-elevated: #1e293b;
+  --bg-glass: rgba(14, 21, 36, 0.82);
+  --bg-hover: rgba(33, 49, 82, 0.45);
+
+  /* Borders & Dividers */
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-active: rgba(255, 255, 255, 0.16);
+  --border-strong: rgba(255, 255, 255, 0.24);
+  --border-focus: rgba(6, 182, 212, 0.5);
+
+  /* Radii */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+
+  /* Text & Typography */
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --text-dim: #475569;
+
+  /* Restrained Semantic Accents */
+  --color-bullish-strong: #059669;
+  --color-bullish: #10b981;
+  --color-bullish-mild: #34d399;
+  --color-bullish-bg: rgba(16, 185, 129, 0.12);
+  --color-bullish-border: rgba(16, 185, 129, 0.32);
+
+  --color-neutral: #94a3b8;
+  --color-neutral-bg: rgba(148, 163, 184, 0.09);
+  --color-neutral-border: rgba(148, 163, 184, 0.22);
+
+  --color-bearish-mild: #fb7185;
+  --color-bearish: #f43f5e;
+  --color-bearish-strong: #e11d48;
+  --color-bearish-bg: rgba(244, 63, 94, 0.12);
+  --color-bearish-border: rgba(244, 63, 94, 0.32);
+
+  --accent-cyan: #06b6d4;
+  --accent-cyan-glow: rgba(6, 182, 212, 0.28);
+  --accent-blue: #3b82f6;
+  --accent-gold: #f59e0b;
+  --accent-gold-bg: rgba(245, 158, 11, 0.12);
+  --accent-purple: #8b5cf6;
+
+  /* Fonts */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  /* Density Scales (Default: Standard) */
+  --density-pad-x: 16px;
+  --density-pad-y: 12px;
+  --density-gap: 16px;
+  --density-font-scale: 1;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 12px -2px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 12px 32px -4px rgba(0, 0, 0, 0.7);
+}
+
+/* ==========================================================================
+   LIGHT THEME DESIGN TOKENS (Institutional Financial Slate)
+   ========================================================================== */
+
+[data-theme="light"],
+html[data-theme="light"],
+:root[data-theme="light"],
+body.theme-light {
+  /* Surfaces & Backgrounds (Light Mode) */
+  --bg-main: #f1f5f9;
+  --bg-void: #e2e8f0;
+  --bg-base: #f8fafc;
+  --bg-sidebar: #ffffff;
+  --bg-card: #ffffff;
+  --bg-card-hover: #f1f5f9;
+
+  --surface-1: #ffffff;
+  --surface-2: #f8fafc;
+  --surface-3: #edf2f7;
+  --surface-elevated: #ffffff;
+  --bg-glass: rgba(255, 255, 255, 0.92);
+  --bg-hover: rgba(226, 232, 240, 0.7);
+
+  /* Borders & Dividers */
+  --border-subtle: rgba(0, 0, 0, 0.08);
+  --border-active: rgba(0, 0, 0, 0.16);
+  --border-strong: rgba(0, 0, 0, 0.25);
+  --border-focus: rgba(8, 145, 178, 0.5);
+
+  /* Text & Typography (High Contrast Dark Slate) */
+  --text-primary: #0f172a;
+  --text-secondary: #334155;
+  --text-muted: #64748b;
+  --text-dim: #94a3b8;
+
+  /* Restrained Semantic Accents */
+  --color-bullish-strong: #047857;
+  --color-bullish: #059669;
+  --color-bullish-mild: #10b981;
+  --color-bullish-bg: rgba(5, 150, 105, 0.1);
+  --color-bullish-border: rgba(5, 150, 105, 0.3);
+
+  --color-neutral: #64748b;
+  --color-neutral-bg: rgba(100, 116, 139, 0.08);
+  --color-neutral-border: rgba(100, 116, 139, 0.2);
+
+  --color-bearish-mild: #e11d48;
+  --color-bearish: #be123c;
+  --color-bearish-strong: #9f1239;
+  --color-bearish-bg: rgba(190, 18, 60, 0.09);
+  --color-bearish-border: rgba(190, 18, 60, 0.28);
+
+  --accent-cyan: #0891b2;
+  --accent-cyan-glow: rgba(8, 145, 178, 0.2);
+  --accent-blue: #2563eb;
+  --accent-gold: #d97706;
+  --accent-gold-bg: rgba(217, 119, 6, 0.1);
+
+  /* Refined Shadows for light mode */
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 4px 12px -2px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 12px 32px -4px rgba(0, 0, 0, 0.15);
+}
+
+/* ==========================================================================
+   DENSITY MODES
+   ========================================================================== */
+
+[data-density="compact"],
+body.density-compact {
+  --density-pad-x: 10px;
+  --density-pad-y: 6px;
+  --density-gap: 10px;
+  --density-font-scale: 0.94;
+}
+
+[data-density="comfortable"],
+body.density-comfortable {
+  --density-pad-x: 22px;
+  --density-pad-y: 16px;
+  --density-gap: 22px;
+  --density-font-scale: 1.04;
+}
+
+/* ==========================================================================
+   GLOBAL RESET & TYPOGRAPHY
+   ========================================================================== */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  background-color: var(--bg-main);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  line-height: 1.5;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.mono {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums lining-nums;
+  letter-spacing: -0.02em;
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-main);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-active);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+/* ==========================================================================
+   BIAS BADGES (7-STATE RESTRAINED SYSTEM)
+   ========================================================================== */
+
+.bias-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  white-space: nowrap;
+}
+
+.bias-strong-bullish {
+  background: rgba(5, 150, 105, 0.22);
+  color: #10b981;
+  border: 1px solid rgba(16, 185, 129, 0.45);
+}
+
+.bias-bullish {
+  background: rgba(16, 185, 129, 0.16);
+  color: #10b981;
+  border: 1px solid rgba(16, 185, 129, 0.32);
+}
+
+.bias-mild-bullish {
+  background: rgba(52, 211, 153, 0.12);
+  color: #059669;
+  border: 1px solid rgba(52, 211, 153, 0.26);
+}
+
+.bias-neutral {
+  background: var(--color-neutral-bg);
+  color: var(--color-neutral);
+  border: 1px solid var(--color-neutral-border);
+}
+
+.bias-mild-bearish {
+  background: rgba(251, 113, 133, 0.12);
+  color: #e11d48;
+  border: 1px solid rgba(251, 113, 133, 0.26);
+}
+
+.bias-bearish {
+  background: rgba(244, 63, 94, 0.16);
+  color: #f43f5e;
+  border: 1px solid rgba(244, 63, 94, 0.32);
+}
+
+.bias-strong-bearish {
+  background: rgba(225, 29, 72, 0.22);
+  color: #e11d48;
+  border: 1px solid rgba(225, 29, 72, 0.45);
+}
+
+/* ==========================================================================
+   ANIMATIONS & SKELETON SHIMMER
+   ========================================================================== */
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.skeleton {
+  background: linear-gradient(90deg, var(--surface-2) 25%, var(--surface-3) 50%, var(--surface-2) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 4px;
+}
+
+@keyframes pulse-subtle {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.pulse-dot {
+  animation: pulse-subtle 2s infinite ease-in-out;
+}

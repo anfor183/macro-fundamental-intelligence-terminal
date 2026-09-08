@@ -1,0 +1,269 @@
+"""Live Real-Time Orchestrator and Background Polling Daemon.
+
+Coordinates live ingestion across Yahoo Finance (prices/yields), ForexFactory (economic calendar),
+and RSS news wires (Fed, ECB, BoE, Yahoo Finance, MarketWatch).
+Maintains live operational state, recalculates fundamental biases, and manages the background scheduler.
+"""
+
+import asyncio
+import logging
+from datetime import datetime, timezone
+from typing import Dict, Any, Optional, List
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from backend.app.core.database import AsyncSessionLocal
+from backend.app.core.constants import score_to_bias
+from backend.app.models.entities import Asset, Currency
+from backend.app.models.intelligence import NewsEvent
+from backend.app.models.scoring import MacroScore, BiasSnapshot
+from backend.app.ingestion.live_market_data import LiveMarketDataCollector
+from backend.app.ingestion.live_calendar import LiveEconomicCalendarIngestor
+from backend.app.ingestion.live_news_manager import LiveNewsManager, LIVE_RSS_FEEDS
+from backend.app.scoring.currency_model import calculate_forex_pair_score
+
+logger = logging.getLogger(__name__)
+
+
+class LiveOrchestrator:
+    """Master controller for continuous live data ingestion and bias recalculation."""
+
+    def __init__(self):
+        self.is_running: bool = False
+        self.last_price_sync: Optional[datetime] = None
+        self.last_calendar_sync: Optional[datetime] = None
+        self.last_news_sync: Optional[datetime] = None
+        self.total_price_updates: int = 0
+        self.total_calendar_events: int = 0
+        self.total_news_events: int = 0
+        self.last_error: Optional[str] = None
+        self._stop_event = asyncio.Event()
+
+    def get_status(self) -> Dict[str, Any]:
+        """Return the current operational status of the live ingestion system."""
+        now = datetime.now(timezone.utc)
+        return {
+            "is_active": self.is_running,
+            "status": "OPERATIONAL" if self.is_running else "IDLE",
+            "last_price_sync": self.last_price_sync.isoformat() if self.last_price_sync else None,
+            "last_calendar_sync": self.last_calendar_sync.isoformat() if self.last_calendar_sync else None,
+            "last_news_sync": self.last_news_sync.isoformat() if self.last_news_sync else None,
+            "total_price_updates": self.total_price_updates,
+            "total_calendar_events": self.total_calendar_events,
+            "total_news_events": self.total_news_events,
+            "last_error": self.last_error,
+            "providers_monitored": len(LIVE_RSS_FEEDS) + 2, # RSS + Yahoo Finance + ForexFactory
+            "cost": "100% Free / Zero Paid Subscriptions",
+            "timestamp": now.isoformat(),
+        }
+
+    async def sync_market_prices(self, session: AsyncSession) -> int:
+        """Fetch and update live asset prices."""
+        try:
+            count = await LiveMarketDataCollector.update_database_prices(session)
+            self.total_price_updates += count
+            self.last_price_sync = datetime.now(timezone.utc)
+            return count
+        except Exception as exc:
+            self.last_error = f"Price sync error: {exc}"
+            logger.error(self.last_error)
+            return 0
+
+    async def sync_economic_calendar(self, session: AsyncSession) -> Dict[str, Any]:
+        """Fetch and update live economic calendar releases and surprise metrics."""
+        try:
+            res = await LiveEconomicCalendarIngestor.sync_calendar_releases(session)
+            synced = res.get("synced_count", 0)
+            self.total_calendar_events += synced
+            self.last_calendar_sync = datetime.now(timezone.utc)
+            return res
+        except Exception as exc:
+            self.last_error = f"Calendar sync error: {exc}"
+            logger.error(self.last_error)
+            return {"status": "ERROR", "error": str(exc)}
+
+    async def sync_macro_news(self, session: AsyncSession) -> Dict[str, Any]:
+        """Fetch and deduplicate breaking macro news from verified public RSS feeds."""
+        try:
+            res = await LiveNewsManager.sync_live_news(session)
+            new_cnt = res.get("new_inserted", 0)
+            self.total_news_events += new_cnt
+            self.last_news_sync = datetime.now(timezone.utc)
+            return res
+        except Exception as exc:
+            self.last_error = f"News sync error: {exc}"
+            logger.error(self.last_error)
+            return {"status": "ERROR", "error": str(exc)}
+
+    async def recalculate_asset_biases(self, session: AsyncSession) -> int:
+        """
+        Recalculates currency relative values and asset scores based on recent incoming news/events.
+        """
+        try:
+            now = datetime.now(timezone.utc)
+            # Fetch currencies
+            curr_res = await session.execute(select(Currency))
+            currencies = {c.code: c for c in curr_res.scalars().all()}
+
+            # Fetch recent news events in the last 24 hours to modulate currency momentum
+            news_res = await session.execute(
+                select(NewsEvent)
+                .order_by(NewsEvent.published_at.desc())
+                .limit(50)
+            )
+            recent_news = news_res.scalars().all()
+
+            # Slight currency score tilt based on verified news direction
+            for c in recent_news:
+                # Identify currency in title or summary
+                for code, curr in currencies.items():
+                    if f" {code} " in f" {c.title} " or f" {curr.name.lower()} " in c.title.lower():
+                        tilt = 0.5 if c.direction == "bullish" else (-0.5 if c.direction == "bearish" else 0.0)
+                        curr.current_score = round(max(-100.0, min(100.0, curr.current_score + tilt)), 1)
+                        curr.updated_at = now
+
+            # Fetch all assets and update scores & biases
+            asset_res = await session.execute(select(Asset))
+            assets = asset_res.scalars().all()
+            updated = 0
+
+            for asset in assets:
+                if asset.asset_class == "forex" and asset.base_currency and asset.quote_currency:
+                    base_c = currencies.get(asset.base_currency)
+                    quote_c = currencies.get(asset.quote_currency)
+                    if base_c and quote_c:
+                        # Recalculate pair score
+                        new_score = calculate_forex_pair_score(
+                            base_currency_score=base_c.current_score,
+                            quote_currency_score=quote_c.current_score,
+                        )
+
+                        # Update latest MacroScore if present
+                        score_query = await session.execute(
+                            select(MacroScore)
+                            .where(MacroScore.asset_id == asset.id)
+                            .order_by(MacroScore.timestamp.desc())
+                            .limit(1)
+                        )
+                        macro_score = score_query.scalars().first()
+                        if macro_score:
+                            macro_score.tactical_score = new_score
+                            macro_score.timestamp = now
+
+                        # Update latest BiasSnapshot if present
+                        bias_query = await session.execute(
+                            select(BiasSnapshot)
+                            .where(BiasSnapshot.asset_id == asset.id)
+                            .order_by(BiasSnapshot.timestamp.desc())
+                            .limit(1)
+                        )
+                        bias_snapshot = bias_query.scalars().first()
+                        if bias_snapshot:
+                            bias_snapshot.score = new_score
+                            bias_snapshot.tactical_bias = score_to_bias(new_score)
+                            bias_snapshot.timestamp = now
+
+                        asset.updated_at = now
+                        updated += 1
+
+            await session.commit()
+            return updated
+        except Exception as exc:
+            logger.error(f"Error recalculating biases: {exc}")
+            return 0
+
+    async def run_full_sync(self) -> Dict[str, Any]:
+        """Execute a complete synchronized update across all live data sources."""
+        async with AsyncSessionLocal() as session:
+            prices_updated = await self.sync_market_prices(session)
+            cal_result = await self.sync_economic_calendar(session)
+            news_result = await self.sync_macro_news(session)
+            biases_recalculated = await self.recalculate_asset_biases(session)
+
+        return {
+            "status": "COMPLETED",
+            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "prices_updated": prices_updated,
+            "calendar_events_synced": cal_result.get("synced_count", 0),
+            "surprises_calculated": cal_result.get("surprises_calculated", 0),
+            "new_news_events": news_result.get("new_inserted", 0),
+            "assets_recalculated": biases_recalculated,
+        }
+
+    async def start_background_scheduler(
+        self,
+        price_interval_sec: int = 60,
+        calendar_interval_sec: int = 180,
+        news_interval_sec: int = 180,
+    ):
+        """
+        Continuous background polling daemon running in FastAPI lifecycle.
+        Non-blocking, gracefully cancellable on app shutdown.
+        """
+        self.is_running = True
+        self._stop_event.clear()
+        logger.info(
+            f"Live Ingestion Background Scheduler started. "
+            f"Intervals: Prices={price_interval_sec}s, Calendar={calendar_interval_sec}s, News={news_interval_sec}s"
+        )
+
+        # Yield control first so FastAPI startup completes instantly
+        await asyncio.sleep(1.5)
+        try:
+            logger.info("Executing initial live data sync in background...")
+            await self.run_full_sync()
+        except Exception as exc:
+            logger.warning(f"Initial live sync warning: {exc}")
+
+        last_price_run = 0.0
+        last_cal_run = 0.0
+        last_news_run = 0.0
+
+        loop = asyncio.get_event_loop()
+
+        while not self._stop_event.is_set():
+            now_mono = loop.time()
+
+            try:
+                # 1. Price polling
+                if now_mono - last_price_run >= price_interval_sec:
+                    async with AsyncSessionLocal() as session:
+                        await self.sync_market_prices(session)
+                    last_price_run = now_mono
+
+                # 2. Calendar polling
+                if now_mono - last_cal_run >= calendar_interval_sec:
+                    async with AsyncSessionLocal() as session:
+                        await self.sync_economic_calendar(session)
+                    last_cal_run = now_mono
+
+                # 3. News polling & bias recalculation
+                if now_mono - last_news_run >= news_interval_sec:
+                    async with AsyncSessionLocal() as session:
+                        await self.sync_macro_news(session)
+                        await self.recalculate_asset_biases(session)
+                    last_news_run = now_mono
+
+            except asyncio.CancelledError:
+                break
+            except Exception as exc:
+                self.last_error = f"Scheduler iteration error: {exc}"
+                logger.error(self.last_error)
+
+            # Sleep 1 second before checking next tick, allows clean cancellation
+            try:
+                await asyncio.sleep(1.0)
+            except asyncio.CancelledError:
+                break
+
+        self.is_running = False
+        logger.info("Live Ingestion Background Scheduler stopped.")
+
+    def stop_background_scheduler(self):
+        """Signal background scheduler to stop."""
+        self._stop_event.set()
+        self.is_running = False
+
+
+# Global singleton orchestrator
+live_orchestrator = LiveOrchestrator()
