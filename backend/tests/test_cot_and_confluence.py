@@ -92,12 +92,12 @@ class TestHighConvictionScorer:
         assert card.invalidation_price_level > curr_price, "Bearish invalidation must be above market price"
 
     def test_bullish_invalidation_level_below_price(self):
-        snap = LiveCOTManager.get_latest_cot("SPX")
-        curr_price = 5600.0
-        atr = 45.0
+        snap = LiveCOTManager.get_latest_cot("XAUUSD")
+        curr_price = 2500.0
+        atr = 25.0
         card = HighConvictionScorer.compute_confluence_card(
-            symbol="SPX",
-            asset_name="S&P 500 Index",
+            symbol="XAUUSD",
+            asset_name="Gold Commodity Futures",
             current_price=curr_price,
             daily_atr=atr,
             macro_score=60.0,
@@ -107,6 +107,7 @@ class TestHighConvictionScorer:
         )
         assert card.primary_direction == "FAVOR LONGS ONLY"
         assert card.invalidation_price_level < curr_price, "Bullish invalidation must be below market price"
+
 
     def test_confluence_dict_serialization(self):
         snap = LiveCOTManager.get_latest_cot("GBPUSD")

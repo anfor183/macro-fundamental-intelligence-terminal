@@ -20,6 +20,7 @@ from backend.app.models.scoring import MacroScore, BiasSnapshot
 from backend.app.ingestion.live_market_data import LiveMarketDataCollector
 from backend.app.ingestion.live_calendar import LiveEconomicCalendarIngestor
 from backend.app.ingestion.live_news_manager import LiveNewsManager, LIVE_RSS_FEEDS
+from backend.app.ingestion.live_cot_data import LiveCOTManager
 from backend.app.scoring.currency_model import calculate_forex_pair_score
 
 logger = logging.getLogger(__name__)
@@ -33,9 +34,11 @@ class LiveOrchestrator:
         self.last_price_sync: Optional[datetime] = None
         self.last_calendar_sync: Optional[datetime] = None
         self.last_news_sync: Optional[datetime] = None
+        self.last_cot_sync: Optional[datetime] = None
         self.total_price_updates: int = 0
         self.total_calendar_events: int = 0
         self.total_news_events: int = 0
+        self.total_cot_updates: int = 0
         self.last_error: Optional[str] = None
         self._stop_event = asyncio.Event()
 
@@ -48,14 +51,29 @@ class LiveOrchestrator:
             "last_price_sync": self.last_price_sync.isoformat() if self.last_price_sync else None,
             "last_calendar_sync": self.last_calendar_sync.isoformat() if self.last_calendar_sync else None,
             "last_news_sync": self.last_news_sync.isoformat() if self.last_news_sync else None,
+            "last_cot_sync": self.last_cot_sync.isoformat() if self.last_cot_sync else None,
             "total_price_updates": self.total_price_updates,
             "total_calendar_events": self.total_calendar_events,
             "total_news_events": self.total_news_events,
+            "total_cot_updates": self.total_cot_updates,
             "last_error": self.last_error,
-            "providers_monitored": len(LIVE_RSS_FEEDS) + 2, # RSS + Yahoo Finance + ForexFactory
+            "providers_monitored": len(LIVE_RSS_FEEDS) + 3, # RSS + Yahoo Finance + ForexFactory + CFTC COT
             "cost": "100% Free / Zero Paid Subscriptions",
             "timestamp": now.isoformat(),
         }
+
+    async def sync_cot_positioning(self) -> int:
+        """Fetch and parse live weekly CFTC Commitments of Traders report."""
+        try:
+            count = await LiveCOTManager.refresh_from_cftc()
+            self.total_cot_updates += count
+            self.last_cot_sync = datetime.now(timezone.utc)
+            return count
+        except Exception as exc:
+            self.last_error = f"COT sync error: {exc}"
+            logger.error(self.last_error)
+            return 0
+
 
     async def sync_market_prices(self, session: AsyncSession) -> int:
         """Fetch and update live asset prices."""
@@ -179,6 +197,7 @@ class LiveOrchestrator:
             cal_result = await self.sync_economic_calendar(session)
             news_result = await self.sync_macro_news(session)
             biases_recalculated = await self.recalculate_asset_biases(session)
+            cot_synced = await self.sync_cot_positioning()
 
         return {
             "status": "COMPLETED",
@@ -188,6 +207,7 @@ class LiveOrchestrator:
             "surprises_calculated": cal_result.get("surprises_calculated", 0),
             "new_news_events": news_result.get("new_inserted", 0),
             "assets_recalculated": biases_recalculated,
+            "cftc_cot_synced": cot_synced,
         }
 
     async def start_background_scheduler(
@@ -195,6 +215,7 @@ class LiveOrchestrator:
         price_interval_sec: int = 60,
         calendar_interval_sec: int = 180,
         news_interval_sec: int = 180,
+        cot_interval_sec: int = 3600,
     ):
         """
         Continuous background polling daemon running in FastAPI lifecycle.
@@ -204,7 +225,7 @@ class LiveOrchestrator:
         self._stop_event.clear()
         logger.info(
             f"Live Ingestion Background Scheduler started. "
-            f"Intervals: Prices={price_interval_sec}s, Calendar={calendar_interval_sec}s, News={news_interval_sec}s"
+            f"Intervals: Prices={price_interval_sec}s, Calendar={calendar_interval_sec}s, News={news_interval_sec}s, COT={cot_interval_sec}s"
         )
 
         # Yield control first so FastAPI startup completes instantly
@@ -218,6 +239,7 @@ class LiveOrchestrator:
         last_price_run = 0.0
         last_cal_run = 0.0
         last_news_run = 0.0
+        last_cot_run = 0.0
 
         loop = asyncio.get_event_loop()
 
@@ -244,6 +266,11 @@ class LiveOrchestrator:
                         await self.recalculate_asset_biases(session)
                     last_news_run = now_mono
 
+                # 4. Weekly CFTC Commitments of Traders polling
+                if now_mono - last_cot_run >= cot_interval_sec:
+                    await self.sync_cot_positioning()
+                    last_cot_run = now_mono
+
             except asyncio.CancelledError:
                 break
             except Exception as exc:
@@ -253,6 +280,7 @@ class LiveOrchestrator:
             # Sleep 1 second before checking next tick, allows clean cancellation
             try:
                 await asyncio.sleep(1.0)
+
             except asyncio.CancelledError:
                 break
 

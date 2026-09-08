@@ -45,17 +45,69 @@ class COTPositionSnapshot:
     squeeze_warning: Optional[str] = None
 
 
-# CFTC Contract mapping for major global trading instruments
+# CFTC Contract mapping for all major global trading instruments
 CFTC_CONTRACT_MAP = {
+    # Forex Majors
     "EURUSD": {"code": "099741", "name": "Euro FX Futures", "base": "EUR"},
     "USDJPY": {"code": "097741", "name": "Japanese Yen Futures", "base": "JPY", "inverted": True},
     "GBPUSD": {"code": "096742", "name": "British Pound Futures", "base": "GBP"},
     "AUDUSD": {"code": "232741", "name": "Australian Dollar Futures", "base": "AUD"},
     "USDCAD": {"code": "090741", "name": "Canadian Dollar Futures", "base": "CAD", "inverted": True},
-    "SPX": {"code": "13874A", "name": "E-mini S&P 500 Futures", "base": "SPX"},
+    "USDCHF": {"code": "092741", "name": "Swiss Franc Futures", "base": "CHF", "inverted": True},
+    "NZDUSD": {"code": "112741", "name": "New Zealand Dollar Futures", "base": "NZD"},
+
+    # Forex Crosses (Synthesized from CFTC Leg Contracts)
+    "EURGBP": {"code": "SYN_EUR_GBP", "name": "EUR/GBP Synthetic Cross COT", "base": "EUR", "quote": "GBP"},
+    "EURJPY": {"code": "SYN_EUR_JPY", "name": "EUR/JPY Synthetic Cross COT", "base": "EUR", "quote": "JPY"},
+    "GBPJPY": {"code": "SYN_GBP_JPY", "name": "GBP/JPY Synthetic Cross COT", "base": "GBP", "quote": "JPY"},
+    "AUDJPY": {"code": "SYN_AUD_JPY", "name": "AUD/JPY Synthetic Cross COT", "base": "AUD", "quote": "JPY"},
+    "CADJPY": {"code": "SYN_CAD_JPY", "name": "CAD/JPY Synthetic Cross COT", "base": "CAD", "quote": "JPY"},
+    "NZDJPY": {"code": "SYN_NZD_JPY", "name": "NZD/JPY Synthetic Cross COT", "base": "NZD", "quote": "JPY"},
+    "CHFJPY": {"code": "SYN_CHF_JPY", "name": "CHF/JPY Synthetic Cross COT", "base": "CHF", "quote": "JPY"},
+    "EURCHF": {"code": "SYN_EUR_CHF", "name": "EUR/CHF Synthetic Cross COT", "base": "EUR", "quote": "CHF"},
+    "GBPCHF": {"code": "SYN_GBP_CHF", "name": "GBP/CHF Synthetic Cross COT", "base": "GBP", "quote": "CHF"},
+    "AUDNZD": {"code": "SYN_AUD_NZD", "name": "AUD/NZD Synthetic Cross COT", "base": "AUD", "quote": "NZD"},
+    "AUDCAD": {"code": "SYN_AUD_CAD", "name": "AUD/CAD Synthetic Cross COT", "base": "AUD", "quote": "CAD"},
+    "AUDCHF": {"code": "SYN_AUD_CHF", "name": "AUD/CHF Synthetic Cross COT", "base": "AUD", "quote": "CHF"},
+    "NZDCAD": {"code": "SYN_NZD_CAD", "name": "NZD/CAD Synthetic Cross COT", "base": "NZD", "quote": "CAD"},
+    "NZDCHF": {"code": "SYN_NZD_CHF", "name": "NZD/CHF Synthetic Cross COT", "base": "NZD", "quote": "CHF"},
+    "CADCHF": {"code": "SYN_CAD_CHF", "name": "CAD/CHF Synthetic Cross COT", "base": "CAD", "quote": "CHF"},
+    "EURAUD": {"code": "SYN_EUR_AUD", "name": "EUR/AUD Synthetic Cross COT", "base": "EUR", "quote": "AUD"},
+    "EURCAD": {"code": "SYN_EUR_CAD", "name": "EUR/CAD Synthetic Cross COT", "base": "EUR", "quote": "CAD"},
+    "EURNZD": {"code": "SYN_EUR_NZD", "name": "EUR/NZD Synthetic Cross COT", "base": "EUR", "quote": "NZD"},
+    "GBPAUD": {"code": "SYN_GBP_AUD", "name": "GBP/AUD Synthetic Cross COT", "base": "GBP", "quote": "AUD"},
+    "GBPCAD": {"code": "SYN_GBP_CAD", "name": "GBP/CAD Synthetic Cross COT", "base": "GBP", "quote": "CAD"},
+    "GBPNZD": {"code": "SYN_GBP_NZD", "name": "GBP/NZD Synthetic Cross COT", "base": "GBP", "quote": "NZD"},
+
+    # Metals
     "XAUUSD": {"code": "088691", "name": "Gold Commodity Futures", "base": "XAU"},
-    "CL": {"code": "067651", "name": "WTI Light Sweet Crude Oil", "base": "CL"},
+    "XAGUSD": {"code": "084691", "name": "Silver Commodity Futures", "base": "XAG"},
+    "XPTUSD": {"code": "076651", "name": "Platinum Commodity Futures", "base": "XPT"},
+    "XPDUSD": {"code": "075651", "name": "Palladium Commodity Futures", "base": "XPD"},
+    "HG": {"code": "085692", "name": "Copper #1 Futures", "base": "HG"},
+
+    # Energy & Commodities
+    "CL": {"code": "067411", "name": "WTI Light Sweet Crude Oil", "base": "CL"},
+    "BZ": {"code": "06765T", "name": "Brent Crude Oil Futures", "base": "BZ"},
+    "NG": {"code": "023391", "name": "Natural Gas Futures", "base": "NG"},
+    "ZC": {"code": "002602", "name": "Corn Futures", "base": "ZC"},
+    "ZS": {"code": "005602", "name": "Soybean Futures", "base": "ZS"},
+    "ZW": {"code": "001602", "name": "Wheat Futures", "base": "ZW"},
+
+    # Indices
+    "SPX": {"code": "13874A", "name": "E-mini S&P 500 Futures", "base": "SPX"},
+    "NDX": {"code": "209742", "name": "Nasdaq 100 Mini Futures", "base": "NDX"},
+    "DJI": {"code": "124603", "name": "DJIA x $5 Futures", "base": "DJI"},
+    "RUT": {"code": "239742", "name": "Russell 2000 Mini Futures", "base": "RUT"},
+    "N225": {"code": "240743", "name": "Nikkei Stock Average Futures", "base": "N225"},
+    "DAX": {"code": "SYN_DAX", "name": "DAX 40 Synthetic Institutional Equity", "base": "DAX"},
+    "FTSE": {"code": "SYN_FTSE", "name": "FTSE 100 Synthetic Institutional Equity", "base": "FTSE"},
+    "CAC": {"code": "SYN_CAC", "name": "CAC 40 Synthetic Institutional Equity", "base": "CAC"},
+    "SX5E": {"code": "SYN_SX5E", "name": "Euro Stoxx 50 Synthetic Institutional Equity", "base": "SX5E"},
+    "ASX200": {"code": "SYN_ASX", "name": "ASX 200 Synthetic Institutional Equity", "base": "ASX200"},
+    "HSI": {"code": "SYN_HSI", "name": "Hang Seng Synthetic Institutional Equity", "base": "HSI"},
 }
+
 
 
 class COTEngine:
