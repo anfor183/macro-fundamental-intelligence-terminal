@@ -164,6 +164,9 @@ export interface CalendarEvent {
   event_time: string;
   consensus: string;
   previous: string;
+  actual?: string;
+  status?: 'UPCOMING' | 'COMPLETED';
+  surprise?: 'BEAT' | 'MISS' | 'IN_LINE' | null;
   importance: 'Critical' | 'High' | 'Medium' | 'Low';
   expected_volatility: 'High' | 'Medium' | 'Low';
   affected_assets: string[];

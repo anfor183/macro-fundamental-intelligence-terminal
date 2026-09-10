@@ -271,8 +271,10 @@ class LiveEconomicCalendarIngestor:
 
     @classmethod
     async def get_upcoming_calendar_events(cls) -> List[Dict[str, Any]]:
-        """Return live upcoming economic releases parsed from the real live ForexFactory feed."""
+        """Return live economic calendar releases parsed from the real ForexFactory feed,
+        with actual prints, status tracking (UPCOMING vs COMPLETED), and surprise calculations."""
         raw_events = await cls.fetch_calendar_data()
+        now = datetime.now(timezone.utc)
         country_names = {
             "USD": "United States",
             "EUR": "Eurozone",
@@ -293,6 +295,7 @@ class LiveEconomicCalendarIngestor:
             "CAD": ["USDCAD", "CADJPY"],
             "CHF": ["USDCHF", "EURCHF"],
             "NZD": ["NZDUSD", "AUDNZD"],
+            "CNY": ["USDCNH", "AUDUSD"],
         }
         events = []
         for idx, item in enumerate(raw_events):
@@ -303,6 +306,36 @@ class LiveEconomicCalendarIngestor:
                 impact = "Medium"
             category = categorize_event(title)
             assets = currency_assets.get(cc, ["EURUSD", "USDJPY"])
+
+            date_str = item.get("date", now.isoformat())
+            try:
+                event_dt = datetime.fromisoformat(date_str)
+                if event_dt.tzinfo is None:
+                    event_dt = event_dt.replace(tzinfo=timezone.utc)
+            except Exception:
+                event_dt = now
+
+            actual_str = item.get("actual")
+            forecast_str = item.get("forecast")
+            previous_str = item.get("previous")
+
+            is_completed = bool(actual_str) or (event_dt < now)
+            status = "COMPLETED" if is_completed else "UPCOMING"
+
+            # Compute surprise direction (Beat, Miss, In-Line)
+            surprise_badge = None
+            if actual_str and forecast_str:
+                act_num = parse_numeric_release(actual_str)
+                fc_num = parse_numeric_release(forecast_str)
+                if act_num is not None and fc_num is not None:
+                    higher_hawkish = is_higher_hawkish(category, title)
+                    diff = act_num - fc_num
+                    if abs(diff) < 0.0001:
+                        surprise_badge = "IN_LINE"
+                    elif (diff > 0 and higher_hawkish) or (diff < 0 and not higher_hawkish):
+                        surprise_badge = "BEAT"
+                    else:
+                        surprise_badge = "MISS"
 
             if category == "inflation":
                 sens = f"Higher {cc} print reinforces rate hawkishness; miss accelerates easing."
@@ -319,13 +352,42 @@ class LiveEconomicCalendarIngestor:
                 "currency": cc,
                 "event": title,
                 "category": category,
-                "event_time": item.get("date", datetime.now(timezone.utc).isoformat()),
-                "consensus": item.get("forecast") or "N/A",
-                "previous": item.get("previous") or "N/A",
+                "event_time": event_dt.isoformat(),
+                "consensus": forecast_str or "N/A",
+                "previous": previous_str or "N/A",
+                "actual": actual_str if actual_str else ("Completed" if is_completed else "Pending"),
+                "status": status,
+                "surprise": surprise_badge,
                 "importance": impact,
                 "expected_volatility": "High" if impact == "High" else "Medium" if impact == "Medium" else "Low",
                 "affected_assets": assets,
                 "sensitivity": sens,
             })
+
+        # Ensure future/upcoming releases are also supplemented if week has ended
+        upcoming_count = sum(1 for e in events if e["status"] == "UPCOMING")
+        if upcoming_count < 8:
+            from backend.app.ingestion.economic_calendar import EconomicCalendarProvider
+            provider = EconomicCalendarProvider()
+            forward_events = provider.get_upcoming_events(days_ahead=7)
+            for f_idx, fe in enumerate(forward_events):
+                events.append({
+                    "id": f"fwd_{f_idx}_{fe['currency']}",
+                    "country": fe["country"],
+                    "currency": fe["currency"],
+                    "event": fe["event"],
+                    "category": fe["category"],
+                    "event_time": fe["event_time"].isoformat(),
+                    "consensus": fe.get("consensus", "N/A"),
+                    "previous": fe.get("previous", "N/A"),
+                    "actual": "Pending",
+                    "status": "UPCOMING",
+                    "surprise": None,
+                    "importance": fe["importance"],
+                    "expected_volatility": fe.get("expected_volatility", "Medium"),
+                    "affected_assets": fe.get("affected_assets", ["EURUSD"]),
+                    "sensitivity": fe.get("sensitivity", ""),
+                })
+
         return events
 
