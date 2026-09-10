@@ -79,7 +79,14 @@ DEFAULT_WEIGHTS = {
         "inflation": 0.15,           # Input costs & margin squeeze
         "risk_sentiment": 0.15,      # Volatility / VIX
         "fiscal": 0.10,              # Government stimulus / corporate tax
-    }
+    },
+    "crypto": { # e.g. BTC, ETH
+        "growth": 0.25,              # Network activity & global liquidity expansion
+        "monetary_policy": 0.25,     # Global central bank easing / M2 impulse
+        "rates_yields": 0.20,        # Real yields (falling yields stimulate risk-on crypto)
+        "risk_sentiment": 0.15,      # Cross-asset risk-on / speculative appetite
+        "inflation": 0.15,           # Fiat debasement & monetary inflation hedge
+    },
 }
 
 
@@ -223,6 +230,10 @@ SUPPORTED_ASSETS = [
     {"symbol": "ZW", "name": "Wheat Futures", "asset_class": "commodity", "base_currency": "USD", "quote_currency": None, "current_price": 570.25, "daily_change_pct": -0.35},
     {"symbol": "ZC", "name": "Corn Futures", "asset_class": "commodity", "base_currency": "USD", "quote_currency": None, "current_price": 428.50, "daily_change_pct": 0.12},
     {"symbol": "ZS", "name": "Soybeans Futures", "asset_class": "commodity", "base_currency": "USD", "quote_currency": None, "current_price": 1020.00, "daily_change_pct": -0.18},
+
+    # CRYPTOCURRENCIES
+    {"symbol": "BTCUSD", "name": "Bitcoin / US Dollar", "asset_class": "crypto", "base_currency": "BTC", "quote_currency": "USD", "current_price": 62540.00, "daily_change_pct": 1.45},
+    {"symbol": "ETHUSD", "name": "Ethereum / US Dollar", "asset_class": "crypto", "base_currency": "ETH", "quote_currency": "USD", "current_price": 2560.00, "daily_change_pct": 2.10},
 ]
 
 

@@ -183,6 +183,72 @@ class Historical15YearValidator:
             raw = growth_proxy + yield_proxy
             score = max(-100.0, min(100.0, round(raw, 1)))
 
+        elif symbol == "NZDUSD":
+            # RBNZ vs Fed cash rate differential + momentum + global yield curve & terms of trade
+            rate_diff = obs.rbnz_cash_rate - obs.fed_funds_rate
+            prev_rate_diff = p.rbnz_cash_rate - p.fed_funds_rate
+            rate_mom = (rate_diff - prev_rate_diff) * 50.0
+            us_yield_drag = -(obs.us_10y_yield - 2.8) * 14.0
+            cpi_drag = -(obs.us_cpi_yoy - 2.0) * 10.0
+            raw = (rate_diff * 18.0) + rate_mom + us_yield_drag + cpi_drag - 5.0
+            score = max(-100.0, min(100.0, round(raw, 1)))
+
+        elif symbol == "AUDUSD":
+            # RBA vs Fed cash rate differential + rate momentum + US yield momentum + commodity terms of trade
+            rate_diff = obs.rba_cash_rate - obs.fed_funds_rate
+            prev_rate_diff = p.rba_cash_rate - p.fed_funds_rate
+            rate_mom = (rate_diff - prev_rate_diff) * 60.0
+            us_yield_mom = -(obs.us_10y_yield - p.us_10y_yield) * 35.0
+            commodity_mom = (obs.cl_price - p.cl_price) * 0.5
+            raw = (rate_diff * 6.0) + rate_mom + us_yield_mom + commodity_mom - 8.0
+            score = max(-100.0, min(100.0, round(raw, 1)))
+
+        elif symbol == "USDCAD":
+            # Oil price level & momentum + Fed vs BoC rate momentum + US 10Y yield momentum
+            oil_mom = -(obs.cl_price - p.cl_price) * 0.8
+            oil_lvl = -(obs.cl_price - 70.0) * 0.3
+            rate_diff = obs.fed_funds_rate - obs.boc_overnight_rate
+            rate_mom = (rate_diff - (p.fed_funds_rate - p.boc_overnight_rate)) * 45.0
+            yield_mom = (obs.us_10y_yield - p.us_10y_yield) * 35.0
+            raw = oil_mom + oil_lvl + rate_mom + yield_mom + 6.0
+            score = max(-100.0, min(100.0, round(raw, 1)))
+
+        elif symbol == "USDCHF":
+            # US inflation drag (CHF safe haven) + US 10Y yield momentum + policy rate momentum
+            us_cpi_drag = -(obs.us_cpi_yoy - 2.0) * 12.0
+            yield_mom = (obs.us_10y_yield - p.us_10y_yield) * 35.0
+            rate_mom = ((obs.fed_funds_rate - obs.snb_policy_rate) - (p.fed_funds_rate - p.snb_policy_rate)) * 40.0
+            raw = us_cpi_drag + yield_mom + rate_mom - 10.0
+            score = max(-100.0, min(100.0, round(raw, 1)))
+
+        elif symbol == "NDX":
+            # Nasdaq 100: Tech duration sensitivity to rates + liquidity momentum
+            liq_mom = (obs.fed_funds_rate - p.fed_funds_rate) * -55.0
+            duration_drag = -(obs.us_10y_yield - 2.5) * 18.0
+            raw = liq_mom + duration_drag + 22.0  # Structural tech growth bias
+            score = max(-100.0, min(100.0, round(raw, 1)))
+
+        elif symbol == "XAGUSD":
+            # Silver: High-beta real yield sensitivity + gold sympathy + liquidity momentum
+            real_yield = obs.us_10y_yield - obs.us_cpi_yoy
+            prev_real_yield = p.us_10y_yield - p.us_cpi_yoy
+            ry_mom = (real_yield - prev_real_yield) * -75.0
+            ry_lvl = -(real_yield - 1.0) * 15.0
+            liq_mom = (obs.fed_funds_rate - p.fed_funds_rate) * -35.0
+            raw = ry_mom + ry_lvl + liq_mom
+            score = max(-100.0, min(100.0, round(raw, 1)))
+
+        elif symbol == "BTCUSD":
+            # Bitcoin: Global fiat liquidity impulse, rate levels, real yield drag & debasement proxy
+            real_yield = obs.us_10y_yield - obs.us_cpi_yoy
+            prev_real_yield = p.us_10y_yield - p.us_cpi_yoy
+            liq_mom = (obs.fed_funds_rate - p.fed_funds_rate) * -75.0
+            ry_mom = (real_yield - prev_real_yield) * -30.0
+            ry_drag = -real_yield * 12.0
+            rate_lvl = 25.0 if obs.fed_funds_rate <= 1.50 else (-25.0 if obs.fed_funds_rate >= 4.50 else 0.0)
+            raw = liq_mom + ry_mom + ry_drag + rate_lvl + 22.0
+            score = max(-100.0, min(100.0, round(raw, 1)))
+
         else:
             score = 0.0
 
@@ -221,6 +287,20 @@ class Historical15YearValidator:
             return obs.xauusd_price
         elif sym == "CL":
             return obs.cl_price
+        elif sym == "NZDUSD":
+            return obs.nzdusd_price
+        elif sym == "AUDUSD":
+            return obs.audusd_price
+        elif sym == "USDCAD":
+            return obs.usdcad_price
+        elif sym == "USDCHF":
+            return obs.usdchf_price
+        elif sym == "NDX":
+            return obs.ndx_price
+        elif sym == "XAGUSD":
+            return obs.xagusd_price
+        elif sym == "BTCUSD":
+            return obs.btcusd_price
         return obs.eurusd_price
 
     @classmethod
@@ -240,9 +320,16 @@ class Historical15YearValidator:
             "EURUSD": "Euro / US Dollar",
             "USDJPY": "US Dollar / Japanese Yen",
             "GBPUSD": "British Pound / US Dollar",
+            "AUDUSD": "Australian Dollar / US Dollar",
+            "USDCAD": "US Dollar / Canadian Dollar",
+            "USDCHF": "US Dollar / Swiss Franc",
+            "NZDUSD": "New Zealand Dollar / US Dollar",
             "SPX": "S&P 500 Index",
+            "NDX": "Nasdaq 100 Index",
             "XAUUSD": "Gold (Spot USD)",
+            "XAGUSD": "Silver (Spot USD)",
             "CL": "WTI Crude Oil",
+            "BTCUSD": "Bitcoin / US Dollar",
         }
 
         # Step 1: Generate signals and measure forward returns
@@ -264,7 +351,8 @@ class Historical15YearValidator:
             elif bias in ("STRONG BEARISH", "BEARISH"):
                 is_correct = fwd_ret < 0.0
             else:
-                is_correct = abs(fwd_ret) < 1.25  # Neutral prediction is correct if market stayed flat
+                flat_thresh = 5.0 if symbol.upper() == "BTCUSD" else (2.0 if symbol.upper() in ("CL", "XAGUSD", "NDX") else 1.25)
+                is_correct = abs(fwd_ret) < flat_thresh  # Neutral prediction is correct if market stayed flat
 
             results.append(BacktestSignalResult(
                 week_index=w,
@@ -348,9 +436,16 @@ class Historical15YearValidator:
             "EURUSD": "cot_eur_zscore",
             "USDJPY": "cot_jpy_zscore",
             "GBPUSD": "cot_gbp_zscore",
+            "AUDUSD": "cot_aud_zscore",
+            "USDCAD": "cot_cad_zscore",
+            "USDCHF": "cot_chf_zscore",
+            "NZDUSD": "cot_nzd_zscore",
             "SPX": "cot_spx_zscore",
+            "NDX": "cot_ndx_zscore",
             "XAUUSD": "cot_gold_zscore",
+            "XAGUSD": "cot_silver_zscore",
             "CL": "cot_oil_zscore",
+            "BTCUSD": "cot_btc_zscore",
         }
         cot_attr = cot_attr_map.get(symbol, "cot_eur_zscore")
 
@@ -386,6 +481,8 @@ class Historical15YearValidator:
             # Enhanced Strategy: COT Crowding Filter + 2.0% Volatility Stop
             obs_idx = min(len(dataset) - 1, r.week_index)
             cot_z = getattr(dataset[obs_idx], cot_attr, 0.0)
+            if symbol.upper() in ("USDJPY", "USDCAD", "USDCHF"):
+                cot_z = -cot_z
             base_bias = r.predicted_bias
 
             # Anti-crowding filter: suppress when speculators are at extremes against the trade

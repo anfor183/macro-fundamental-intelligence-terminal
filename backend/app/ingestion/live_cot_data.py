@@ -61,6 +61,9 @@ CFTC_RAW_CODE_MAP = {
     "124603": "DJI",     # Dow Jones ($5)
     "239742": "RUT",     # Russell 2000
     "240743": "N225",    # Nikkei 225
+    # Cryptocurrencies (CME Futures)
+    "133741": "BTC",     # Bitcoin
+    "146041": "ETH",     # Ether
 }
 
 # 3-Year rolling statistical baseline (mean and standard deviation in net contracts)
@@ -91,6 +94,8 @@ UNDERLYING_3Y_STATS: Dict[str, Dict[str, float]] = {
     "DJI": {"mean": 15000.0, "std": 12000.0},
     "RUT": {"mean": -45000.0, "std": 32000.0},
     "N225": {"mean": 2500.0, "std": 3500.0},
+    "BTC": {"mean": 1200.0, "std": 3500.0},
+    "ETH": {"mean": 400.0, "std": 1800.0},
 }
 
 # Live/point-in-time fallback figures for all tracked underlying instruments
@@ -118,6 +123,8 @@ BASELINE_UNDERLYINGS: Dict[str, Dict[str, Any]] = {
     "DJI": {"date": "2026-09-01", "long": 26546, "short": 9218, "oi": 86927, "net": 17328},
     "RUT": {"date": "2026-09-01", "long": 63898, "short": 135561, "oi": 424663, "net": -71663},
     "N225": {"date": "2026-09-01", "long": 6639, "short": 3944, "oi": 30948, "net": 2695},
+    "BTC": {"date": "2026-09-01", "long": 14250, "short": 11800, "oi": 38400, "net": 2450},
+    "ETH": {"date": "2026-09-01", "long": 5120, "short": 4650, "oi": 16200, "net": 470},
 }
 
 
@@ -256,6 +263,7 @@ class LiveCOTManager:
             "CL": "CL", "BZ": "BZ", "NG": "NG", "HG": "HG",
             "ZC": "ZC", "ZS": "ZS", "ZW": "ZW",
             "SPX": "SPX", "NDX": "NDX", "DJI": "DJI", "RUT": "RUT", "N225": "N225",
+            "BTCUSD": "BTC", "ETHUSD": "ETH",
         }
 
         if sym in key_map:

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import {
   Compass, ShieldAlert, CheckCircle2, XCircle, AlertTriangle,
-  TrendingUp, TrendingDown, Minus, Info, Layers, Users, Activity, Crosshair
+  TrendingUp, TrendingDown, Minus, Info, Layers, Users, Activity, Crosshair, Brain
 } from 'lucide-react';
 import { api } from '../services/api';
 import { TraderConfluenceCard as ITraderConfluenceCard } from '../types/macro';
@@ -11,17 +11,17 @@ interface Props {
 }
 
 function biasColor(bias: string): string {
-  if (bias.includes('STRONG BULLISH')) return '#10b981';
-  if (bias.includes('BULLISH')) return '#34d399';
-  if (bias.includes('STRONG BEARISH')) return '#f43f5e';
-  if (bias.includes('BEARISH')) return '#fb7185';
-  return '#94a3b8';
+  if (bias.includes('STRONG BULLISH')) return 'var(--color-bullish-strong)';
+  if (bias.includes('BULLISH')) return 'var(--color-bullish)';
+  if (bias.includes('STRONG BEARISH')) return 'var(--color-bearish-strong)';
+  if (bias.includes('BEARISH')) return 'var(--color-bearish)';
+  return 'var(--color-neutral)';
 }
 
 function crowdingColor(index: number): string {
-  if (index <= 18 || index >= 82) return '#f43f5e'; // Squeeze risk zone
-  if (index <= 35 || index >= 65) return '#38bdf8'; // Strong trend zone
-  return '#10b981'; // Balanced healthy zone
+  if (index <= 18 || index >= 82) return 'var(--color-bearish)'; // Squeeze risk zone
+  if (index <= 35 || index >= 65) return 'var(--accent-cyan)'; // Strong trend zone
+  return 'var(--color-bullish)'; // Balanced healthy zone
 }
 
 export const TraderConfluenceCard: React.FC<Props> = ({ symbol }) => {
@@ -220,6 +220,78 @@ export const TraderConfluenceCard: React.FC<Props> = ({ symbol }) => {
           <span>Positioning Stance: <strong style={{ color: crowdingColor(card.cot_crowding_index) }}>{card.cot_sentiment_label.replace(/_/g, ' ')}</strong></span>
         </div>
       </div>
+
+      {/* ── Machine Learning XGBoost Confluence Section ── */}
+      {card.ml_prediction && (
+        <div style={{
+          background: 'linear-gradient(135deg, rgba(99,102,241,0.06), rgba(168,85,247,0.06))',
+          border: '1px solid rgba(168,85,247,0.25)',
+          borderRadius: 10,
+          padding: '14px 18px',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 10,
+        }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 8 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <Brain size={16} color="#c084fc" />
+              <span style={{ fontSize: '0.82rem', fontWeight: 800, color: 'var(--text-primary)' }}>
+                XGBoost ML Directional Ensemble
+              </span>
+              <span style={{
+                fontSize: '0.66rem',
+                padding: '1px 6px',
+                borderRadius: 4,
+                background: 'rgba(168,85,247,0.2)',
+                color: '#c084fc',
+                fontWeight: 700,
+              }}>
+                {card.ml_prediction.model_version}
+              </span>
+            </div>
+            <div style={{ display: 'flex', gap: 12, alignItems: 'center', fontSize: '0.72rem' }}>
+              <span>ML Bias: <strong style={{ color: biasColor(card.ml_prediction.predicted_bias) }}>{card.ml_prediction.predicted_bias}</strong></span>
+              <span>ML Conviction: <strong style={{ color: '#38bdf8' }}>{card.ml_prediction.ml_conviction_score.toFixed(0)}%</strong></span>
+            </div>
+          </div>
+
+          {/* Probability Distribution Chips */}
+          <div style={{ display: 'flex', gap: 10, fontSize: '0.7rem' }}>
+            <span style={{ color: 'var(--text-muted)' }}>Probabilities:</span>
+            <span style={{ color: '#34d399', fontWeight: 700 }}>
+              Bull: {(card.ml_prediction.probability_distribution.BULLISH * 100).toFixed(0)}%
+            </span>
+            <span style={{ color: 'var(--text-muted)' }}>
+              Neutral: {(card.ml_prediction.probability_distribution.NEUTRAL * 100).toFixed(0)}%
+            </span>
+            <span style={{ color: '#f87171', fontWeight: 700 }}>
+              Bear: {(card.ml_prediction.probability_distribution.BEARISH * 100).toFixed(0)}%
+            </span>
+          </div>
+
+          {/* Top Contributing Features */}
+          {card.ml_prediction.feature_importances && card.ml_prediction.feature_importances.length > 0 && (
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 2 }}>
+              <span style={{ fontSize: '0.68rem', color: 'var(--text-muted)', alignSelf: 'center' }}>Top Drivers:</span>
+              {card.ml_prediction.feature_importances.slice(0, 3).map((f, i) => (
+                <span
+                  key={i}
+                  style={{
+                    fontSize: '0.68rem',
+                    background: 'var(--surface-1)',
+                    border: '1px solid var(--border-subtle)',
+                    borderRadius: 4,
+                    padding: '2px 7px',
+                    color: f.directional_impact === 'BULLISH' ? '#34d399' : '#f87171',
+                  }}
+                >
+                  {f.label} ({(f.importance_weight * 100).toFixed(0)}% wt)
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
 
       {/* ── 4-Pillars Confluence Meter ── */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>

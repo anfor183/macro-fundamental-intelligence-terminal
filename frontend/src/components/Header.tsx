@@ -149,7 +149,7 @@ export const Header: React.FC<HeaderProps> = ({
                 color: 'var(--text-primary)',
               }}
             >
-              ANTIGRAVITY MACRO
+              FORTUNE ANUKPOSI
             </span>
             <span
               style={{
@@ -163,11 +163,11 @@ export const Header: React.FC<HeaderProps> = ({
                 letterSpacing: '0.05em',
               }}
             >
-              TERMINAL
+              MACRO TERMINAL
             </span>
           </div>
           <div style={{ fontSize: '0.7rem', color: 'var(--text-dim)' }}>
-            Institutional Macro Intelligence & Market-Bias Engine
+            Quantitative Fundamental Intelligence & Market-Bias Engine
           </div>
         </div>
       </div>

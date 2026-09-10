@@ -106,6 +106,10 @@ CFTC_CONTRACT_MAP = {
     "SX5E": {"code": "SYN_SX5E", "name": "Euro Stoxx 50 Synthetic Institutional Equity", "base": "SX5E"},
     "ASX200": {"code": "SYN_ASX", "name": "ASX 200 Synthetic Institutional Equity", "base": "ASX200"},
     "HSI": {"code": "SYN_HSI", "name": "Hang Seng Synthetic Institutional Equity", "base": "HSI"},
+
+    # Cryptocurrencies (CME Futures)
+    "BTCUSD": {"code": "133741", "name": "Bitcoin Futures", "base": "BTC"},
+    "ETHUSD": {"code": "146041", "name": "Ether Futures", "base": "ETH"},
 }
 
 

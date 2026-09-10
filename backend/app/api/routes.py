@@ -52,6 +52,16 @@ from backend.app.scoring.high_conviction_scorer import (
 )
 
 from backend.app.ingestion.live_calendar import LiveEconomicCalendarIngestor
+from backend.app.engine.regime_signal_engine import (
+    RegimeSignalEngine,
+    signal_to_dict,
+    backtest_to_dict,
+    SCORED_ASSETS,
+)
+from backend.app.engine.forward_test_tracker import (
+    ForwardTestTracker,
+    forward_entry_to_dict,
+)
 
 router = APIRouter()
 calendar_provider = EconomicCalendarProvider()
@@ -913,4 +923,286 @@ async def get_trader_confluence_card(
     return confluence_card_to_dict(card)
 
 
+# ─────────────────────────────────────────────────────────────────────────────
+# REGIME SIGNAL SCANNER  –  Reversal & Continuation Detection
+# ─────────────────────────────────────────────────────────────────────────────
+
+@router.get("/regime-signals")
+async def get_all_regime_signals(
+    signal_type: Optional[str] = Query(None, description="REVERSAL or CONTINUATION"),
+    strength: Optional[str] = Query(None, description="MAJOR, MODERATE, or MINOR"),
+    db: AsyncSession = Depends(get_db),
+):
+    """
+    Detect active Major Reversal and Continuation signals across all tracked assets.
+    Signals are scored via the 15-year fundamental reconstruction pipeline.
+    Optional filters: signal_type (REVERSAL|CONTINUATION), strength (MAJOR|MODERATE|MINOR).
+    """
+    # Pull latest prices from DB for context
+    stmt = select(Asset)
+    res = await db.execute(stmt)
+    all_assets = res.scalars().all()
+    price_map = {a.symbol.upper(): (a.current_price or 0.0) for a in all_assets}
+
+    signals = RegimeSignalEngine.detect_all_signals(asset_prices=price_map)
+
+    if signal_type:
+        signals = [s for s in signals if s.signal_type == signal_type.upper()]
+    if strength:
+        signals = [s for s in signals if s.strength == strength.upper()]
+
+    # Auto-log all detected signals into forward test tracker
+    for sig in signals:
+        if sig.current_price > 0:
+            ForwardTestTracker.log_signal(
+                signal_id=sig.signal_id,
+                symbol=sig.symbol,
+                asset_name=sig.asset_name,
+                signal_type=sig.signal_type,
+                direction=sig.direction,
+                strength=sig.strength,
+                issue_price=sig.current_price,
+                confluence_pct=sig.confluence_pct,
+                backtest_hit_rate=sig.backtest_hit_rate,
+            )
+
+    return {
+        "count": len(signals),
+        "signals": [signal_to_dict(s) for s in signals],
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+    }
+
+
+@router.get("/regime-signals/history")
+async def get_historical_signal_log(
+    symbol: Optional[str] = Query(None, description="Asset symbol (e.g. EURUSD, USDJPY, or None for all)"),
+    signal_type: Optional[str] = Query(None, description="REVERSAL or CONTINUATION"),
+    outcome: Optional[str] = Query(None, description="WIN or LOSS"),
+    horizon_weeks: int = Query(4, description="Forward horizon in weeks"),
+    limit: int = Query(250, description="Max past signals to return"),
+):
+    """
+    Return the complete historical log of past signals that either won or lost,
+    with exact dates, entry/exit prices, realized return %, macro score, and COT context.
+    """
+    return RegimeSignalEngine.get_historical_signal_log(
+        symbol=symbol,
+        signal_type=signal_type,
+        outcome=outcome,
+        horizon_weeks=horizon_weeks,
+        limit=limit,
+    )
+
+
+@router.get("/regime-signals/forward-test/log")
+async def get_forward_test_log():
+    """
+    Return all signals logged in the forward test tracker (last 90 days).
+    Includes resolved outcomes (WIN/LOSS/DRAW) and pending signals with live P&L.
+    """
+    entries = ForwardTestTracker.get_all_entries(limit=200)
+    stats = ForwardTestTracker.get_summary_stats()
+    return {
+        "stats": stats,
+        "entries": [forward_entry_to_dict(e) for e in entries],
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+    }
+
+
+@router.get("/regime-signals/backtest/{symbol}")
+async def get_regime_signal_backtest(
+    symbol: str,
+    signal_type: str = Query("REVERSAL", description="REVERSAL or CONTINUATION"),
+    horizon_weeks: int = Query(4, description="Forward horizon in weeks (1, 4, 12)"),
+):
+    """
+    Run the 15-year walk-forward backtest for a specific signal type on an asset.
+    Returns empirical hit rate, Sharpe, regime breakdown, and timeline.
+    """
+    sym = symbol.upper()
+    bt = RegimeSignalEngine.get_backtest(sym, signal_type.upper())
+    return backtest_to_dict(bt)
+
+
+@router.get("/regime-signals/{symbol}")
+async def get_regime_signals_for_asset(
+    symbol: str,
+    db: AsyncSession = Depends(get_db),
+):
+    """
+    Detect active Reversal/Continuation signals for a single asset.
+    Also returns 26-week score history for the mini chart.
+    """
+    sym = symbol.upper()
+    asset_name = SCORED_ASSETS.get(sym, sym)
+
+    # Pull price
+    stmt = select(Asset).where(Asset.symbol == sym)
+    res = await db.execute(stmt)
+    asset = res.scalar_one_or_none()
+    price = asset.current_price if asset and asset.current_price else 0.0
+
+    signals = RegimeSignalEngine.detect_signals_for_asset(sym, asset_name, price)
+    score_history = RegimeSignalEngine.get_score_history(sym, weeks=26)
+
+    return {
+        "symbol": sym,
+        "asset_name": asset_name,
+        "current_price": price,
+        "signals": [signal_to_dict(s) for s in signals],
+        "score_history": score_history,
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+    }
+
+
+# ── AI, Machine Learning, NLP & RAG Endpoints ─────────────────────────────────
+
+from pydantic import BaseModel
+from backend.app.intelligence.rag_service import rag_service
+from backend.app.intelligence.ml_engine import macro_ml_engine
+from backend.app.intelligence.nlp_sentiment import MacroNLPSentiment
+
+
+class CopilotQueryRequest(BaseModel):
+    query: str
+    symbol: Optional[str] = None
+    macro_regime: Optional[str] = None
+
+
+class MLPredictRequest(BaseModel):
+    symbol: str
+    asset_class: str = "forex"
+    yield_spread_10y_2y: float = 40.0
+    policy_rate_spread: float = 25.0
+    cot_crowding_index: float = 50.0
+    cot_zscore_3y: float = 0.0
+    volatility_atr_pct: float = 50.0
+    inflation_surprise_zscore: float = 0.0
+    growth_surprise_zscore: float = 0.0
+    risk_sentiment_score: float = 10.0
+    macro_regime: str = "EXPANSION"
+
+
+class NLPAnalyzeRequest(BaseModel):
+    text: str
+    title: Optional[str] = None
+
+
+@router.post("/ai/copilot")
+async def query_macro_copilot(payload: CopilotQueryRequest):
+    """
+    Interactive Macro Copilot: combines vector RAG retrieval with Generative AI synthesis.
+    Works with live Google Gemini API or deterministic grounded fallback.
+    """
+    return await ai_service.query_macro_copilot(
+        query=payload.query,
+        symbol=payload.symbol,
+        macro_regime=payload.macro_regime,
+    )
+
+
+@router.get("/ai/rag/search")
+async def search_rag_precedents(
+    query: str = Query(..., description="Semantic search query"),
+    top_k: int = Query(5, ge=1, le=10, description="Max precedents to return"),
+):
+    """
+    Sub-millisecond semantic search across central bank transcripts and historical crisis playbooks.
+    """
+    results = rag_service.search(query, top_k=top_k)
+    return {
+        "query": query,
+        "count": len(results),
+        "results": [
+            {
+                "id": r.document.id,
+                "title": r.document.title,
+                "institution": r.document.institution,
+                "date": r.document.date,
+                "category": r.document.category,
+                "content": r.document.content,
+                "key_takeaway": r.document.key_takeaway,
+                "historical_asset_reaction": r.document.historical_asset_reaction,
+                "relevance_score": r.relevance_score,
+                "snippet": r.snippet,
+            }
+            for r in results
+        ],
+    }
+
+
+@router.get("/ml/status")
+async def get_ml_status():
+    """
+    Retrieve operational metrics, validation accuracy, and feature importances for the XGBoost model.
+    """
+    return macro_ml_engine.get_model_status()
+
+
+@router.get("/ml/weights/{asset_class}")
+async def get_dynamic_factor_weights(
+    asset_class: str,
+    regime: str = Query("EXPANSION", description="Current overarching macro regime"),
+):
+    """
+    Compute dynamically calibrated factor weights for an asset class based on macro regime.
+    """
+    static_weights = DEFAULT_WEIGHTS.get(asset_class.lower(), DEFAULT_WEIGHTS["forex"])
+    dynamic_weights = macro_ml_engine.optimize_factor_weights(asset_class.lower(), current_regime=regime)
+    return {
+        "asset_class": asset_class.lower(),
+        "regime": regime,
+        "static_weights": static_weights,
+        "dynamic_weights": dynamic_weights,
+        "adaptation_status": "OPTIMIZED",
+    }
+
+
+@router.post("/ml/predict")
+async def predict_ml_confluence(payload: MLPredictRequest):
+    """
+    Run live XGBoost directional prediction and feature importance attribution on custom features.
+    """
+    result = macro_ml_engine.predict_confluence(
+        symbol=payload.symbol,
+        asset_class=payload.asset_class,
+        yield_spread_10y_2y=payload.yield_spread_10y_2y,
+        policy_rate_spread=payload.policy_rate_spread,
+        cot_crowding_index=payload.cot_crowding_index,
+        cot_zscore_3y=payload.cot_zscore_3y,
+        volatility_atr_pct=payload.volatility_atr_pct,
+        inflation_surprise_zscore=payload.inflation_surprise_zscore,
+        growth_surprise_zscore=payload.growth_surprise_zscore,
+        risk_sentiment_score=payload.risk_sentiment_score,
+        macro_regime=payload.macro_regime,
+    )
+    return {
+        "symbol": payload.symbol,
+        "predicted_bias": result.predicted_bias,
+        "ml_conviction_score": result.ml_conviction_score,
+        "probability_distribution": result.probability_distribution,
+        "feature_importances": result.feature_importances,
+        "dynamic_weights": result.dynamic_weights,
+        "regime_alignment": result.regime_alignment,
+        "model_version": result.model_version,
+    }
+
+
+@router.post("/nlp/analyze")
+async def analyze_nlp_sentiment(payload: NLPAnalyzeRequest):
+    """
+    Run multi-dimensional financial NLP sentiment analysis on any headline or report.
+    """
+    res = MacroNLPSentiment.analyze_text(payload.text, payload.title)
+    return {
+        "sentiment_score": res.sentiment_score,
+        "hawkish_dovish_score": res.hawkish_dovish_score,
+        "growth_sentiment": res.growth_sentiment,
+        "inflation_pressure": res.inflation_pressure,
+        "direction": res.direction,
+        "statement_type": res.statement_type,
+        "confidence": res.confidence,
+        "detected_currencies": res.detected_currencies,
+        "key_signals": res.key_signals,
+    }
 

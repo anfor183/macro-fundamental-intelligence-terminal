@@ -13,17 +13,33 @@ import { BacktestView } from './components/BacktestView';
 import { SystemHealthView } from './components/SystemHealthView';
 import { ValidationDashboard } from './components/ValidationDashboard';
 import { DataIntegrityDashboard } from './components/DataIntegrityDashboard';
+import { RegimeScannerView } from './components/RegimeScannerView';
 import { AssetDetailModal } from './components/AssetDetailModal';
 import { SimulationModal } from './components/SimulationModal';
 import { CommandPalette } from './components/CommandPalette';
 import { MacroBattleView } from './components/MacroBattleView';
 import { WatchlistPortfolio } from './components/WatchlistPortfolio';
 import { EvidenceDrawer } from './components/EvidenceDrawer';
+import { AICopilotView } from './components/AICopilotView';
 import { AssetItem, MacroRegime, WhatChangedItem, CalendarEvent } from './types/macro';
 import { api } from './services/api';
 
 export function App() {
-  const [activeTab, setActiveTab] = useState<ViewTab>('dashboard');
+  const [activeTab, setActiveTab] = useState<ViewTab>(() => {
+    if (typeof window !== 'undefined') {
+      const hash = window.location.hash.replace('#', '') as ViewTab;
+      const validTabs: ViewTab[] = [
+        'dashboard', 'battle', 'watchlist', 'forex', 'matrix', 'gold', 'oil',
+        'indices', 'ai_copilot', 'calendar', 'news', 'what_changed', 'backtest',
+        'regime_scanner', 'validation', 'integrity', 'health'
+      ];
+      if (validTabs.includes(hash)) return hash;
+      const params = new URLSearchParams(window.location.search);
+      const tabParam = params.get('tab') as ViewTab;
+      if (tabParam && validTabs.includes(tabParam)) return tabParam;
+    }
+    return 'dashboard';
+  });
   const [regime, setRegime] = useState<MacroRegime | null>(null);
   const [assets, setAssets] = useState<AssetItem[]>([]);
   const [whatChanged, setWhatChanged] = useState<WhatChangedItem[]>([]);
@@ -41,8 +57,14 @@ export function App() {
   const [loading, setLoading] = useState<boolean>(true);
 
   const [theme, setTheme] = useState<'dark' | 'light'>(() => {
-    const saved = localStorage.getItem('terminal-theme');
-    return saved === 'light' ? 'light' : 'dark';
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const themeParam = params.get('theme');
+      if (themeParam === 'light' || themeParam === 'dark') return themeParam;
+      const saved = localStorage.getItem('terminal-theme');
+      if (saved === 'light' || saved === 'dark') return saved;
+    }
+    return 'dark';
   });
 
   const [density, setDensity] = useState<'compact' | 'standard' | 'comfortable'>(() => {
@@ -69,8 +91,21 @@ export function App() {
     }
   };
 
+  const handleToggleTheme = () => {
+    setTheme((prev) => {
+      const next = prev === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      document.documentElement.className = `theme-${next}`;
+      document.body.setAttribute('data-theme', next);
+      document.body.className = `theme-${next} density-${density}`;
+      localStorage.setItem('terminal-theme', next);
+      return next;
+    });
+  };
+
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
+    document.documentElement.className = `theme-${theme}`;
     document.documentElement.setAttribute('data-density', density);
     document.body.setAttribute('data-theme', theme);
     document.body.setAttribute('data-density', density);
@@ -78,6 +113,21 @@ export function App() {
     localStorage.setItem('terminal-theme', theme);
     localStorage.setItem('terminal-density', density);
   }, [theme, density]);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.location.hash.replace('#', '') !== activeTab) {
+      window.location.hash = activeTab;
+    }
+  }, [activeTab]);
+
+  useEffect(() => {
+    const handleHashChange = () => {
+      const hash = window.location.hash.replace('#', '') as ViewTab;
+      if (hash && hash !== activeTab) setActiveTab(hash);
+    };
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, [activeTab]);
 
   useEffect(() => {
     loadAllData();
@@ -130,7 +180,7 @@ export function App() {
         onSelectAsset={(sym) => setSelectedAsset(sym)}
         onOpenCommandPalette={() => setIsCommandPaletteOpen(true)}
         theme={theme}
-        onToggleTheme={() => setTheme((t) => (t === 'dark' ? 'light' : 'dark'))}
+        onToggleTheme={handleToggleTheme}
         density={density}
         onCycleDensity={() =>
           setDensity((d) =>
@@ -199,6 +249,7 @@ export function App() {
             <ForexRankingsView onSelectAsset={setSelectedAsset} />
           ) : activeTab === 'matrix' ? (
             <CurrencyMatrixView
+              theme={theme}
               onSelectPairAsset={setSelectedAsset}
               onOpenMacroBattle={handleOpenMacroBattle}
             />
@@ -212,6 +263,8 @@ export function App() {
               onSelectAsset={setSelectedAsset}
               title="Global Equity Indices Macro Landscape"
             />
+          ) : activeTab === 'ai_copilot' ? (
+            <AICopilotView />
           ) : activeTab === 'calendar' ? (
             <CalendarView onSelectAsset={setSelectedAsset} />
           ) : activeTab === 'news' ? (
@@ -220,6 +273,8 @@ export function App() {
             <WhatChangedView onSelectAsset={setSelectedAsset} />
           ) : activeTab === 'backtest' ? (
             <BacktestView />
+          ) : activeTab === 'regime_scanner' ? (
+            <RegimeScannerView />
           ) : activeTab === 'validation' ? (
             <ValidationDashboard />
           ) : activeTab === 'integrity' ? (
@@ -229,6 +284,32 @@ export function App() {
           ) : null}
         </main>
       </div>
+
+      {/* Terminal Status & Copyright Footer */}
+      <footer
+        style={{
+          padding: '7px 24px',
+          borderTop: '1px solid var(--border-subtle)',
+          background: 'var(--surface-1)',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          fontSize: '0.69rem',
+          color: 'var(--text-muted)',
+          zIndex: 30,
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <span style={{ fontWeight: 700, color: 'var(--text-primary)' }}>
+            Fortune Anukposi Quantitative Macro Terminal
+          </span>
+          <span style={{ color: 'var(--border-strong)' }}>|</span>
+          <span>Institutional Fundamental Intelligence Engine</span>
+        </div>
+        <div>
+          © {new Date().getFullYear()} Fortune Anukposi. All rights reserved.
+        </div>
+      </footer>
 
       {/* Global Command Palette (Cmd + K) */}
       <CommandPalette
@@ -248,7 +329,7 @@ export function App() {
           setIsCommandPaletteOpen(false);
         }}
         theme={theme}
-        onToggleTheme={() => setTheme((t) => (t === 'dark' ? 'light' : 'dark'))}
+        onToggleTheme={handleToggleTheme}
         density={density}
         onChangeDensity={(newDensity) => setDensity(newDensity)}
       />

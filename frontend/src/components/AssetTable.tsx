@@ -141,7 +141,7 @@ export const AssetTable: React.FC<AssetTableProps> = ({
                       display: 'flex',
                       alignItems: 'center',
                       gap: 4,
-                      color: isPositiveChange ? '#34d399' : '#f87171',
+                      color: isPositiveChange ? 'var(--color-bullish)' : 'var(--color-bearish)',
                       fontWeight: 600,
                     }}>
                       {isPositiveChange ? <TrendingUp size={13} /> : <TrendingDown size={13} />}
@@ -155,7 +155,7 @@ export const AssetTable: React.FC<AssetTableProps> = ({
                       <span className="mono" style={{
                         fontWeight: 800,
                         fontSize: '0.86rem',
-                        color: isPositiveScore ? '#10b981' : (asset.score < -14 ? '#ef4444' : '#94a3b8'),
+                        color: isPositiveScore ? 'var(--color-bullish)' : (asset.score < -14 ? 'var(--color-bearish)' : 'var(--color-neutral)'),
                         minWidth: 42,
                       }}>
                         {asset.score > 0 ? `+${asset.score.toFixed(1)}` : asset.score.toFixed(1)}
@@ -170,14 +170,14 @@ export const AssetTable: React.FC<AssetTableProps> = ({
                         overflow: 'hidden',
                       }}>
                         {/* Center marker */}
-                        <div style={{ position: 'absolute', left: '50%', width: 1, height: '100%', background: '#475569' }} />
+                        <div style={{ position: 'absolute', left: '50%', width: 1, height: '100%', background: 'var(--border-strong)' }} />
                         {isPositiveScore ? (
                           <div style={{
                             position: 'absolute',
                             left: '50%',
                             width: `${Math.min(50, (asset.score / 100) * 50)}%`,
                             height: '100%',
-                            background: '#10b981',
+                            background: 'var(--color-bullish)',
                             borderRadius: '0 2px 2px 0',
                           }} />
                         ) : (
@@ -186,7 +186,7 @@ export const AssetTable: React.FC<AssetTableProps> = ({
                             right: '50%',
                             width: `${Math.min(50, (Math.abs(asset.score) / 100) * 50)}%`,
                             height: '100%',
-                            background: '#ef4444',
+                            background: 'var(--color-bearish)',
                             borderRadius: '2px 0 0 2px',
                           }} />
                         )}
@@ -218,7 +218,7 @@ export const AssetTable: React.FC<AssetTableProps> = ({
                     <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                       <span style={{
                         fontWeight: 700,
-                        color: asset.confidence >= 75 ? '#38bdf8' : (asset.confidence >= 60 ? '#f59e0b' : '#ef4444'),
+                        color: asset.confidence >= 75 ? 'var(--accent-cyan)' : (asset.confidence >= 60 ? 'var(--accent-gold)' : 'var(--color-bearish)'),
                       }}>
                         {asset.confidence.toFixed(0)}%
                       </span>

@@ -15,7 +15,19 @@ import {
   Historical15YSummaryItem,
   COTPositionSnapshot,
   TraderConfluenceCard,
+  RegimeSignalsResponse,
+  RegimeSignalAssetResponse,
+  RegimeSignalBacktest,
+  ForwardTestLogResponse,
+  HistoricalSignalsResponse,
+  MLModelStatus,
+  DynamicWeightsResponse,
+  MLPredictionResponse,
+  CopilotResponse,
+  RAGSearchResponse,
+  NLPSentimentAnalysis,
 } from '../types/macro';
+
 
 const API_BASE = '/api/v1';
 
@@ -145,4 +157,77 @@ export const api = {
 
   getPdfExportUrl: () => `${API_BASE}/export/pdf`,
   getCsvExportUrl: () => `${API_BASE}/export/csv`,
+
+  // ── Regime Signal Scanner ──────────────────────────────────────────────────
+  getRegimeSignals: (signalType?: string, strength?: string) => {
+    const params = new URLSearchParams();
+    if (signalType) params.set('signal_type', signalType);
+    if (strength) params.set('strength', strength);
+    const qs = params.toString();
+    return fetchJson<RegimeSignalsResponse>(`${API_BASE}/regime-signals${qs ? `?${qs}` : ''}`);
+  },
+
+  getRegimeSignalsForAsset: (symbol: string) =>
+    fetchJson<RegimeSignalAssetResponse>(
+      `${API_BASE}/regime-signals/${encodeURIComponent(symbol)}`
+    ),
+
+  getRegimeSignalBacktest: (symbol: string, signalType = 'REVERSAL') =>
+    fetchJson<RegimeSignalBacktest>(
+      `${API_BASE}/regime-signals/backtest/${encodeURIComponent(symbol)}?signal_type=${signalType}`
+    ),
+
+  getForwardTestLog: () =>
+    fetchJson<ForwardTestLogResponse>(`${API_BASE}/regime-signals/forward-test/log`),
+
+  getHistoricalSignalLog: (params?: {
+    symbol?: string;
+    signal_type?: string;
+    outcome?: string;
+    horizon_weeks?: number;
+    limit?: number;
+  }) => {
+    const sp = new URLSearchParams();
+    if (params?.symbol) sp.set('symbol', params.symbol);
+    if (params?.signal_type) sp.set('signal_type', params.signal_type);
+    if (params?.outcome) sp.set('outcome', params.outcome);
+    if (params?.horizon_weeks) sp.set('horizon_weeks', params.horizon_weeks.toString());
+    if (params?.limit) sp.set('limit', params.limit.toString());
+    const qs = sp.toString();
+    return fetchJson<HistoricalSignalsResponse>(`${API_BASE}/regime-signals/history${qs ? `?${qs}` : ''}`);
+  },
+
+  // ── AI, Machine Learning, RAG & NLP Intelligence Hub ────────────────────────
+  queryCopilot: (query: string, symbol?: string, macroRegime?: string) =>
+    fetchJson<CopilotResponse>(`${API_BASE}/ai/copilot`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ query, symbol, macro_regime: macroRegime }),
+    }),
+
+  searchRAG: (query: string, topK = 5) =>
+    fetchJson<RAGSearchResponse>(
+      `${API_BASE}/ai/rag/search?query=${encodeURIComponent(query)}&top_k=${topK}`
+    ),
+
+  getMLStatus: () => fetchJson<MLModelStatus>(`${API_BASE}/ml/status`),
+
+  getDynamicWeights: (assetClass: string, regime = 'EXPANSION') =>
+    fetchJson<DynamicWeightsResponse>(
+      `${API_BASE}/ml/weights/${encodeURIComponent(assetClass)}?regime=${encodeURIComponent(regime)}`
+    ),
+
+  predictMLConfluence: (payload: any) =>
+    fetchJson<MLPredictionResponse>(`${API_BASE}/ml/predict`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    }),
+
+  analyzeNLP: (text: string, title?: string) =>
+    fetchJson<NLPSentimentAnalysis>(`${API_BASE}/nlp/analyze`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text, title }),
+    }),
 };

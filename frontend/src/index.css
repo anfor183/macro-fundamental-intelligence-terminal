@@ -19,6 +19,9 @@ body.theme-dark {
   --surface-2: #141e33;
   --surface-3: #1a2742;
   --surface-elevated: #1e293b;
+  --bg-surface-1: #0e1524;
+  --bg-surface-2: #141e33;
+  --bg-surface-3: #1a2742;
   --bg-glass: rgba(14, 21, 36, 0.82);
   --bg-hover: rgba(33, 49, 82, 0.45);
 
@@ -63,6 +66,22 @@ body.theme-dark {
   --accent-gold-bg: rgba(245, 158, 11, 0.12);
   --accent-purple: #8b5cf6;
 
+  /* Matrix Heatmap Table Tokens (Dark Mode) */
+  --matrix-pos-bg-rgb: 16, 185, 129;
+  --matrix-pos-bg-base-alpha: 0.12;
+  --matrix-pos-cell-text: #6ee7b7;
+  --matrix-neg-bg-rgb: 239, 68, 68;
+  --matrix-neg-bg-base-alpha: 0.12;
+  --matrix-neg-cell-text: #fca5a5;
+  --matrix-header-quote: #38bdf8;
+  --matrix-header-base: var(--text-secondary);
+  --matrix-diag-bg: var(--surface-2);
+  --matrix-diag-text: var(--text-dim);
+  --matrix-badge-pos-bg: rgba(16, 185, 129, 0.2);
+  --matrix-badge-pos-text: #34d399;
+  --matrix-badge-neg-bg: rgba(239, 68, 68, 0.2);
+  --matrix-badge-neg-text: #f87171;
+
   /* Fonts */
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
@@ -99,6 +118,9 @@ body.theme-light {
   --surface-2: #f8fafc;
   --surface-3: #edf2f7;
   --surface-elevated: #ffffff;
+  --bg-surface-1: #ffffff;
+  --bg-surface-2: #f8fafc;
+  --bg-surface-3: #edf2f7;
   --bg-glass: rgba(255, 255, 255, 0.92);
   --bg-hover: rgba(226, 232, 240, 0.7);
 
@@ -106,36 +128,53 @@ body.theme-light {
   --border-subtle: rgba(0, 0, 0, 0.08);
   --border-active: rgba(0, 0, 0, 0.16);
   --border-strong: rgba(0, 0, 0, 0.25);
-  --border-focus: rgba(8, 145, 178, 0.5);
+  --border-focus: rgba(2, 132, 199, 0.5);
 
   /* Text & Typography (High Contrast Dark Slate) */
   --text-primary: #0f172a;
   --text-secondary: #334155;
-  --text-muted: #64748b;
-  --text-dim: #94a3b8;
+  --text-muted: #475569;
+  --text-dim: #64748b;
 
-  /* Restrained Semantic Accents */
-  --color-bullish-strong: #047857;
-  --color-bullish: #059669;
-  --color-bullish-mild: #10b981;
-  --color-bullish-bg: rgba(5, 150, 105, 0.1);
-  --color-bullish-border: rgba(5, 150, 105, 0.3);
+  /* Restrained Semantic Accents (High Contrast in Light Mode) */
+  --color-bullish-strong: #064e3b;
+  --color-bullish: #047857;
+  --color-bullish-mild: #059669;
+  --color-bullish-bg: rgba(5, 150, 105, 0.12);
+  --color-bullish-border: rgba(5, 150, 105, 0.35);
 
-  --color-neutral: #64748b;
-  --color-neutral-bg: rgba(100, 116, 139, 0.08);
-  --color-neutral-border: rgba(100, 116, 139, 0.2);
+  --color-neutral: #475569;
+  --color-neutral-bg: rgba(100, 116, 139, 0.1);
+  --color-neutral-border: rgba(100, 116, 139, 0.28);
 
-  --color-bearish-mild: #e11d48;
-  --color-bearish: #be123c;
-  --color-bearish-strong: #9f1239;
-  --color-bearish-bg: rgba(190, 18, 60, 0.09);
-  --color-bearish-border: rgba(190, 18, 60, 0.28);
+  --color-bearish-mild: #be123c;
+  --color-bearish: #9f1239;
+  --color-bearish-strong: #881337;
+  --color-bearish-bg: rgba(190, 18, 60, 0.1);
+  --color-bearish-border: rgba(190, 18, 60, 0.32);
 
-  --accent-cyan: #0891b2;
-  --accent-cyan-glow: rgba(8, 145, 178, 0.2);
-  --accent-blue: #2563eb;
-  --accent-gold: #d97706;
-  --accent-gold-bg: rgba(217, 119, 6, 0.1);
+  --accent-cyan: #0284c7;
+  --accent-cyan-glow: rgba(2, 132, 199, 0.2);
+  --accent-blue: #1d4ed8;
+  --accent-gold: #b45309;
+  --accent-gold-bg: rgba(217, 119, 6, 0.12);
+  --accent-purple: #7c3aed;
+
+  /* Matrix Heatmap Table Tokens (Light Mode - High Contrast) */
+  --matrix-pos-bg-rgb: 16, 185, 129;
+  --matrix-pos-bg-base-alpha: 0.10;
+  --matrix-pos-cell-text: #065f46;
+  --matrix-neg-bg-rgb: 239, 68, 68;
+  --matrix-neg-bg-base-alpha: 0.10;
+  --matrix-neg-cell-text: #991b1b;
+  --matrix-header-quote: #0369a1;
+  --matrix-header-base: var(--text-primary);
+  --matrix-diag-bg: #f1f5f9;
+  --matrix-diag-text: var(--text-secondary);
+  --matrix-badge-pos-bg: rgba(16, 185, 129, 0.16);
+  --matrix-badge-pos-text: #065f46;
+  --matrix-badge-neg-bg: rgba(239, 68, 68, 0.16);
+  --matrix-badge-neg-text: #991b1b;
 
   /* Refined Shadows for light mode */
   --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.08);
@@ -225,21 +264,21 @@ html, body {
 }
 
 .bias-strong-bullish {
-  background: rgba(5, 150, 105, 0.22);
-  color: #10b981;
-  border: 1px solid rgba(16, 185, 129, 0.45);
+  background: var(--color-bullish-bg);
+  color: var(--color-bullish-strong);
+  border: 1px solid var(--color-bullish-border);
 }
 
 .bias-bullish {
-  background: rgba(16, 185, 129, 0.16);
-  color: #10b981;
-  border: 1px solid rgba(16, 185, 129, 0.32);
+  background: var(--color-bullish-bg);
+  color: var(--color-bullish);
+  border: 1px solid var(--color-bullish-border);
 }
 
 .bias-mild-bullish {
-  background: rgba(52, 211, 153, 0.12);
-  color: #059669;
-  border: 1px solid rgba(52, 211, 153, 0.26);
+  background: var(--color-bullish-bg);
+  color: var(--color-bullish-mild);
+  border: 1px solid var(--color-bullish-border);
 }
 
 .bias-neutral {
@@ -249,21 +288,21 @@ html, body {
 }
 
 .bias-mild-bearish {
-  background: rgba(251, 113, 133, 0.12);
-  color: #e11d48;
-  border: 1px solid rgba(251, 113, 133, 0.26);
+  background: var(--color-bearish-bg);
+  color: var(--color-bearish-mild);
+  border: 1px solid var(--color-bearish-border);
 }
 
 .bias-bearish {
-  background: rgba(244, 63, 94, 0.16);
-  color: #f43f5e;
-  border: 1px solid rgba(244, 63, 94, 0.32);
+  background: var(--color-bearish-bg);
+  color: var(--color-bearish);
+  border: 1px solid var(--color-bearish-border);
 }
 
 .bias-strong-bearish {
-  background: rgba(225, 29, 72, 0.22);
-  color: #e11d48;
-  border: 1px solid rgba(225, 29, 72, 0.45);
+  background: var(--color-bearish-bg);
+  color: var(--color-bearish-strong);
+  border: 1px solid var(--color-bearish-border);
 }
 
 /* ==========================================================================
@@ -290,3 +329,101 @@ html, body {
 .pulse-dot {
   animation: pulse-subtle 2s infinite ease-in-out;
 }
+
+/* ==========================================================================
+   CURRENCY MATRIX HEATMAP CONTRAST RULES (LIGHT & DARK THEMES)
+   ========================================================================== */
+
+/* Dark Mode Defaults */
+.matrix-th-base {
+  color: var(--text-secondary);
+}
+.matrix-th-quote {
+  color: var(--accent-cyan);
+}
+.matrix-row-header {
+  color: var(--text-primary);
+}
+.matrix-cell-diagonal {
+  color: var(--text-dim);
+  background: var(--surface-2);
+}
+.matrix-cell-positive {
+  color: #34d399 !important;
+}
+.matrix-cell-negative {
+  color: #f87171 !important;
+}
+.matrix-legend-text {
+  color: var(--text-secondary);
+}
+
+/* Light Mode Overrides (Forced High Contrast Institutional Hierarchy) */
+[data-theme="light"] .matrix-th-base,
+html[data-theme="light"] .matrix-th-base,
+body.theme-light .matrix-th-base,
+.theme-light .matrix-th-base {
+  color: #0f172a !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="light"] .matrix-th-quote,
+html[data-theme="light"] .matrix-th-quote,
+body.theme-light .matrix-th-quote,
+.theme-light .matrix-th-quote {
+  color: #0369a1 !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="light"] .matrix-row-header,
+html[data-theme="light"] .matrix-row-header,
+body.theme-light .matrix-row-header,
+.theme-light .matrix-row-header {
+  color: #0f172a !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="light"] .matrix-cell-diagonal,
+html[data-theme="light"] .matrix-cell-diagonal,
+body.theme-light .matrix-cell-diagonal,
+.theme-light .matrix-cell-diagonal {
+  color: #64748b !important;
+  background: #f1f5f9 !important;
+}
+
+[data-theme="light"] .matrix-cell-positive,
+html[data-theme="light"] .matrix-cell-positive,
+body.theme-light .matrix-cell-positive,
+.theme-light .matrix-cell-positive,
+[data-theme="light"] td.matrix-cell-positive,
+[data-theme="light"] span.matrix-cell-positive {
+  color: #065f46 !important; /* Deep forest emerald: WCAG AAA on light green */
+  font-weight: 800 !important;
+}
+
+[data-theme="light"] .matrix-cell-negative,
+html[data-theme="light"] .matrix-cell-negative,
+body.theme-light .matrix-cell-negative,
+.theme-light .matrix-cell-negative,
+[data-theme="light"] td.matrix-cell-negative,
+[data-theme="light"] span.matrix-cell-negative {
+  color: #991b1b !important; /* Deep crimson ruby: WCAG AAA on light red */
+  font-weight: 800 !important;
+}
+
+[data-theme="light"] .matrix-legend-text,
+html[data-theme="light"] .matrix-legend-text,
+body.theme-light .matrix-legend-text,
+.theme-light .matrix-legend-text {
+  color: #334155 !important;
+  font-weight: 600 !important;
+}
+
+[data-theme="light"] td.matrix-cell-positive {
+  border-color: rgba(5, 150, 105, 0.28) !important;
+}
+
+[data-theme="light"] td.matrix-cell-negative {
+  border-color: rgba(220, 38, 38, 0.28) !important;
+}
+

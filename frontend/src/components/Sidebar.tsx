@@ -17,6 +17,8 @@ import {
   ChevronRight,
   FlaskConical,
   DatabaseZap,
+  ScanSearch,
+  Brain,
 } from 'lucide-react';
 
 export type ViewTab =
@@ -28,10 +30,12 @@ export type ViewTab =
   | 'gold'
   | 'oil'
   | 'indices'
+  | 'ai_copilot'
   | 'calendar'
   | 'news'
   | 'what_changed'
   | 'backtest'
+  | 'regime_scanner'
   | 'validation'
   | 'integrity'
   | 'health';
@@ -74,6 +78,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     {
       title: 'Intelligence Feeds',
       items: [
+        { id: 'ai_copilot', label: 'AI & ML Copilot', icon: <Brain size={17} />, badge: 'AI' },
         { id: 'calendar', label: 'Macro Calendar', icon: <Calendar size={17} /> },
         { id: 'news', label: 'News Intelligence', icon: <Newspaper size={17} /> },
         { id: 'what_changed', label: 'What Changed', icon: <History size={17} />, badge: 'Delta' },
@@ -82,6 +87,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     {
       title: 'Analytics & Validation',
       items: [
+        { id: 'regime_scanner', label: 'Regime Scanner', icon: <ScanSearch size={17} />, badge: 'HOT' },
         { id: 'backtest', label: 'Backtesting Engine', icon: <Activity size={17} /> },
         { id: 'validation', label: 'Model Validation', icon: <FlaskConical size={17} />, badge: 'New' },
       ],
@@ -187,7 +193,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                       ? 'linear-gradient(90deg, rgba(6, 182, 212, 0.18) 0%, rgba(6, 182, 212, 0.05) 100%)'
                       : 'transparent',
                     borderLeft: isActive ? '3px solid var(--accent-cyan)' : '3px solid transparent',
-                    color: isActive ? '#38bdf8' : 'var(--text-secondary)',
+                    color: isActive ? 'var(--accent-cyan)' : 'var(--text-secondary)',
                     fontSize: '0.8rem',
                     fontWeight: isActive ? 700 : 500,
                     cursor: 'pointer',
@@ -245,6 +251,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
         >
           <div>Zero-Hallucination Core</div>
           <div style={{ color: '#10b981', fontWeight: 600, marginTop: 2 }}>● Engines Synchronized</div>
+          <div style={{ marginTop: 6, fontSize: '0.62rem', color: 'var(--text-muted)' }}>
+            © {new Date().getFullYear()} Fortune Anukposi
+          </div>
         </div>
       )}
     </aside>

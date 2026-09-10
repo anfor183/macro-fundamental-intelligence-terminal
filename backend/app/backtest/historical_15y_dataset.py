@@ -57,6 +57,26 @@ class HistoricalMacroObservation:
     cot_spx_zscore: float = 0.0
     cot_gold_zscore: float = 0.0
     cot_oil_zscore: float = 0.0
+    cot_nzd_zscore: float = 0.0
+    cot_aud_zscore: float = 0.0
+    cot_cad_zscore: float = 0.0
+    cot_chf_zscore: float = 0.0
+    cot_ndx_zscore: float = 0.0
+    cot_silver_zscore: float = 0.0
+    cot_btc_zscore: float = 0.0
+
+    # Additional Central Bank Policy Rates & Asset Prices
+    rbnz_cash_rate: float = 3.00
+    nzdusd_price: float = 0.6500
+    rba_cash_rate: float = 2.50
+    audusd_price: float = 0.7000
+    boc_overnight_rate: float = 2.50
+    usdcad_price: float = 1.3200
+    snb_policy_rate: float = 0.00
+    usdchf_price: float = 0.9200
+    ndx_price: float = 12000.0
+    xagusd_price: float = 24.0
+    btcusd_price: float = 30000.0
 
 
 # The 5 Macro Regimes spanning 2011 to 2026
@@ -151,6 +171,73 @@ def generate_15y_macro_dataset() -> List[HistoricalMacroObservation]:
         (779, "2026-09-04", 4.00, 2.50, 0.50, 4.00, 2.4, 2.1, 4.45, 4.10, 1.1630, 154.2, 1.2940, 5980.0, 2745.0, 71.8, "Current Operating Timeline: Steady economic expansion"),
     ]
 
+    nzd_anchors = [
+        (0, 0.7800, 3.00), (52, 0.8000, 2.50), (104, 0.8300, 2.50), (156, 0.8300, 2.50),
+        (180, 0.8600, 3.25), (208, 0.7700, 3.50), (260, 0.6700, 2.50), (312, 0.7000, 1.75),
+        (416, 0.6700, 1.75), (478, 0.5800, 0.25), (540, 0.7200, 0.25), (612, 0.5600, 3.50),
+        (660, 0.5800, 5.50), (712, 0.6100, 5.25), (750, 0.6000, 4.75), (779, 0.5890, 4.25),
+    ]
+
+    aud_anchors = [
+        (0, 1.0200, 4.75), (52, 1.0300, 4.25), (104, 1.0400, 3.00), (156, 0.8900, 2.50),
+        (208, 0.8100, 2.50), (260, 0.7200, 2.00), (312, 0.7200, 1.50), (416, 0.7050, 1.50),
+        (478, 0.5750, 0.25), (540, 0.7720, 0.10), (612, 0.6250, 2.60), (660, 0.6320, 4.10),
+        (712, 0.6800, 4.35), (750, 0.6720, 4.10), (779, 0.6680, 3.85),
+    ]
+
+    cad_anchors = [
+        (0, 0.9900, 1.00), (52, 1.0200, 1.00), (104, 0.9850, 1.00), (156, 1.0600, 1.00),
+        (208, 1.1600, 1.00), (260, 1.3900, 0.50), (312, 1.3500, 0.50), (416, 1.3600, 1.75),
+        (478, 1.4500, 0.25), (540, 1.2080, 0.25), (612, 1.3850, 3.25), (660, 1.3700, 5.00),
+        (712, 1.3560, 4.25), (750, 1.3650, 3.75), (779, 1.3620, 3.25),
+    ]
+
+    chf_anchors = [
+        (0, 0.9650, 0.25), (52, 0.9500, 0.00), (104, 0.9250, 0.00), (156, 0.9020, 0.00),
+        (208, 0.9880, -0.25), (260, 0.9920, -0.75), (312, 1.0250, -0.75), (416, 0.9900, -0.75),
+        (478, 0.9850, -0.75), (540, 0.8980, -0.75), (612, 1.0050, 0.50), (660, 0.8950, 1.75),
+        (712, 0.8500, 1.25), (750, 0.8650, 1.00), (779, 0.8450, 1.00),
+    ]
+
+    ndx_anchors = [
+        (0, 2270.0), (52, 2350.0), (104, 2730.0), (156, 3590.0),
+        (208, 4290.0), (260, 4580.0), (312, 4920.0), (416, 6330.0),
+        (478, 7000.0), (540, 13690.0), (612, 10700.0), (660, 14600.0),
+        (712, 19800.0), (750, 20200.0), (779, 20850.0),
+    ]
+
+    xag_anchors = [
+        (0, 29.0), (52, 28.7), (104, 30.1), (156, 20.1),
+        (208, 16.1), (260, 14.1), (312, 15.8), (416, 14.7),
+        (478, 12.6), (540, 27.9), (612, 18.2), (660, 23.3),
+        (712, 31.2), (750, 31.8), (779, 32.8),
+    ]
+
+    btc_anchors = [
+        (0, 10.0), (52, 6.0), (104, 13.5), (156, 820.0),
+        (208, 315.0), (260, 460.0), (312, 900.0), (416, 3800.0),
+        (478, 6200.0), (540, 35600.0), (612, 19100.0), (660, 29600.0),
+        (712, 63200.0), (750, 66500.0), (779, 68500.0),
+    ]
+
+    def _get_anchor_val(anchors: List[Tuple[int, float]], week: int) -> float:
+        for idx in range(len(anchors) - 1):
+            w_a, v_a = anchors[idx]
+            w_b, v_b = anchors[idx + 1]
+            if w_a <= week <= w_b:
+                frac = (week - w_a) / float(max(1, w_b - w_a))
+                return _interpolate(v_a, v_b, frac)
+        return anchors[-1][1]
+
+    def _get_anchor_pair(anchors: List[Tuple[int, float, float]], week: int) -> Tuple[float, float]:
+        for idx in range(len(anchors) - 1):
+            w_a, p_a, r_a = anchors[idx]
+            w_b, p_b, r_b = anchors[idx + 1]
+            if w_a <= week <= w_b:
+                frac = (week - w_a) / float(max(1, w_b - w_a))
+                return _interpolate(p_a, p_b, frac), _interpolate(r_a, r_b, frac)
+        return anchors[-1][1], anchors[-1][2]
+
     # Fill in every weekly observation from week 0 to 779 by piecewise linear interpolation
     for i in range(len(milestones) - 1):
         m0 = milestones[i]
@@ -183,6 +270,31 @@ def generate_15y_macro_dataset() -> List[HistoricalMacroObservation]:
             xau_p = _interpolate(xau0, xau1, t) * (1.0 + seed_noise * 2.0)
             cl_p = _interpolate(cl0, cl1, t) * (1.0 + seed_noise * 3.0)
 
+            nzd_base_p, rbnz_r = _get_anchor_pair(nzd_anchors, w)
+            nzd_p = nzd_base_p * (1.0 + seed_noise * 1.2)
+            cot_nzd_z = round(max(-3.0, min(3.0, (nzd_p - 0.68) * 12.0 + math.sin(w * 0.09) * 0.5)), 2)
+
+            aud_base_p, rba_r = _get_anchor_pair(aud_anchors, w)
+            aud_p = aud_base_p * (1.0 + seed_noise * 1.2)
+            cot_aud_z = round(max(-3.0, min(3.0, (aud_p - 0.72) * 10.0 + math.sin(w * 0.08) * 0.5)), 2)
+
+            cad_base_p, boc_r = _get_anchor_pair(cad_anchors, w)
+            cad_p = cad_base_p * (1.0 + seed_noise * 1.1)
+            cot_cad_z = round(max(-3.0, min(3.0, (1.30 - cad_p) * 10.0 + math.sin(w * 0.07) * 0.5)), 2)
+
+            chf_base_p, snb_r = _get_anchor_pair(chf_anchors, w)
+            chf_p = chf_base_p * (1.0 + seed_noise * 1.0)
+            cot_chf_z = round(max(-3.0, min(3.0, (0.95 - chf_p) * 10.0 + math.sin(w * 0.09) * 0.5)), 2)
+
+            ndx_p = _get_anchor_val(ndx_anchors, w) * (1.0 + price_noise_equity * 1.2)
+            cot_ndx_z = round(max(-3.0, min(3.0, math.sin(w * 0.05 + 0.5) * 1.2 + 0.3)), 2)
+
+            xag_p = _get_anchor_val(xag_anchors, w) * (1.0 + seed_noise * 2.2)
+            cot_silver_z = round(max(-3.0, min(3.0, (xag_p - 22.0) * 0.15 + math.sin(w * 0.06) * 0.6)), 2)
+
+            btc_p = _get_anchor_val(btc_anchors, w) * (1.0 + seed_noise * 3.5)
+            cot_btc_z = round(max(-3.0, min(3.0, math.sin(w * 0.04) * 1.4 + 0.2)), 2)
+
             obs = HistoricalMacroObservation(
                 week_index=w,
                 observation_date=obs_date,
@@ -213,6 +325,24 @@ def generate_15y_macro_dataset() -> List[HistoricalMacroObservation]:
                 cot_spx_zscore=round(max(-3.0, min(3.0, math.sin(w * 0.05) * 1.2 + 0.4)), 2),
                 cot_gold_zscore=round(max(-3.0, min(3.0, math.sin(w * 0.06) * 1.4 + 0.5)), 2),
                 cot_oil_zscore=round(max(-3.0, min(3.0, (cl_p - 70.0) * 0.04 + math.sin(w * 0.08) * 0.6)), 2),
+                cot_nzd_zscore=cot_nzd_z,
+                rbnz_cash_rate=round(rbnz_r, 2),
+                nzdusd_price=round(nzd_p, 4),
+                cot_aud_zscore=cot_aud_z,
+                cot_cad_zscore=cot_cad_z,
+                cot_chf_zscore=cot_chf_z,
+                cot_ndx_zscore=cot_ndx_z,
+                cot_silver_zscore=cot_silver_z,
+                cot_btc_zscore=cot_btc_z,
+                rba_cash_rate=round(rba_r, 2),
+                audusd_price=round(aud_p, 4),
+                boc_overnight_rate=round(boc_r, 2),
+                usdcad_price=round(cad_p, 4),
+                snb_policy_rate=round(snb_r, 2),
+                usdchf_price=round(chf_p, 4),
+                ndx_price=round(ndx_p, 2),
+                xagusd_price=round(xag_p, 2),
+                btcusd_price=round(btc_p, 2),
             )
             observations.append(obs)
 
@@ -249,6 +379,24 @@ def generate_15y_macro_dataset() -> List[HistoricalMacroObservation]:
         cot_spx_zscore=0.9,
         cot_gold_zscore=1.1,
         cot_oil_zscore=0.1,
+        cot_nzd_zscore=0.27,
+        rbnz_cash_rate=4.25,
+        nzdusd_price=0.5890,
+        cot_aud_zscore=-0.2,
+        cot_cad_zscore=-0.4,
+        cot_chf_zscore=0.3,
+        cot_ndx_zscore=0.8,
+        cot_silver_zscore=0.9,
+        cot_btc_zscore=0.5,
+        rba_cash_rate=3.85,
+        audusd_price=0.6680,
+        boc_overnight_rate=3.25,
+        usdcad_price=1.3620,
+        snb_policy_rate=1.00,
+        usdchf_price=0.8450,
+        ndx_price=20850.0,
+        xagusd_price=32.8,
+        btcusd_price=68500.0,
     ))
 
     return observations

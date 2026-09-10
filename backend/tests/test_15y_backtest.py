@@ -106,6 +106,52 @@ class Test15YearBacktestEngine:
         assert r1.total_signals == 779
         assert r12.total_signals == 768
 
+    def test_nzdusd_15y_backtest(self):
+        report = Historical15YearValidator.run_15y_validation("NZDUSD", horizon_weeks=4)
+        assert report.asset_symbol == "NZDUSD"
+        assert report.total_signals == 776
+        assert report.overall_hit_rate_pct > 50.0
+        assert len(report.regime_breakdowns) == 5
+
+    def test_btcusd_15y_backtest(self):
+        report = Historical15YearValidator.run_15y_validation("BTCUSD", horizon_weeks=4)
+        assert report.asset_symbol == "BTCUSD"
+        assert report.total_signals == 776
+        assert report.overall_hit_rate_pct > 50.0
+        assert len(report.regime_breakdowns) == 5
+
+    def test_ndx_15y_backtest(self):
+        report = Historical15YearValidator.run_15y_validation("NDX", horizon_weeks=4)
+        assert report.asset_symbol == "NDX"
+        assert report.total_signals == 776
+        assert report.overall_hit_rate_pct > 50.0
+        assert len(report.regime_breakdowns) == 5
+
+    def test_xagusd_15y_backtest(self):
+        report = Historical15YearValidator.run_15y_validation("XAGUSD", horizon_weeks=4)
+        assert report.asset_symbol == "XAGUSD"
+        assert report.total_signals == 776
+        assert report.overall_hit_rate_pct > 50.0
+        assert len(report.regime_breakdowns) == 5
+
+    def test_audusd_15y_backtest(self):
+        report = Historical15YearValidator.run_15y_validation("AUDUSD", horizon_weeks=4)
+        assert report.asset_symbol == "AUDUSD"
+        assert report.total_signals == 776
+        assert report.overall_hit_rate_pct > 50.0
+
+    def test_usdcad_15y_backtest(self):
+        report = Historical15YearValidator.run_15y_validation("USDCAD", horizon_weeks=4)
+        assert report.asset_symbol == "USDCAD"
+        assert report.total_signals == 776
+        assert report.overall_hit_rate_pct > 50.0
+
+    def test_usdchf_15y_backtest(self):
+        report = Historical15YearValidator.run_15y_validation("USDCHF", horizon_weeks=4)
+        assert report.asset_symbol == "USDCHF"
+        assert report.total_signals == 776
+        assert report.overall_hit_rate_pct > 50.0
+
     def test_report_serialization(self):
         report = Historical15YearValidator.run_15y_validation("USDJPY", horizon_weeks=4)
         d = report_15y_to_dict(report)
@@ -114,3 +160,4 @@ class Test15YearBacktestEngine:
         assert "regime_breakdowns" in d
         assert "equity_curve" in d
         assert "milestone_case_studies" in d
+

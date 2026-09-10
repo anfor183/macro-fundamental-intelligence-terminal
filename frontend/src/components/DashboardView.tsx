@@ -115,9 +115,9 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                   borderRadius: 4,
                   background:
                     regime.risk_sentiment === 'RISK_ON'
-                      ? 'rgba(16, 185, 129, 0.15)'
-                      : 'rgba(245, 158, 11, 0.15)',
-                  color: regime.risk_sentiment === 'RISK_ON' ? '#34d399' : '#f59e0b',
+                      ? 'var(--color-bullish-bg)'
+                      : 'var(--accent-gold-bg)',
+                  color: regime.risk_sentiment === 'RISK_ON' ? 'var(--color-bullish)' : 'var(--accent-gold)',
                 }}
               >
                 {regime.risk_sentiment}
@@ -347,7 +347,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                       style={{
                         fontSize: '0.9rem',
                         fontWeight: 800,
-                        color: isBull ? '#10b981' : '#ef4444',
+                        color: isBull ? 'var(--color-bullish)' : 'var(--color-bearish)',
                       }}
                     >
                       {curr.score > 0 ? `+${curr.score}` : curr.score}
@@ -356,7 +356,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                       style={{
                         fontSize: '0.65rem',
                         fontWeight: 700,
-                        color: curr.weeklyChange >= 0 ? '#34d399' : '#f87171',
+                        color: curr.weeklyChange >= 0 ? 'var(--color-bullish)' : 'var(--color-bearish)',
                       }}
                     >
                       {curr.weeklyChange >= 0 ? `↑ +${curr.weeklyChange}` : `↓ ${curr.weeklyChange}`}
@@ -399,6 +399,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             { id: 'index', label: 'Equity Indices' },
             { id: 'metal', label: 'Precious Metals' },
             { id: 'commodity', label: 'Energy & Commodities' },
+            { id: 'crypto', label: 'Crypto (BTC & ETH)' },
           ].map((tab) => (
             <button
               key={tab.id}

@@ -11,7 +11,7 @@ export interface AssetItem {
   id: number;
   symbol: string;
   name: string;
-  asset_class: 'forex' | 'index' | 'metal' | 'commodity';
+  asset_class: 'forex' | 'index' | 'metal' | 'commodity' | 'crypto';
   base_currency?: string;
   quote_currency?: string;
   current_price: number;
@@ -54,7 +54,7 @@ export interface ScenarioItem {
 export interface AssetDetail {
   symbol: string;
   name: string;
-  asset_class: 'forex' | 'index' | 'metal' | 'commodity';
+  asset_class: 'forex' | 'index' | 'metal' | 'commodity' | 'crypto';
   base_currency?: string;
   quote_currency?: string;
   current_price: number;
@@ -537,6 +537,273 @@ export interface TraderConfluenceCard {
   pillars: ConfluencePillar[];
   checklist: ConfluenceChecklistItem[];
   disclaimer: string;
+  ml_prediction?: {
+    predicted_bias: string;
+    ml_conviction_score: number;
+    probability_distribution: { BULLISH: number; NEUTRAL: number; BEARISH: number };
+    feature_importances: Array<{ feature: string; label: string; importance_weight: number; current_value: number; directional_impact: string }>;
+    model_version: string;
+    regime_alignment: string;
+  };
+  dynamic_weights?: Record<string, number>;
 }
 
 
+// ── AI & ML Intelligence Hub Types ──────────────────────────────────────────
+
+export interface MLFeatureImportance {
+  feature: string;
+  label: string;
+  importance_weight: number;
+  current_value: number;
+  directional_impact: string;
+}
+
+export interface MLPredictionResponse {
+  symbol: string;
+  predicted_bias: string;
+  ml_conviction_score: number;
+  probability_distribution: { BULLISH: number; NEUTRAL: number; BEARISH: number };
+  feature_importances: MLFeatureImportance[];
+  dynamic_weights: Record<string, number>;
+  regime_alignment: string;
+  model_version: string;
+}
+
+export interface MLModelStatus {
+  model_architecture: string;
+  is_trained: boolean;
+  validation_accuracy: number;
+  f1_macro_score: number;
+  features_monitored: number;
+  feature_names: string[];
+  top_features_by_importance: Array<{ feature: string; weight: number }>;
+  regime_adaptive_weighting: string;
+  inference_latency_ms: string;
+}
+
+export interface DynamicWeightsResponse {
+  asset_class: string;
+  regime: string;
+  static_weights: Record<string, number>;
+  dynamic_weights: Record<string, number>;
+  adaptation_status: string;
+}
+
+export interface RAGCitation {
+  id: string;
+  title: string;
+  institution: string;
+  date: string;
+  relevance_score: number;
+  takeaway: string;
+}
+
+export interface CopilotResponse {
+  query: string;
+  response: string;
+  provider: string;
+  citations: RAGCitation[];
+  timestamp: string;
+}
+
+export interface RAGSearchResultItem {
+  id: string;
+  title: string;
+  institution: string;
+  date: string;
+  category: string;
+  content: string;
+  key_takeaway: string;
+  historical_asset_reaction: string;
+  relevance_score: number;
+  snippet: string;
+}
+
+export interface RAGSearchResponse {
+  query: string;
+  count: number;
+  results: RAGSearchResultItem[];
+}
+
+export interface NLPSentimentAnalysis {
+  sentiment_score: number;
+  hawkish_dovish_score: number;
+  growth_sentiment: number;
+  inflation_pressure: number;
+  direction: string;
+  statement_type: string;
+  confidence: number;
+  detected_currencies: string[];
+  key_signals: string[];
+}
+
+
+// ── Regime Signal Scanner Types ───────────────────────────────────────────────
+
+export interface RegimeSignalRegimeBreakdown {
+  regime_id: string;
+  regime_name: string;
+  total: number;
+  hit_rate_pct: number;
+  avg_return: number;
+}
+
+export interface RegimeSignal {
+  signal_id: string;
+  symbol: string;
+  asset_name: string;
+  signal_type: 'REVERSAL' | 'CONTINUATION';
+  direction: 'BULLISH' | 'BEARISH';
+  strength: 'MAJOR' | 'MODERATE' | 'MINOR';
+  macro_score_now: number;
+  macro_score_4w_ago: number;
+  score_delta: number;
+  cot_zscore: number;
+  cot_zscore_momentum: number;
+  crowding_index: number;
+  pillars_aligned: number;
+  confluence_pct: number;
+  entry_context: string;
+  invalidation_context: string;
+  current_price: number;
+  signal_date: string;
+  backtest_hit_rate: number;
+  backtest_sample_size: number;
+  backtest_avg_gain_pct: number;
+  backtest_sharpe: number;
+  regime_breakdown: RegimeSignalRegimeBreakdown[];
+}
+
+export interface RegimeSignalsResponse {
+  count: number;
+  signals: RegimeSignal[];
+  generated_at: string;
+}
+
+export interface ScoreHistoryPoint {
+  date: string;
+  score: number;
+  bias: string;
+  cot_zscore: number;
+}
+
+export interface RegimeSignalAssetResponse {
+  symbol: string;
+  asset_name: string;
+  current_price: number;
+  signals: RegimeSignal[];
+  score_history: ScoreHistoryPoint[];
+  generated_at: string;
+}
+
+export interface RegimeBacktestTimeline {
+  date: string;
+  direction: string;
+  strength: string;
+  forward_return_pct: number;
+  is_correct: boolean;
+  confluence_pct: number;
+  entry_price?: number;
+  exit_price?: number;
+  outcome?: 'WIN' | 'LOSS';
+  macro_score?: number;
+  cot_zscore?: number;
+  regime_name?: string;
+}
+
+export interface RegimeSignalBacktest {
+  symbol: string;
+  signal_type: string;
+  total_signals_found: number;
+  hit_rate_pct: number;
+  avg_gain_pct: number;
+  avg_loss_pct: number;
+  win_loss_ratio: number;
+  sharpe_equivalent: number;
+  max_consecutive_wins: number;
+  max_consecutive_losses: number;
+  best_regime: string;
+  worst_regime: string;
+  regime_breakdown: RegimeSignalRegimeBreakdown[];
+  timeline: RegimeBacktestTimeline[];
+  evaluation_period: string;
+}
+
+export interface ForwardTestEntry {
+  signal_id: string;
+  symbol: string;
+  asset_name: string;
+  signal_type: string;
+  direction: string;
+  strength: string;
+  issue_date: string;
+  issue_price: number;
+  horizon_days: number;
+  target_date: string;
+  current_price: number;
+  realized_return_pct: number;
+  is_resolved: boolean;
+  outcome: 'WIN' | 'LOSS' | 'DRAW' | 'PENDING';
+  confluence_pct: number;
+  backtest_hit_rate: number;
+}
+
+export interface ForwardTestStats {
+  total_logged: number;
+  total_resolved: number;
+  total_pending: number;
+  rolling_accuracy_pct: number;
+  wins: number;
+  losses: number;
+  draws: number;
+  avg_win_pct: number;
+  avg_loss_pct: number;
+  forward_sharpe: number;
+  by_signal_type: Record<string, { total: number; wins: number; accuracy_pct: number }>;
+  by_strength: Record<string, { total: number; wins: number; accuracy_pct: number }>;
+}
+
+export interface ForwardTestLogResponse {
+  stats: ForwardTestStats;
+  entries: ForwardTestEntry[];
+  generated_at: string;
+}
+
+export interface HistoricalPastSignal {
+  signal_id: string;
+  date: string;
+  symbol: string;
+  asset_name: string;
+  signal_type: 'REVERSAL' | 'CONTINUATION';
+  direction: 'BULLISH' | 'BEARISH';
+  strength: 'MAJOR' | 'MODERATE' | 'MINOR';
+  outcome: 'WIN' | 'LOSS';
+  entry_price: number;
+  exit_price: number;
+  forward_return_pct: number;
+  macro_score: number;
+  cot_zscore: number;
+  confluence_pct: number;
+  regime_name: string;
+  horizon_weeks: number;
+}
+
+export interface HistoricalSignalsResponse {
+  total_signals: number;
+  total_wins: number;
+  total_losses: number;
+  hit_rate_pct: number;
+  win_loss_ratio: number;
+  avg_win_pct: number;
+  avg_loss_pct: number;
+  signals: HistoricalPastSignal[];
+  filters_applied: {
+    symbol?: string;
+    signal_type?: string;
+    outcome?: string;
+    horizon_weeks?: number;
+    limit?: number;
+  };
+  generated_at: string;
+}

@@ -48,7 +48,7 @@ class ReportExporter:
         elements = []
         now_str = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
 
-        elements.append(Paragraph(f"GLOBAL MACRO FUNDAMENTAL INTELLIGENCE TERMINAL", title_style))
+        elements.append(Paragraph(f"FORTUNE ANUKPOSI QUANTITATIVE MACRO TERMINAL", title_style))
         elements.append(Paragraph(f"REPORT: {report_type.upper()} | GENERATED: {now_str} | CLASSIFICATION: INSTITUTIONAL RESEARCH", subtitle_style))
         elements.append(Spacer(1, 10))
 
@@ -86,13 +86,14 @@ class ReportExporter:
             elements.append(t)
             elements.append(Spacer(1, 20))
 
-        # Disclaimer
-        disclaimer = (
-            "<b>Institutional Compliance Notice:</b> Fundamental bias is an analytical output derived from "
-            "deterministic macroeconomic factor scoring and verified data sources. It is not a guarantee of future market "
-            "direction or financial advice."
+        # Copyright & Disclaimer
+        copyright_text = (
+            f"<b>© {datetime.now(timezone.utc).year} Fortune Anukposi. All rights reserved.</b> "
+            "Fortune Anukposi Quantitative Macro Fundamental Intelligence Terminal. "
+            "Fundamental bias is an analytical output derived from quantitative macroeconomic factor scoring. "
+            "Strictly for institutional research."
         )
-        elements.append(Paragraph(disclaimer, subtitle_style))
+        elements.append(Paragraph(copyright_text, subtitle_style))
 
         doc.build(elements)
         buffer.seek(0)

@@ -6,7 +6,9 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    PROJECT_NAME: str = "Automated Macro Fundamental Intelligence Platform"
+    PROJECT_NAME: str = "Fortune Anukposi Automated Macro Fundamental Intelligence Platform"
+    AUTHOR: str = "Fortune Anukposi"
+    COPYRIGHT: str = "© 2026 Fortune Anukposi. All rights reserved."
     VERSION: str = "1.0.0"
     API_V1_STR: str = "/api/v1"
     

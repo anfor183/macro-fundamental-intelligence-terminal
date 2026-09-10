@@ -76,7 +76,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
       id: 'asset-eurusd',
       label: 'Open EURUSD Macro Deep-Dive',
       category: 'Assets',
-      icon: <TrendingUp size={16} color="#34d399" />,
+      icon: <TrendingUp size={16} color="var(--color-bullish)" />,
       hint: 'Forex Major • +42.0 Bullish',
       action: () => { onSelectAsset('EURUSD'); onClose(); },
     },
@@ -84,7 +84,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
       id: 'asset-xauusd',
       label: 'Open Gold (XAUUSD) Terminal',
       category: 'Assets',
-      icon: <Sparkles size={16} color="#fbbf24" />,
+      icon: <Sparkles size={16} color="var(--accent-gold)" />,
       hint: 'Precious Metals • +64.0 Strong Bullish',
       action: () => { onSelectAsset('XAUUSD'); onClose(); },
     },
@@ -92,7 +92,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
       id: 'asset-cl',
       label: 'Open WTI Crude Oil (CL) Terminal',
       category: 'Assets',
-      icon: <Droplet size={16} color="#f87171" />,
+      icon: <Droplet size={16} color="var(--color-bearish)" />,
       hint: 'Commodities • -24.0 Mild Bearish',
       action: () => { onSelectAsset('CL'); onClose(); },
     },
@@ -100,7 +100,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
       id: 'asset-spx',
       label: 'Open S&P 500 (SPX) Index Terminal',
       category: 'Assets',
-      icon: <TrendingUp size={16} color="#38bdf8" />,
+      icon: <TrendingUp size={16} color="var(--accent-cyan)" />,
       hint: 'Equity Indices • +46.0 Bullish',
       action: () => { onSelectAsset('SPX'); onClose(); },
     },
@@ -108,7 +108,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
       id: 'asset-usdjpy',
       label: 'Open USDJPY Macro Breakdown',
       category: 'Assets',
-      icon: <TrendingUp size={16} color="#94a3b8" />,
+      icon: <TrendingUp size={16} color="var(--text-muted)" />,
       hint: 'Forex Major • -37.0 Mild Bearish',
       action: () => { onSelectAsset('USDJPY'); onClose(); },
     },
@@ -255,7 +255,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
         left: 0,
         right: 0,
         bottom: 0,
-        backgroundColor: 'rgba(5, 8, 15, 0.78)',
+        backgroundColor: 'rgba(15, 23, 42, 0.65)',
         backdropFilter: 'blur(10px)',
         display: 'flex',
         alignItems: 'flex-start',
@@ -269,7 +269,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
         style={{
           width: '100%',
           maxWidth: 620,
-          background: 'var(--bg-surface-1)',
+          background: 'var(--surface-elevated)',
           border: '1px solid var(--border-active)',
           borderRadius: 12,
           boxShadow: 'var(--shadow-lg)',
@@ -288,7 +288,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
           gap: 12,
           padding: '14px 18px',
           borderBottom: '1px solid var(--border-subtle)',
-          background: 'var(--bg-surface-2)',
+          background: 'var(--surface-2)',
         }}>
           <Search size={18} color="var(--text-muted)" />
           <input
@@ -313,7 +313,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
           <div style={{
             fontSize: '0.65rem',
             fontFamily: 'var(--font-mono)',
-            background: 'var(--border-subtle)',
+            background: 'var(--surface-3)',
             color: 'var(--text-muted)',
             padding: '3px 6px',
             borderRadius: 4,
@@ -324,7 +324,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
         </div>
 
         {/* Results List */}
-        <div style={{ maxHeight: 360, overflowY: 'auto', padding: '8px' }}>
+        <div style={{ maxHeight: 360, overflowY: 'auto', padding: '8px', background: 'var(--surface-elevated)' }}>
           {filtered.length === 0 ? (
             <div style={{ padding: '32px 16px', textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.84rem' }}>
               No terminal commands matching <strong style={{ color: 'var(--text-primary)' }}>"{query}"</strong>
@@ -354,7 +354,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
                       width: 28,
                       height: 28,
                       borderRadius: 6,
-                      background: 'var(--bg-surface-3)',
+                      background: 'var(--surface-3)',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
@@ -364,13 +364,13 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
                     <div>
                       <div style={{
                         fontSize: '0.84rem',
-                        fontWeight: isSelected ? 700 : 500,
-                        color: isSelected ? 'var(--text-primary)' : 'var(--text-secondary)',
+                        fontWeight: isSelected ? 800 : 600,
+                        color: isSelected ? 'var(--text-primary)' : 'var(--text-primary)',
                       }}>
                         {item.label}
                       </div>
                       {item.hint && (
-                        <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>
+                        <div style={{ fontSize: '0.72rem', color: isSelected ? 'var(--text-secondary)' : 'var(--text-muted)', marginTop: 2 }}>
                           {item.hint}
                         </div>
                       )}
@@ -381,15 +381,16 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
                     <span style={{
                       fontSize: '0.65rem',
                       fontFamily: 'var(--font-mono)',
-                      color: 'var(--text-dim)',
+                      color: 'var(--text-secondary)',
                       textTransform: 'uppercase',
                       padding: '2px 6px',
                       borderRadius: 4,
-                      background: 'var(--border-subtle)',
+                      background: 'var(--surface-3)',
+                      fontWeight: 700,
                     }}>
                       {item.category}
                     </span>
-                    <ChevronRight size={14} color={isSelected ? 'var(--accent-cyan)' : 'var(--border-subtle)'} />
+                    <ChevronRight size={14} color={isSelected ? 'var(--accent-cyan)' : 'var(--text-muted)'} />
                   </div>
                 </div>
               );
@@ -401,12 +402,12 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
         <div style={{
           padding: '8px 16px',
           borderTop: '1px solid var(--border-subtle)',
-          background: 'var(--bg-void)',
+          background: 'var(--surface-2)',
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
           fontSize: '0.68rem',
-          color: 'var(--text-muted)',
+          color: 'var(--text-secondary)',
           fontFamily: 'var(--font-mono)',
         }}>
           <div style={{ display: 'flex', gap: 14 }}>
@@ -414,7 +415,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
             <span>↵ Select</span>
             <span>ESC Close</span>
           </div>
-          <div>ANTIGRAVITY COMMAND PALETTE</div>
+          <div style={{ fontWeight: 700, letterSpacing: '0.04em' }}>FORTUNE ANUKPOSI COMMAND PALETTE</div>
         </div>
       </div>
     </div>

@@ -31,128 +31,131 @@ async def seed_database():
 
     async with AsyncSessionLocal() as session:
         # Check if assets are already seeded
-        result = await session.execute(select(Asset).limit(1))
-        if result.scalars().first():
-            logger.info("Database already seeded. Skipping initial seeding.")
+        result = await session.execute(select(Asset.symbol))
+        existing_symbols = set(result.scalars().all())
+        missing_assets = [a for a in SUPPORTED_ASSETS if a["symbol"] not in existing_symbols]
+
+        if not missing_assets and existing_symbols:
+            logger.info("Database already seeded and up-to-date. Skipping initial seeding.")
             return
 
-        logger.info("Seeding Central Banks...")
-        cb_map = {}
-        for cb_data in SUPPORTED_CENTRAL_BANKS:
-            cb = CentralBank(
-                code=cb_data["code"],
-                name=cb_data["name"],
-                country=cb_data["country"],
-                currency=cb_data["currency"],
-                current_rate=cb_data["current_rate"],
-                previous_rate=cb_data["previous_rate"],
-                expected_next_rate=cb_data["expected_next_rate"],
-                guidance_stance=cb_data["guidance_stance"],
-                balance_sheet_policy=cb_data["balance_sheet_policy"],
-                next_meeting_date=utc_now() + timedelta(days=14),
-                last_statement_summary=cb_data["last_statement_summary"],
-            )
-            session.add(cb)
-            cb_map[cb_data["code"]] = cb
-
-        await session.flush()
-
-        logger.info("Seeding Currencies...")
-        curr_map = {}
-        # Base fundamental currency scores
         curr_scores = {
             "USD": 18.0, "EUR": 42.0, "GBP": 25.0, "JPY": 55.0,
             "CHF": 10.0, "CAD": -15.0, "AUD": 28.0, "NZD": -20.0,
             "CNY": -5.0, "SEK": 12.0, "NOK": 5.0
         }
-        for curr_data in SUPPORTED_CURRENCIES:
-            cb = cb_map.get(curr_data["cb_code"])
-            c_score = curr_scores.get(curr_data["code"], 0.0)
-            curr = Currency(
-                code=curr_data["code"],
-                name=curr_data["name"],
-                central_bank_id=cb.id if cb else None,
-                current_score=c_score,
-                weekly_score=c_score - 2.0,
-                policy_direction="Tightening" if c_score > 30 else ("Easing" if c_score < -10 else "Paused"),
-                growth_direction="Accelerating" if c_score > 20 else ("Slowing" if c_score < 0 else "Stable"),
-            )
-            session.add(curr)
-            curr_map[curr_data["code"]] = curr
 
-        await session.flush()
-
-        logger.info("Seeding Sources...")
-        for src_data in DEFAULT_SOURCES:
-            src = NewsSource(
-                name=src_data["name"],
-                domain=src_data["domain"],
-                tier=src_data["tier"],
-                reliability_score=src_data["reliability_score"],
-                source_type=src_data["source_type"],
-                feed_url=src_data["feed_url"],
-                is_active=True,
-                last_fetch_time=utc_now() - timedelta(minutes=15),
-            )
-            session.add(src)
-
-        logger.info("Seeding Economic Indicators...")
-        indicators_data = [
-            {"code": "US_CPI_YOY", "name": "US Headline CPI YoY", "country": "United States", "currency": "USD", "category": "inflation", "importance": "Critical", "unit": "%", "std": 0.25},
-            {"code": "US_CORE_CPI_MOM", "name": "US Core CPI MoM", "country": "United States", "currency": "USD", "category": "inflation", "importance": "Critical", "unit": "%", "std": 0.15},
-            {"code": "US_NFP", "name": "US Nonfarm Payrolls", "country": "United States", "currency": "USD", "category": "labor", "importance": "Critical", "unit": "K", "std": 45.0},
-            {"code": "US_UNEMP_RATE", "name": "US Unemployment Rate", "country": "United States", "currency": "USD", "category": "labor", "importance": "High", "unit": "%", "std": 0.2},
-            {"code": "US_ISM_MFG", "name": "US ISM Manufacturing PMI", "country": "United States", "currency": "USD", "category": "growth", "importance": "High", "unit": "Index", "std": 1.5},
-            {"code": "EZ_CPI_YOY", "name": "Eurozone Flash HICP YoY", "country": "Eurozone", "currency": "EUR", "category": "inflation", "importance": "Critical", "unit": "%", "std": 0.2},
-            {"code": "EZ_PMI_COMP", "name": "Eurozone Composite PMI", "country": "Eurozone", "currency": "EUR", "category": "growth", "importance": "High", "unit": "Index", "std": 1.2},
-            {"code": "UK_CPI_YOY", "name": "UK Headline CPI YoY", "country": "United Kingdom", "currency": "GBP", "category": "inflation", "importance": "Critical", "unit": "%", "std": 0.3},
-            {"code": "JP_CPI_CORE_YOY", "name": "Japan Core CPI (ex-fresh food) YoY", "country": "Japan", "currency": "JPY", "category": "inflation", "importance": "High", "unit": "%", "std": 0.2},
-            {"code": "EIA_CRUDE_STOCKS", "name": "US EIA Weekly Crude Inventories", "country": "United States", "currency": "USD", "category": "commodities", "importance": "High", "unit": "M bbl", "std": 2.5},
-        ]
-        ind_map = {}
-        for ind in indicators_data:
-            ei = EconomicIndicator(
-                code=ind["code"],
-                name=ind["name"],
-                country=ind["country"],
-                currency=ind["currency"],
-                category=ind["category"],
-                importance=ind["importance"],
-                unit=ind["unit"],
-                historical_std_dev=ind["std"],
-            )
-            session.add(ei)
-            ind_map[ind["code"]] = ei
-
-        await session.flush()
-
-        logger.info("Seeding baseline Economic Releases...")
-        releases_data = [
-            {"ind": "US_CPI_YOY", "period": "Latest", "actual": 2.9, "consensus": 3.1, "prev": 3.2, "surprise": -0.2, "pol": "Dovish", "dt": utc_now() - timedelta(days=2)},
-            {"ind": "US_NFP", "period": "Latest", "actual": 142.0, "consensus": 165.0, "prev": 114.0, "surprise": -23.0, "pol": "Dovish", "dt": utc_now() - timedelta(days=5)},
-            {"ind": "EZ_CPI_YOY", "period": "Latest", "actual": 2.2, "consensus": 2.2, "prev": 2.6, "surprise": 0.0, "pol": "Neutral", "dt": utc_now() - timedelta(days=4)},
-            {"ind": "JP_CPI_CORE_YOY", "period": "Latest", "actual": 2.8, "consensus": 2.5, "prev": 2.5, "surprise": 0.3, "pol": "Hawkish", "dt": utc_now() - timedelta(days=3)},
-            {"ind": "EIA_CRUDE_STOCKS", "period": "Latest", "actual": -3.2, "consensus": -1.0, "prev": 1.4, "surprise": -2.2, "pol": "Bullish Commodity", "dt": utc_now() - timedelta(days=1)},
-        ]
-        for rel in releases_data:
-            ei = ind_map.get(rel["ind"])
-            if ei:
-                er = EconomicRelease(
-                    indicator_id=ei.id,
-                    event_time=rel["dt"],
-                    period=rel["period"],
-                    actual=rel["actual"],
-                    consensus=rel["consensus"],
-                    previous=rel["prev"],
-                    surprise=rel["surprise"],
-                    surprise_zscore=rel["surprise"] / ei.historical_std_dev,
-                    policy_implication=rel["pol"],
-                    source_url="https://www.bls.gov/cpi",
+        if not existing_symbols:
+            logger.info("Seeding Central Banks...")
+            cb_map = {}
+            for cb_data in SUPPORTED_CENTRAL_BANKS:
+                cb = CentralBank(
+                    code=cb_data["code"],
+                    name=cb_data["name"],
+                    country=cb_data["country"],
+                    currency=cb_data["currency"],
+                    current_rate=cb_data["current_rate"],
+                    previous_rate=cb_data["previous_rate"],
+                    expected_next_rate=cb_data["expected_next_rate"],
+                    guidance_stance=cb_data["guidance_stance"],
+                    balance_sheet_policy=cb_data["balance_sheet_policy"],
+                    next_meeting_date=utc_now() + timedelta(days=14),
+                    last_statement_summary=cb_data["last_statement_summary"],
                 )
-                session.add(er)
+                session.add(cb)
+                cb_map[cb_data["code"]] = cb
 
-        logger.info("Seeding Assets and Baseline Macro Scores...")
-        for a_data in SUPPORTED_ASSETS:
+            await session.flush()
+
+            logger.info("Seeding Currencies...")
+            curr_map = {}
+            for curr_data in SUPPORTED_CURRENCIES:
+                cb = cb_map.get(curr_data["cb_code"])
+                c_score = curr_scores.get(curr_data["code"], 0.0)
+                curr = Currency(
+                    code=curr_data["code"],
+                    name=curr_data["name"],
+                    central_bank_id=cb.id if cb else None,
+                    current_score=c_score,
+                    weekly_score=c_score - 2.0,
+                    policy_direction="Tightening" if c_score > 30 else ("Easing" if c_score < -10 else "Paused"),
+                    growth_direction="Accelerating" if c_score > 20 else ("Slowing" if c_score < 0 else "Stable"),
+                )
+                session.add(curr)
+                curr_map[curr_data["code"]] = curr
+
+            await session.flush()
+
+            logger.info("Seeding Sources...")
+            for src_data in DEFAULT_SOURCES:
+                src = NewsSource(
+                    name=src_data["name"],
+                    domain=src_data["domain"],
+                    tier=src_data["tier"],
+                    reliability_score=src_data["reliability_score"],
+                    source_type=src_data["source_type"],
+                    feed_url=src_data["feed_url"],
+                    is_active=True,
+                    last_fetch_time=utc_now() - timedelta(minutes=15),
+                )
+                session.add(src)
+
+            logger.info("Seeding Economic Indicators...")
+            indicators_data = [
+                {"code": "US_CPI_YOY", "name": "US Headline CPI YoY", "country": "United States", "currency": "USD", "category": "inflation", "importance": "Critical", "unit": "%", "std": 0.25},
+                {"code": "US_CORE_CPI_MOM", "name": "US Core CPI MoM", "country": "United States", "currency": "USD", "category": "inflation", "importance": "Critical", "unit": "%", "std": 0.15},
+                {"code": "US_NFP", "name": "US Nonfarm Payrolls", "country": "United States", "currency": "USD", "category": "labor", "importance": "Critical", "unit": "K", "std": 45.0},
+                {"code": "US_UNEMP_RATE", "name": "US Unemployment Rate", "country": "United States", "currency": "USD", "category": "labor", "importance": "High", "unit": "%", "std": 0.2},
+                {"code": "US_ISM_MFG", "name": "US ISM Manufacturing PMI", "country": "United States", "currency": "USD", "category": "growth", "importance": "High", "unit": "Index", "std": 1.5},
+                {"code": "EZ_CPI_YOY", "name": "Eurozone Flash HICP YoY", "country": "Eurozone", "currency": "EUR", "category": "inflation", "importance": "Critical", "unit": "%", "std": 0.2},
+                {"code": "EZ_PMI_COMP", "name": "Eurozone Composite PMI", "country": "Eurozone", "currency": "EUR", "category": "growth", "importance": "High", "unit": "Index", "std": 1.2},
+                {"code": "UK_CPI_YOY", "name": "UK Headline CPI YoY", "country": "United Kingdom", "currency": "GBP", "category": "inflation", "importance": "Critical", "unit": "%", "std": 0.3},
+                {"code": "JP_CPI_CORE_YOY", "name": "Japan Core CPI (ex-fresh food) YoY", "country": "Japan", "currency": "JPY", "category": "inflation", "importance": "High", "unit": "%", "std": 0.2},
+                {"code": "EIA_CRUDE_STOCKS", "name": "US EIA Weekly Crude Inventories", "country": "United States", "currency": "USD", "category": "commodities", "importance": "High", "unit": "M bbl", "std": 2.5},
+            ]
+            ind_map = {}
+            for ind in indicators_data:
+                ei = EconomicIndicator(
+                    code=ind["code"],
+                    name=ind["name"],
+                    country=ind["country"],
+                    currency=ind["currency"],
+                    category=ind["category"],
+                    importance=ind["importance"],
+                    unit=ind["unit"],
+                    historical_std_dev=ind["std"],
+                )
+                session.add(ei)
+                ind_map[ind["code"]] = ei
+
+            await session.flush()
+
+            logger.info("Seeding baseline Economic Releases...")
+            releases_data = [
+                {"ind": "US_CPI_YOY", "period": "Latest", "actual": 2.9, "consensus": 3.1, "prev": 3.2, "surprise": -0.2, "pol": "Dovish", "dt": utc_now() - timedelta(days=2)},
+                {"ind": "US_NFP", "period": "Latest", "actual": 142.0, "consensus": 165.0, "prev": 114.0, "surprise": -23.0, "pol": "Dovish", "dt": utc_now() - timedelta(days=5)},
+                {"ind": "EZ_CPI_YOY", "period": "Latest", "actual": 2.2, "consensus": 2.2, "prev": 2.6, "surprise": 0.0, "pol": "Neutral", "dt": utc_now() - timedelta(days=4)},
+                {"ind": "JP_CPI_CORE_YOY", "period": "Latest", "actual": 2.8, "consensus": 2.5, "prev": 2.5, "surprise": 0.3, "pol": "Hawkish", "dt": utc_now() - timedelta(days=3)},
+                {"ind": "EIA_CRUDE_STOCKS", "period": "Latest", "actual": -3.2, "consensus": -1.0, "prev": 1.4, "surprise": -2.2, "pol": "Bullish Commodity", "dt": utc_now() - timedelta(days=1)},
+            ]
+            for rel in releases_data:
+                ei = ind_map.get(rel["ind"])
+                if ei:
+                    er = EconomicRelease(
+                        indicator_id=ei.id,
+                        event_time=rel["dt"],
+                        period=rel["period"],
+                        actual=rel["actual"],
+                        consensus=rel["consensus"],
+                        previous=rel["prev"],
+                        surprise=rel["surprise"],
+                        policy_implication=rel["pol"],
+                        source_url="https://www.bls.gov/cpi",
+                    )
+                    session.add(er)
+
+        logger.info(f"Seeding {len(missing_assets) if existing_symbols else len(SUPPORTED_ASSETS)} Assets and Baseline Macro Scores...")
+        for a_data in (missing_assets if existing_symbols else SUPPORTED_ASSETS):
             asset = Asset(
                 symbol=a_data["symbol"],
                 name=a_data["name"],
@@ -190,6 +193,10 @@ async def seed_database():
                 tactical_score = 12.0 # Neutral to Mild Bullish European Equities
                 weekly_score = 10.0
                 confidence = 70.0
+            elif asset.asset_class == "crypto":
+                tactical_score = 52.0 # Crypto Bullish (liquidity impulse + ETF inflows)
+                weekly_score = 48.0
+                confidence = 76.0
             else:
                 tactical_score = 15.0
                 weekly_score = 10.0
@@ -297,6 +304,27 @@ async def seed_database():
                     "base": {"title": "Base Case (Moderate Grind Higher)", "probability": 0.35, "description": "Valuation limits multiple expansion but earnings support floor.", "implications": "Consolidation around 5,850-6,050", "triggers": ["In-line earnings"]},
                     "bear": {"title": "Bear Case (Stagflationary Margin Squeeze)", "probability": 0.15, "description": "Input cost rebound meets decelerating consumer demand.", "implications": "Correction towards 5,300-5,500", "triggers": ["Margin compression"]}
                 }
+            elif asset.asset_class == "crypto":
+                primary_driver = "Global liquidity impulse, Fed easing tailwinds, and structural ETF net inflows"
+                secondary_driver = "Real yields declining and institutional custody adoption expanding"
+                bullish_factors = [
+                    "Sustained institutional spot ETF net inflows across global asset managers",
+                    "Global central bank monetary easing cycle expanding broad M2 money supply",
+                    "Macro risk sentiment remains constructive with low volatility regimes"
+                ]
+                bearish_factors = [
+                    "Regulatory overhang and headline volatility in derivative leverage",
+                    "Elevated speculative retail positioning susceptible to leverage flushes"
+                ]
+                invalidation = [
+                    {"id": f"inv_{asset.symbol}_1", "condition": "Global M2 liquidity expansion contracts sharply", "likelihood": "Low", "impact_if_triggered": "Flips to Bearish", "metric_to_watch": "Global M2 Growth"},
+                    {"id": f"inv_{asset.symbol}_2", "condition": "US 10Y real yields spike above 2.25%", "likelihood": "Medium", "impact_if_triggered": "Reduces to Neutral", "metric_to_watch": "10Y TIPS Yield"}
+                ]
+                scenarios = {
+                    "bull": {"title": "Bull Case (Liquidity Supercycle & Broad Adoption)", "probability": 0.55, "description": "Accelerating central bank balance sheet expansion drives capital to scarce digital assets.", "implications": f"{asset.symbol} reaches new cyclical highs", "triggers": ["M2 expansion", "ETF inflows"]},
+                    "base": {"title": "Base Case (Steady Digital Asset Expansion)", "probability": 0.35, "description": "Consolidation with upward trend aligned with global easing.", "implications": f"{asset.symbol} ranges within bullish channel", "triggers": ["Fed rate cuts"]},
+                    "bear": {"title": "Bear Case (Liquidity Shock & Risk-Off Deleveraging)", "probability": 0.10, "description": "Broad market liquidity crunch forces cross-asset margin liquidations.", "implications": f"{asset.symbol} tests major macro support", "triggers": ["Hawkish shock", "Spike in VIX"]}
+                }
             else:
                 primary_driver = f"Macro relative alignment for {asset.symbol}"
                 secondary_driver = "Yield spread and cross-asset liquidity conditions"
@@ -385,40 +413,41 @@ async def seed_database():
             )
             session.add(iv)
 
-        logger.info("Seeding System Health metrics...")
-        components = [
-            {"comp": "Data Ingestion Engine", "status": "HEALTHY", "latency": 120.5, "err": 0.0, "msg": "Consuming 18 official RSS and API endpoints"},
-            {"comp": "Deduplication & Clustering", "status": "HEALTHY", "latency": 45.2, "err": 0.0, "msg": "Event cluster ID hashing operational"},
-            {"comp": "Macro Scoring Engine", "status": "HEALTHY", "latency": 85.0, "err": 0.0, "msg": "Factor waterfall calculations synced"},
-            {"comp": "Bias & Invalidation Engine", "status": "HEALTHY", "latency": 32.1, "err": 0.0, "msg": "Deterministic bias threshold checks active"},
-            {"comp": "Database & Persistence", "status": "HEALTHY", "latency": 15.4, "err": 0.0, "msg": "Async connection pool nominal"},
-            {"comp": "AI Synthesis Layer", "status": "HEALTHY", "latency": 210.0, "err": 0.0, "msg": "Structured schema validation active with fallback rules"},
-        ]
-        for c in components:
-            sh = SystemHealth(
-                component=c["comp"],
-                status=c["status"],
-                latency_ms=c["latency"],
-                error_rate_pct=c["err"],
-                message=c["msg"],
-            )
-            session.add(sh)
+        if not existing_symbols:
+            logger.info("Seeding System Health metrics...")
+            components = [
+                {"comp": "Data Ingestion Engine", "status": "HEALTHY", "latency": 120.5, "err": 0.0, "msg": "Consuming 18 official RSS and API endpoints"},
+                {"comp": "Deduplication & Clustering", "status": "HEALTHY", "latency": 45.2, "err": 0.0, "msg": "Event cluster ID hashing operational"},
+                {"comp": "Macro Scoring Engine", "status": "HEALTHY", "latency": 85.0, "err": 0.0, "msg": "Factor waterfall calculations synced"},
+                {"comp": "Bias & Invalidation Engine", "status": "HEALTHY", "latency": 32.1, "err": 0.0, "msg": "Deterministic bias threshold checks active"},
+                {"comp": "Database & Persistence", "status": "HEALTHY", "latency": 15.4, "err": 0.0, "msg": "Async connection pool nominal"},
+                {"comp": "AI Synthesis Layer", "status": "HEALTHY", "latency": 210.0, "err": 0.0, "msg": "Structured schema validation active with fallback rules"},
+            ]
+            for c in components:
+                sh = SystemHealth(
+                    component=c["comp"],
+                    status=c["status"],
+                    latency_ms=c["latency"],
+                    error_rate_pct=c["err"],
+                    message=c["msg"],
+                )
+                session.add(sh)
 
-        logger.info("Seeding initial Alerts...")
-        alerts_data = [
-            {"symbol": "EURUSD", "type": "BIAS_CHANGE", "title": "EURUSD Bias Upgraded to Bullish", "msg": "Score increased from +28 to +42 following softer US CPI print and Fed easing repricing.", "sev": "INFO"},
-            {"symbol": "XAUUSD", "type": "HIGH_IMPACT_CATALYST", "title": "Gold Reaches Strong Bullish Conviction (+64)", "msg": "US 10Y real yields drop 14bps while central bank reserve buying pace accelerates.", "sev": "INFO"},
-            {"symbol": "USDJPY", "type": "CENTRAL_BANK_GUIDANCE", "title": "BoJ Signals Preparedness for Further Rate Hikes", "msg": "Governor Ueda speech emphasizes positive wage-price dynamic and currency stability.", "sev": "WARNING"},
-        ]
-        for a in alerts_data:
-            alt = Alert(
-                asset_symbol=a["symbol"],
-                alert_type=a["type"],
-                title=a["title"],
-                message=a["msg"],
-                severity=a["sev"],
-            )
-            session.add(alt)
+            logger.info("Seeding initial Alerts...")
+            alerts_data = [
+                {"symbol": "EURUSD", "type": "BIAS_CHANGE", "title": "EURUSD Bias Upgraded to Bullish", "msg": "Score increased from +28 to +42 following softer US CPI print and Fed easing repricing.", "sev": "INFO"},
+                {"symbol": "XAUUSD", "type": "HIGH_IMPACT_CATALYST", "title": "Gold Reaches Strong Bullish Conviction (+64)", "msg": "US 10Y real yields drop 14bps while central bank reserve buying pace accelerates.", "sev": "INFO"},
+                {"symbol": "USDJPY", "type": "CENTRAL_BANK_GUIDANCE", "title": "BoJ Signals Preparedness for Further Rate Hikes", "msg": "Governor Ueda speech emphasizes positive wage-price dynamic and currency stability.", "sev": "WARNING"},
+            ]
+            for a in alerts_data:
+                alt = Alert(
+                    asset_symbol=a["symbol"],
+                    alert_type=a["type"],
+                    title=a["title"],
+                    message=a["msg"],
+                    severity=a["sev"],
+                )
+                session.add(alt)
 
         await session.commit()
         logger.info("Database successfully seeded with comprehensive macro data!")

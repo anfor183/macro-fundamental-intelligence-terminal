@@ -293,8 +293,8 @@ export const MacroBattleView: React.FC<MacroBattleViewProps> = ({
               padding: '2px 8px',
               borderRadius: 4,
               marginTop: 4,
-              background: netScore > 10 ? 'rgba(16, 185, 129, 0.2)' : netScore < -10 ? 'rgba(239, 68, 68, 0.2)' : 'rgba(148, 163, 184, 0.2)',
-              color: netScore > 10 ? '#34d399' : netScore < -10 ? '#f87171' : 'var(--text-secondary)',
+              background: netScore > 10 ? 'var(--color-bullish-bg)' : netScore < -10 ? 'var(--color-bearish-bg)' : 'var(--color-neutral-bg)',
+              color: netScore > 10 ? 'var(--color-bullish)' : netScore < -10 ? 'var(--color-bearish)' : 'var(--text-secondary)',
             }}
           >
             {netScore > 25 ? 'STRONG BULLISH' : netScore > 10 ? 'BULLISH' : netScore < -25 ? 'STRONG BEARISH' : netScore < -10 ? 'BEARISH' : 'NEUTRAL'}
@@ -309,7 +309,7 @@ export const MacroBattleView: React.FC<MacroBattleViewProps> = ({
               lineHeight: 1.4,
             }}
           >
-            Yield Diff: <strong className="mono" style={{ color: Number(yieldDiff) >= 0 ? '#34d399' : '#f87171' }}>{Number(yieldDiff) >= 0 ? `+${yieldDiff}%` : `${yieldDiff}%`}</strong>
+            Yield Diff: <strong className="mono" style={{ color: Number(yieldDiff) >= 0 ? 'var(--color-bullish)' : 'var(--color-bearish)' }}>{Number(yieldDiff) >= 0 ? `+${yieldDiff}%` : `${yieldDiff}%`}</strong>
           </div>
 
           {onSelectPairAsset && (

@@ -363,6 +363,45 @@ export const AssetDetailModal: React.FC<AssetDetailModalProps> = ({ symbol, onCl
               />
             </div>
 
+            {/* AI Macro Strategist Grounded Synthesis */}
+            {detail.explanation && (
+              <div
+                style={{
+                  background: 'linear-gradient(135deg, rgba(99,102,241,0.06), rgba(168,85,247,0.08))',
+                  border: '1px solid rgba(168,85,247,0.3)',
+                  borderRadius: 'var(--radius-lg)',
+                  padding: '20px 22px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: 12,
+                }}
+              >
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <Sparkles size={18} color="#c084fc" />
+                    <h3 style={{ fontSize: '0.98rem', fontWeight: 900, color: 'var(--text-primary)', margin: 0 }}>
+                      AI Macro Strategist Synthesis
+                    </h3>
+                  </div>
+                  <span
+                    style={{
+                      fontSize: '0.68rem',
+                      fontWeight: 800,
+                      padding: '2px 8px',
+                      borderRadius: 999,
+                      background: 'rgba(168,85,247,0.2)',
+                      color: '#c084fc',
+                    }}
+                  >
+                    ZERO HALLUCINATION GROUNDED
+                  </span>
+                </div>
+                <div style={{ fontSize: '0.86rem', lineHeight: 1.65, color: 'var(--text-primary)', whiteSpace: 'pre-line' }}>
+                  {detail.explanation}
+                </div>
+              </div>
+            )}
+
             {/* Signature Section 20: "WHY THIS BIAS?" Panel */}
             <div
               style={{

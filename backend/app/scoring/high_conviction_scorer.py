@@ -16,6 +16,7 @@ from dataclasses import dataclass
 from typing import Dict, Any, List, Optional
 from backend.app.core.constants import score_to_bias
 from backend.app.engine.cot_engine import COTPositionSnapshot, COTEngine
+from backend.app.intelligence.ml_engine import macro_ml_engine
 
 
 @dataclass
@@ -48,6 +49,8 @@ class TraderConfluenceCard:
     pillars: List[ConfluencePillar]
     checklist: List[Dict[str, Any]]
     disclaimer: str
+    ml_prediction: Optional[Dict[str, Any]] = None
+    dynamic_weights: Optional[Dict[str, float]] = None
 
 
 class HighConvictionScorer:
@@ -225,6 +228,29 @@ class HighConvictionScorer:
             },
         ]
 
+        # 5. Run ML Model Inference and Dynamic Weight Optimization
+        ml_res = macro_ml_engine.predict_confluence(
+            symbol=symbol,
+            asset_class="forex" if "/" in symbol or len(symbol) == 6 else "index",
+            yield_spread_10y_2y=policy_spread_score * 2.0,
+            policy_rate_spread=policy_spread_score,
+            cot_crowding_index=crowding,
+            cot_zscore_3y=cot_snapshot.cot_zscore_3y,
+            volatility_atr_pct=min(95.0, max(10.0, market_volatility_score + 50.0)),
+            inflation_surprise_zscore=growth_inflation_score / 30.0,
+            growth_surprise_zscore=growth_inflation_score / 30.0,
+            risk_sentiment_score=macro_score,
+        )
+
+        ml_pred_dict = {
+            "predicted_bias": ml_res.predicted_bias,
+            "ml_conviction_score": ml_res.ml_conviction_score,
+            "probability_distribution": ml_res.probability_distribution,
+            "feature_importances": ml_res.feature_importances,
+            "model_version": ml_res.model_version,
+            "regime_alignment": ml_res.regime_alignment,
+        }
+
         return TraderConfluenceCard(
             symbol=symbol.upper(),
             asset_name=asset_name,
@@ -243,6 +269,8 @@ class HighConvictionScorer:
             pillars=pillars,
             checklist=checklist,
             disclaimer="Institutional macro intelligence for technical execution. Not financial advice.",
+            ml_prediction=ml_pred_dict,
+            dynamic_weights=ml_res.dynamic_weights,
         )
 
 
@@ -276,4 +304,6 @@ def confluence_card_to_dict(card: TraderConfluenceCard) -> Dict[str, Any]:
         ],
         "checklist": card.checklist,
         "disclaimer": card.disclaimer,
+        "ml_prediction": card.ml_prediction,
+        "dynamic_weights": card.dynamic_weights,
     }

@@ -72,6 +72,9 @@ YFINANCE_TICKER_MAP: Dict[str, str] = {
     "ZW": "ZW=F",
     "ZC": "ZC=F",
     "ZS": "ZS=F",
+    # Cryptocurrencies
+    "BTCUSD": "BTC-USD",
+    "ETHUSD": "ETH-USD",
     # Sovereign Yields & Macro Benchmarks
     "US10Y": "^TNX",
     "US05Y": "^FVX",

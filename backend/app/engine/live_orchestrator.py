@@ -22,6 +22,7 @@ from backend.app.ingestion.live_calendar import LiveEconomicCalendarIngestor
 from backend.app.ingestion.live_news_manager import LiveNewsManager, LIVE_RSS_FEEDS
 from backend.app.ingestion.live_cot_data import LiveCOTManager
 from backend.app.scoring.currency_model import calculate_forex_pair_score
+from backend.app.engine.forward_test_tracker import ForwardTestTracker
 
 logger = logging.getLogger(__name__)
 
@@ -81,6 +82,17 @@ class LiveOrchestrator:
             count = await LiveMarketDataCollector.update_database_prices(session)
             self.total_price_updates += count
             self.last_price_sync = datetime.now(timezone.utc)
+
+            # Update open forward test positions with latest prices
+            try:
+                stmt = select(Asset)
+                res = await session.execute(stmt)
+                all_assets = res.scalars().all()
+                price_map = {a.symbol.upper(): (a.current_price or 0.0) for a in all_assets}
+                ForwardTestTracker.update_prices(price_map)
+            except Exception as ft_exc:
+                logger.debug(f"Forward test price update skipped: {ft_exc}")
+
             return count
         except Exception as exc:
             self.last_error = f"Price sync error: {exc}"

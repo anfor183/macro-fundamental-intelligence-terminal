@@ -4,7 +4,19 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>frontend</title>
+    <title>Fortune Anukposi Quantitative Macro Terminal</title>
+    <meta name="author" content="Fortune Anukposi" />
+    <meta name="copyright" content="© 2026 Fortune Anukposi. All rights reserved." />
+    <script>
+      (function() {
+        try {
+          var saved = localStorage.getItem('terminal-theme');
+          var theme = saved === 'light' ? 'light' : 'dark';
+          document.documentElement.setAttribute('data-theme', theme);
+          document.documentElement.className = 'theme-' + theme;
+        } catch(e) {}
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

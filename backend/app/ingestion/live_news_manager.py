@@ -67,10 +67,13 @@ def strip_html_tags(text: str) -> str:
     return re.sub(clean, "", text).strip()
 
 
+from backend.app.intelligence.nlp_sentiment import MacroNLPSentiment
+
+
 def classify_macro_news(title: str, summary: str, default_category: str) -> Dict[str, Any]:
     """
     Classifies a headline into macro category, sentiment direction,
-    statement type, and estimated impact score.
+    statement type, and estimated impact score using MacroNLPSentiment.
     """
     combined = f"{title} {summary}".lower()
 
@@ -91,35 +94,31 @@ def classify_macro_news(title: str, summary: str, default_category: str) -> Dict
     elif any(k in combined for k in ["war", "sanctions", "conflict", "geopolitical", "tariff", "trade war"]):
         category = "geopolitics"
 
-    # Direction (bullish / bearish / neutral)
-    direction = "neutral"
-    impact_score = 50.0
+    # Multi-aspect NLP sentiment analysis
+    sentiment_res = MacroNLPSentiment.analyze_text(summary, title)
 
-    hawkish_keywords = ["hike", "hawkish", "accelerat", "surge", "beat", "higher", "jump", "tighten", "hot"]
-    dovish_keywords = ["cut", "dovish", "slow", "cool", "miss", "lower", "ease", "drop", "slump", "fall"]
-
-    hawk_count = sum(1 for w in hawkish_keywords if w in combined)
-    dove_count = sum(1 for w in dovish_keywords if w in combined)
-
-    if hawk_count > dove_count:
-        direction = "bullish"
-        impact_score = min(90.0, 50.0 + (hawk_count * 10.0))
-    elif dove_count > hawk_count:
-        direction = "bearish"
-        impact_score = max(20.0, 50.0 - (dove_count * 10.0))
-
-    # Statement type
-    statement_type = "FACT"
-    if any(w in combined for w in ["expect", "forecast", "predict", "analyst", "project"]):
-        statement_type = "FORECAST"
-    elif any(w in combined for w in ["opinion", "view", "believes", "considers", "editorial"]):
-        statement_type = "ANALYST OPINION"
+    # Direction and impact scoring (scaled 0-100, centered at 50)
+    dir_str = sentiment_res.direction.lower()
+    if dir_str == "bullish":
+        intensity = max(20.0, abs(sentiment_res.hawkish_dovish_score), abs(sentiment_res.sentiment_score))
+        impact_score = min(95.0, 50.0 + (intensity * 0.55))
+    elif dir_str == "bearish":
+        intensity = max(20.0, abs(sentiment_res.hawkish_dovish_score), abs(sentiment_res.sentiment_score))
+        impact_score = max(5.0, 50.0 - (intensity * 0.55))
+    else:
+        impact_score = 50.0
 
     return {
         "macro_category": category,
-        "direction": direction,
-        "impact_score": impact_score,
-        "statement_type": statement_type,
+        "direction": dir_str,
+        "impact_score": round(impact_score, 1),
+        "statement_type": sentiment_res.statement_type,
+        "hawkish_dovish_score": sentiment_res.hawkish_dovish_score,
+        "growth_sentiment": sentiment_res.growth_sentiment,
+        "inflation_pressure": sentiment_res.inflation_pressure,
+        "confidence": sentiment_res.confidence,
+        "detected_currencies": sentiment_res.detected_currencies,
+        "key_signals": sentiment_res.key_signals,
     }
 
 

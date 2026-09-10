@@ -78,7 +78,7 @@ export const MacroScoreGauge: React.FC<MacroScoreGaugeProps> = ({
         <path
           d={`M ${cx - radius} ${cy} A ${radius} ${radius} 0 0 1 ${cx + radius} ${cy}`}
           fill="none"
-          stroke="var(--bg-surface-3)"
+          stroke="var(--surface-3)"
           strokeWidth={strokeWidth}
           strokeLinecap="round"
         />

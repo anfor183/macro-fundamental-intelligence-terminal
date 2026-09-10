@@ -37,7 +37,7 @@ class TestCOTEngine:
         assert squeeze is None
 
     def test_live_cot_manager_returns_major_assets(self):
-        symbols = ["EURUSD", "USDJPY", "GBPUSD", "SPX", "XAUUSD", "CL"]
+        symbols = ["EURUSD", "USDJPY", "GBPUSD", "SPX", "XAUUSD", "CL", "BTCUSD", "ETHUSD", "NDX", "XAGUSD"]
         for sym in symbols:
             snap = LiveCOTManager.get_latest_cot(sym)
             assert snap.symbol == sym
@@ -51,6 +51,7 @@ class TestCOTEngine:
         symbols = {s.symbol for s in all_cot}
         assert "EURUSD" in symbols
         assert "XAUUSD" in symbols
+        assert "BTCUSD" in symbols
 
 
 class TestHighConvictionScorer:

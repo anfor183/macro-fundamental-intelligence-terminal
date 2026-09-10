@@ -96,3 +96,37 @@ async def test_backtest_endpoint():
         data = res.json()
         assert "metrics" in data
         assert data["metrics"]["directional_accuracy_pct"] > 50.0
+
+
+@pytest.mark.asyncio
+async def test_regime_signals_history_endpoint():
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as ac:
+        # 1. Full history
+        res = await ac.get("/api/v1/regime-signals/history?limit=100")
+        assert res.status_code == 200
+        data = res.json()
+        assert data["total_signals"] > 0
+        assert data["hit_rate_pct"] > 0
+        assert len(data["signals"]) <= 100
+        first = data["signals"][0]
+        assert "date" in first
+        assert "symbol" in first
+        assert first["signal_type"] in ("REVERSAL", "CONTINUATION", "PULLBACK_EXHAUSTION")
+        assert first["outcome"] in ("WIN", "LOSS")
+        assert "entry_price" in first
+        assert "exit_price" in first
+        assert "forward_return_pct" in first
+
+        # 2. Filter by symbol
+        res_eur = await ac.get("/api/v1/regime-signals/history?symbol=EURUSD&limit=50")
+        assert res_eur.status_code == 200
+        data_eur = res_eur.json()
+        assert all(s["symbol"] == "EURUSD" for s in data_eur["signals"])
+
+        # 3. Filter by signal_type and outcome
+        res_rev_win = await ac.get("/api/v1/regime-signals/history?signal_type=REVERSAL&outcome=WIN&limit=20")
+        assert res_rev_win.status_code == 200
+        data_rev_win = res_rev_win.json()
+        assert all(s["signal_type"] == "REVERSAL" for s in data_rev_win["signals"])
+        assert all(s["outcome"] == "WIN" for s in data_rev_win["signals"])
+

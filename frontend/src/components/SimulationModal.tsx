@@ -111,12 +111,12 @@ export const SimulationModal: React.FC<SimulationModalProps> = ({
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
-          background: 'rgba(11, 17, 28, 0.95)',
+          background: 'var(--surface-2)',
         }}>
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
               <PlayCircle size={20} color="#fbbf24" />
-              <h2 style={{ fontSize: '1.15rem', fontWeight: 800, color: '#f8fafc' }}>
+              <h2 style={{ fontSize: '1.15rem', fontWeight: 800, color: 'var(--text-primary)' }}>
                 Macro Scenario Simulator
               </h2>
               <span style={{
@@ -169,14 +169,14 @@ export const SimulationModal: React.FC<SimulationModalProps> = ({
         )}
 
         {/* Scenarios Grid */}
-        <div style={{ padding: '20px 24px', display: 'flex', flexDirection: 'column', gap: 12 }}>
+        <div style={{ padding: '20px 24px', display: 'flex', flexDirection: 'column', gap: 12, background: 'var(--surface-elevated)' }}>
           {scenarios.map((sc) => {
             const isRunning = runningId === sc.id;
             return (
               <div
                 key={sc.id}
                 style={{
-                  background: 'var(--bg-main)',
+                  background: 'var(--surface-2)',
                   border: '1px solid var(--border-subtle)',
                   borderRadius: 8,
                   padding: '14px 18px',
@@ -188,7 +188,7 @@ export const SimulationModal: React.FC<SimulationModalProps> = ({
               >
                 <div style={{ flex: 1 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-                    <span style={{ fontSize: '0.86rem', fontWeight: 700, color: '#f8fafc' }}>
+                    <span style={{ fontSize: '0.86rem', fontWeight: 700, color: 'var(--text-primary)' }}>
                       {sc.title}
                     </span>
                     <span style={{
@@ -196,7 +196,7 @@ export const SimulationModal: React.FC<SimulationModalProps> = ({
                       fontWeight: 700,
                       padding: '2px 6px',
                       borderRadius: 3,
-                      background: 'rgba(255, 255, 255, 0.08)',
+                      background: 'var(--surface-3)',
                       color: sc.color,
                     }}>
                       {sc.badge}
@@ -239,9 +239,9 @@ export const SimulationModal: React.FC<SimulationModalProps> = ({
           borderTop: '1px solid var(--border-subtle)',
           fontSize: '0.7rem',
           color: 'var(--text-dim)',
-          background: 'rgba(11, 17, 28, 0.5)',
+          background: 'var(--surface-2)',
         }}>
-          Notice: All injected scenario items are explicitly tagged with <code style={{ color: '#fbbf24' }}>is_simulated = True</code> and labeled <code style={{ color: '#fbbf24' }}>[DEMO / SIMULATION]</code> across data stores and audit logs.
+          Notice: All injected scenario items are explicitly tagged with <code style={{ color: 'var(--accent-gold)' }}>is_simulated = True</code> and labeled <code style={{ color: 'var(--accent-gold)' }}>[DEMO / SIMULATION]</code> across data stores and audit logs.
         </div>
       </div>
     </div>

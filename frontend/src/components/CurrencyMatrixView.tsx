@@ -26,14 +26,72 @@ interface CellHoverData {
 }
 
 interface CurrencyMatrixViewProps {
+  theme?: 'dark' | 'light';
   onSelectPairAsset?: (symbol: string) => void;
   onOpenMacroBattle?: (base: string, quote: string) => void;
 }
 
+function getMatrixCellStyles(score: number, isLight: boolean) {
+  const isPositive = score > 0;
+  const intensity = Math.min(0.4, Math.abs(score) / 160.0);
+
+  if (isLight) {
+    // High-contrast Light Mode: deep forest green (#065f46) and deep crimson (#991b1b)
+    const alpha = (0.09 + intensity * 0.28).toFixed(2);
+    return {
+      bg: isPositive ? `rgba(16, 185, 129, ${alpha})` : `rgba(239, 68, 68, ${alpha})`,
+      textColor: isPositive ? '#065f46' : '#991b1b',
+      arrowColor: isPositive ? '#065f46' : '#991b1b',
+      borderColor: isPositive ? 'rgba(5, 150, 105, 0.35)' : 'rgba(220, 38, 38, 0.35)',
+    };
+  } else {
+    // Terminal Dark Mode: glowing pastel mint (#6ee7b7) and rose (#fca5a5)
+    const alpha = (0.14 + intensity).toFixed(2);
+    return {
+      bg: isPositive ? `rgba(16, 185, 129, ${alpha})` : `rgba(239, 68, 68, ${alpha})`,
+      textColor: isPositive ? '#6ee7b7' : '#fca5a5',
+      arrowColor: isPositive ? '#34d399' : '#f87171',
+      borderColor: 'var(--border-subtle)',
+    };
+  }
+}
+
 export const CurrencyMatrixView: React.FC<CurrencyMatrixViewProps> = ({
+  theme = 'dark',
   onSelectPairAsset,
   onOpenMacroBattle,
 }) => {
+  // Live reactive light mode detection across React props, DOM data-theme and body classes
+  const [isLightMode, setIsLightMode] = useState<boolean>(() => {
+    if (typeof document !== 'undefined') {
+      const docTheme = document.documentElement.getAttribute('data-theme');
+      if (docTheme === 'light' || document.body.classList.contains('theme-light')) return true;
+      if (docTheme === 'dark') return false;
+      const saved = localStorage.getItem('terminal-theme');
+      if (saved === 'light') return true;
+    }
+    return theme === 'light';
+  });
+
+  useEffect(() => {
+    const checkTheme = () => {
+      const docTheme = document.documentElement.getAttribute('data-theme');
+      const isL =
+        theme === 'light' ||
+        docTheme === 'light' ||
+        (typeof document !== 'undefined' && document.body.classList.contains('theme-light'));
+      setIsLightMode(isL);
+    };
+    checkTheme();
+
+    if (typeof document !== 'undefined') {
+      const observer = new MutationObserver(checkTheme);
+      observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'class'] });
+      observer.observe(document.body, { attributes: true, attributeFilter: ['data-theme', 'class'] });
+      return () => observer.disconnect();
+    }
+  }, [theme]);
+
   const [matrix, setMatrix] = useState<CurrencyMatrixItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [hoveredCell, setHoveredCell] = useState<CellHoverData | null>(null);
@@ -145,10 +203,10 @@ export const CurrencyMatrixView: React.FC<CurrencyMatrixViewProps> = ({
               padding: '12px 14px',
               borderTop:
                 c.rank <= 3
-                  ? '3px solid #10b981'
+                  ? `3px solid ${isLightMode ? '#059669' : '#10b981'}`
                   : c.rank >= 9
-                  ? '3px solid #ef4444'
-                  : '3px solid #64748b',
+                  ? `3px solid ${isLightMode ? '#dc2626' : '#f43f5e'}`
+                  : `3px solid ${isLightMode ? '#cbd5e1' : 'var(--border-strong)'}`,
             }}
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -162,8 +220,8 @@ export const CurrencyMatrixView: React.FC<CurrencyMatrixViewProps> = ({
                 style={{
                   fontSize: '0.68rem',
                   fontWeight: 700,
-                  color: 'var(--text-muted)',
-                  background: 'var(--surface-3)',
+                  color: isLightMode ? '#334155' : 'var(--text-muted)',
+                  background: isLightMode ? '#e2e8f0' : 'var(--surface-3)',
                   padding: '2px 6px',
                   borderRadius: 4,
                 }}
@@ -171,7 +229,7 @@ export const CurrencyMatrixView: React.FC<CurrencyMatrixViewProps> = ({
                 #{c.rank}
               </span>
             </div>
-            <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: 2 }}>
+            <div style={{ fontSize: '0.7rem', color: isLightMode ? '#475569' : 'var(--text-muted)', marginTop: 2 }}>
               {c.name}
             </div>
             <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, marginTop: 8 }}>
@@ -180,7 +238,10 @@ export const CurrencyMatrixView: React.FC<CurrencyMatrixViewProps> = ({
                 style={{
                   fontSize: '1.25rem',
                   fontWeight: 800,
-                  color: c.absolute_score >= 0 ? '#10b981' : '#ef4444',
+                  color:
+                    c.absolute_score >= 0
+                      ? isLightMode ? '#059669' : '#10b981'
+                      : isLightMode ? '#dc2626' : '#f43f5e',
                 }}
               >
                 {c.absolute_score > 0 ? `+${c.absolute_score.toFixed(1)}` : c.absolute_score.toFixed(1)}
@@ -189,7 +250,7 @@ export const CurrencyMatrixView: React.FC<CurrencyMatrixViewProps> = ({
             <div
               style={{
                 fontSize: '0.68rem',
-                color: 'var(--text-dim)',
+                color: isLightMode ? '#475569' : 'var(--text-dim)',
                 marginTop: 6,
                 display: 'flex',
                 justifyContent: 'space-between',
@@ -214,10 +275,10 @@ export const CurrencyMatrixView: React.FC<CurrencyMatrixViewProps> = ({
         }}
       >
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-          <h3 style={{ fontSize: '0.88rem', fontWeight: 700, color: 'var(--text-primary)' }}>
+          <h3 style={{ fontSize: '0.92rem', fontWeight: 800, color: 'var(--text-primary)' }}>
             Pair Relative Macro Scores (Row Base − Column Quote)
           </h3>
-          <span style={{ fontSize: '0.7rem', color: 'var(--text-dim)' }}>
+          <span className="matrix-legend-text" style={{ fontSize: '0.74rem', fontWeight: 600 }}>
             Green = Base Currency Strength (Bullish Cross) • Red = Quote Currency Strength
           </span>
         </div>
@@ -226,13 +287,14 @@ export const CurrencyMatrixView: React.FC<CurrencyMatrixViewProps> = ({
           style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.78rem', textAlign: 'center' }}
         >
           <thead>
-            <tr style={{ background: 'var(--surface-2)' }}>
+            <tr style={{ background: isLightMode ? '#f1f5f9' : 'var(--surface-2)' }}>
               <th
+                className="matrix-th-base"
                 style={{
                   padding: '10px 14px',
                   textAlign: 'left',
-                  color: 'var(--text-dim)',
-                  fontWeight: 700,
+                  fontWeight: 800,
+                  fontSize: '0.76rem',
                 }}
               >
                 BASE \ QUOTE
@@ -240,8 +302,12 @@ export const CurrencyMatrixView: React.FC<CurrencyMatrixViewProps> = ({
               {currencies.map((curr) => (
                 <th
                   key={curr}
-                  className="mono"
-                  style={{ padding: '10px 10px', color: 'var(--accent-cyan)', fontWeight: 800 }}
+                  className="mono matrix-th-quote"
+                  style={{
+                    padding: '10px 10px',
+                    fontWeight: 800,
+                    fontSize: '0.82rem',
+                  }}
                 >
                   {curr}
                 </th>
@@ -250,15 +316,15 @@ export const CurrencyMatrixView: React.FC<CurrencyMatrixViewProps> = ({
           </thead>
           <tbody>
             {matrix.map((row) => (
-              <tr key={row.currency} style={{ borderBottom: '1px solid var(--border-subtle)' }}>
+              <tr key={row.currency} style={{ borderBottom: isLightMode ? '1px solid #e2e8f0' : '1px solid var(--border-subtle)' }}>
                 <td
                   style={{
                     padding: '10px 14px',
                     textAlign: 'left',
                     fontWeight: 800,
-                    color: 'var(--text-primary)',
+                    fontSize: '0.84rem',
                   }}
-                  className="mono"
+                  className="mono matrix-row-header"
                 >
                   {row.currency}
                 </td>
@@ -267,10 +333,10 @@ export const CurrencyMatrixView: React.FC<CurrencyMatrixViewProps> = ({
                     return (
                       <td
                         key={col}
+                        className="matrix-cell-diagonal"
                         style={{
                           padding: '10px 10px',
-                          color: 'var(--text-dim)',
-                          background: 'var(--surface-2)',
+                          fontWeight: 700,
                         }}
                       >
                         —
@@ -279,23 +345,20 @@ export const CurrencyMatrixView: React.FC<CurrencyMatrixViewProps> = ({
                   }
                   const score = row.relative_scores[col] || 0.0;
                   const isPositive = score > 0;
-                  const intensity = Math.min(0.4, Math.abs(score) / 160.0);
-                  const bg = isPositive
-                    ? `rgba(16, 185, 129, ${0.12 + intensity})`
-                    : `rgba(239, 68, 68, ${0.12 + intensity})`;
-                  const textColor = isPositive ? '#6ee7b7' : '#fca5a5';
+                  const { bg, textColor, borderColor } = getMatrixCellStyles(score, isLightMode);
                   const ArrowIcon = isPositive ? ArrowUpRight : ArrowDownRight;
 
                   return (
                     <td
                       key={col}
-                      className="mono"
+                      className={`mono ${isPositive ? 'matrix-cell-positive' : 'matrix-cell-negative'}`}
                       style={{
                         padding: '10px 10px',
                         background: bg,
                         color: textColor,
                         fontWeight: 800,
-                        border: '1px solid var(--border-subtle)',
+                        fontSize: '0.82rem',
+                        border: `1px solid ${borderColor}`,
                         cursor: 'pointer',
                         transition: 'transform 0.1s ease',
                       }}
@@ -306,9 +369,11 @@ export const CurrencyMatrixView: React.FC<CurrencyMatrixViewProps> = ({
                         else if (onSelectPairAsset) onSelectPairAsset(`${row.currency}${col}`);
                       }}
                     >
-                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 2 }}>
-                        <span>{score > 0 ? `+${score.toFixed(0)}` : score.toFixed(0)}</span>
-                        <ArrowIcon size={12} />
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 3 }}>
+                        <span className={isPositive ? 'matrix-cell-positive' : 'matrix-cell-negative'}>
+                          {score > 0 ? `+${score.toFixed(0)}` : score.toFixed(0)}
+                        </span>
+                        <ArrowIcon size={12} color="currentColor" strokeWidth={2.5} />
                       </div>
                     </td>
                   );
@@ -326,11 +391,11 @@ export const CurrencyMatrixView: React.FC<CurrencyMatrixViewProps> = ({
             position: 'fixed',
             left: Math.min(window.innerWidth - 280, hoveredCell.x),
             top: Math.max(80, hoveredCell.y - 40),
-            background: 'var(--surface-elevated)',
-            border: '1px solid var(--border-active)',
+            background: isLightMode ? '#ffffff' : 'var(--surface-elevated)',
+            border: isLightMode ? '1px solid #cbd5e1' : '1px solid var(--border-active)',
             borderRadius: 'var(--radius-md)',
             padding: '14px',
-            boxShadow: 'var(--shadow-lg)',
+            boxShadow: isLightMode ? '0 12px 30px -4px rgba(0, 0, 0, 0.15)' : 'var(--shadow-lg)',
             zIndex: 90,
             pointerEvents: 'none',
             minWidth: 240,
@@ -347,8 +412,14 @@ export const CurrencyMatrixView: React.FC<CurrencyMatrixViewProps> = ({
                 fontWeight: 800,
                 padding: '2px 6px',
                 borderRadius: 4,
-                background: hoveredCell.score >= 0 ? 'rgba(16, 185, 129, 0.2)' : 'rgba(239, 68, 68, 0.2)',
-                color: hoveredCell.score >= 0 ? '#34d399' : '#f87171',
+                background:
+                  hoveredCell.score >= 0
+                    ? (isLightMode ? 'rgba(16, 185, 129, 0.18)' : 'rgba(16, 185, 129, 0.2)')
+                    : (isLightMode ? 'rgba(239, 68, 68, 0.18)' : 'rgba(239, 68, 68, 0.2)'),
+                color:
+                  hoveredCell.score >= 0
+                    ? (isLightMode ? '#065f46' : '#34d399')
+                    : (isLightMode ? '#991b1b' : '#f87171'),
               }}
             >
               {hoveredCell.bias}
@@ -356,13 +427,16 @@ export const CurrencyMatrixView: React.FC<CurrencyMatrixViewProps> = ({
           </div>
 
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginTop: 4 }}>
-            <span style={{ fontSize: '0.72rem', color: 'var(--text-dim)' }}>Relative Score:</span>
+            <span style={{ fontSize: '0.72rem', color: isLightMode ? '#475569' : 'var(--text-secondary)' }}>Relative Score:</span>
             <span
               className="mono"
               style={{
                 fontSize: '1.1rem',
                 fontWeight: 800,
-                color: hoveredCell.score >= 0 ? '#10b981' : '#ef4444',
+                color:
+                  hoveredCell.score >= 0
+                    ? (isLightMode ? '#059669' : '#10b981')
+                    : (isLightMode ? '#dc2626' : '#ef4444'),
               }}
             >
               {hoveredCell.score > 0 ? `+${hoveredCell.score.toFixed(1)}` : hoveredCell.score.toFixed(1)}
@@ -370,8 +444,8 @@ export const CurrencyMatrixView: React.FC<CurrencyMatrixViewProps> = ({
           </div>
 
           <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 2 }}>
-            <span style={{ fontSize: '0.72rem', color: 'var(--text-dim)' }}>Model Confidence:</span>
-            <span className="mono" style={{ fontSize: '0.75rem', fontWeight: 700, color: '#38bdf8' }}>
+            <span style={{ fontSize: '0.72rem', color: isLightMode ? '#475569' : 'var(--text-secondary)' }}>Model Confidence:</span>
+            <span className="mono" style={{ fontSize: '0.75rem', fontWeight: 700, color: isLightMode ? '#0284c7' : '#38bdf8' }}>
               {hoveredCell.confidence}%
             </span>
           </div>
@@ -380,9 +454,9 @@ export const CurrencyMatrixView: React.FC<CurrencyMatrixViewProps> = ({
             style={{
               marginTop: 8,
               paddingTop: 6,
-              borderTop: '1px solid var(--border-subtle)',
+              borderTop: isLightMode ? '1px solid #e2e8f0' : '1px solid var(--border-subtle)',
               fontSize: '0.68rem',
-              color: 'var(--text-secondary)',
+              color: isLightMode ? '#334155' : 'var(--text-secondary)',
               lineHeight: 1.35,
             }}
           >
@@ -393,7 +467,7 @@ export const CurrencyMatrixView: React.FC<CurrencyMatrixViewProps> = ({
             style={{
               marginTop: 6,
               fontSize: '0.62rem',
-              color: 'var(--accent-cyan)',
+              color: isLightMode ? '#0369a1' : 'var(--accent-cyan)',
               textAlign: 'center',
               fontWeight: 600,
             }}

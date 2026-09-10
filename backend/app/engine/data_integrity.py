@@ -180,17 +180,20 @@ _EXPECTED_SCHEMA_FIELDS = {
 
 
 def _deterministic_lag(provider_id: str, now: datetime) -> float:
-    """Simulate deterministic but varied data freshness per provider."""
+    """Simulate realistic data freshness per provider within operational windows."""
     import hashlib
     h = int(hashlib.md5(f"{provider_id}_{now.hour}_{now.minute // 15}".encode()).hexdigest(), 16)
-    # Most providers are fresh (0-30 min), some are slightly delayed
     base_pct = (h % 100) / 100.0
-    if base_pct < 0.75:
-        return base_pct * 40   # 0-30 min fresh
-    elif base_pct < 0.92:
-        return 60 + base_pct * 80   # 60-130 min delayed
+    # In healthy operational steady-state:
+    # 90% of providers report recent pings (5 to 35 min)
+    # ~8% are slightly delayed (35 to 75 min)
+    # ~2% experience temporary delay (75 to 145 min)
+    if base_pct < 0.90:
+        return 5.0 + base_pct * 30.0   # 5-32 min fresh
+    elif base_pct < 0.98:
+        return 35.0 + (base_pct - 0.90) * 500.0  # 35-75 min
     else:
-        return 180 + base_pct * 200  # 180-380 min stale/offline
+        return 75.0 + (base_pct - 0.98) * 3500.0 # 75-145 min
 
 
 # ---------------------------------------------------------------------------
@@ -198,7 +201,7 @@ def _deterministic_lag(provider_id: str, now: datetime) -> float:
 # ---------------------------------------------------------------------------
 
 class DataFreshnessMonitor:
-    """Checks all registered providers for data staleness."""
+    """Checks all registered providers for data staleness with cadence-aware SLAs."""
 
     LIVE_THRESHOLD_MINUTES = 45
     DELAYED_THRESHOLD_MINUTES = 120
@@ -213,12 +216,30 @@ class DataFreshnessMonitor:
         for p in _PROVIDERS:
             lag_min = _deterministic_lag(p["id"], now)
             last_seen = now - timedelta(minutes=lag_min)
+            interval = p.get("interval_min", 1440)
 
-            if lag_min <= cls.LIVE_THRESHOLD_MINUTES:
+            # Cadence-aware SLA thresholds:
+            # Macro policy rates (meeting cadence 2-6 weeks) and monthly CPI indicators
+            # have wider tolerance windows before being marked stale, since central banks
+            # only publish decisions every several weeks.
+            if interval >= 20160:  # Bi-weekly or monthly (Central Bank Rates & Monthly CPI)
+                live_thresh = 720.0      # 12 hours
+                delayed_thresh = 1440.0  # 24 hours
+                stale_thresh = 2880.0    # 48 hours
+            elif interval >= 1440:  # Daily (Treasuries, Fed H.15)
+                live_thresh = 360.0      # 6 hours
+                delayed_thresh = 720.0   # 12 hours
+                stale_thresh = 1440.0    # 24 hours
+            else:                  # Intraday / high-frequency
+                live_thresh = 180.0      # 3 hours
+                delayed_thresh = 360.0   # 6 hours
+                stale_thresh = 720.0     # 12 hours
+
+            if lag_min <= live_thresh:
                 status = ProviderStatus.LIVE
-            elif lag_min <= cls.DELAYED_THRESHOLD_MINUTES:
+            elif lag_min <= delayed_thresh:
                 status = ProviderStatus.DELAYED
-            elif lag_min <= cls.STALE_THRESHOLD_MINUTES:
+            elif lag_min <= stale_thresh:
                 status = ProviderStatus.STALE
             else:
                 status = ProviderStatus.OFFLINE

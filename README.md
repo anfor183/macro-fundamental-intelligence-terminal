@@ -1,6 +1,7 @@
-# Antigravity Macro Fundamental Intelligence Platform
+# Fortune Anukposi Quantitative Macro Terminal
 
 > **Automated Macro-Fundamental Intelligence and Market-Bias Engine for Global Financial Trading Assets**  
+> Developed and Copyrighted by **Fortune Anukposi**.  
 > Covering Global Forex (28 Majors & Crosses), Global Equity Indices (11), Precious Metals (Gold, Silver, Platinum, Palladium), and Energy/Commodities (WTI, Brent, Natural Gas, Copper, Ags).
 
 [![Python 3.12](https://img.shields.io/badge/Python-3.12-blue.svg)](https://www.python.org/)
@@ -122,3 +123,11 @@ cd frontend && npm run dev
 ## 7. Regulatory & Compliance Notice
 
 > **Institutional Notice:** Fundamental bias is an analytical output derived from quantitative macroeconomic factor scoring and verified data releases. It does not constitute investment advice, trade recommendations, or guarantees of future market direction.
+
+---
+
+## 8. Author & Copyright
+
+- **Author & Architect**: Fortune Anukposi
+- **Copyright**: © 2026 Fortune Anukposi. All rights reserved.
+- **License**: MIT License (see [LICENSE](file:///home/fortune/Documents/fx%20fundamentals/LICENSE))

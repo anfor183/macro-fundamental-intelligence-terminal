@@ -107,16 +107,16 @@ export const ForexRankingsView: React.FC<{ onSelectAsset?: (symbol: string) => v
                   {/* Conviction Score */}
                   <td className="mono" style={{ padding: '12px 14px' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                      <span style={{ fontWeight: 800, fontSize: '0.9rem', color: '#38bdf8' }}>
+                      <span style={{ fontWeight: 800, fontSize: '0.9rem', color: 'var(--accent-cyan)' }}>
                         {p.conviction_score.toFixed(1)}
                       </span>
-                      <div style={{ width: 50, height: 4, background: '#1e293b', borderRadius: 2, overflow: 'hidden' }}>
-                        <div style={{ width: `${Math.min(100, (p.conviction_score / 80) * 100)}%`, height: '100%', background: '#38bdf8' }} />
+                      <div style={{ width: 50, height: 4, background: 'var(--surface-3)', borderRadius: 2, overflow: 'hidden' }}>
+                        <div style={{ width: `${Math.min(100, (p.conviction_score / 80) * 100)}%`, height: '100%', background: 'var(--accent-cyan)' }} />
                       </div>
                     </div>
                   </td>
 
-                  <td className="mono" style={{ padding: '12px 14px', fontWeight: 700, color: isPositive ? '#10b981' : '#ef4444' }}>
+                  <td className="mono" style={{ padding: '12px 14px', fontWeight: 700, color: isPositive ? 'var(--color-bullish)' : 'var(--color-bearish)' }}>
                     {p.tactical_score > 0 ? `+${p.tactical_score.toFixed(1)}` : p.tactical_score.toFixed(1)}
                   </td>
 

@@ -1,8 +1,11 @@
-# REST API Reference
+# REST API Reference — Fortune Anukposi Quantitative Macro Terminal
 
 Base URL: `http://localhost:8080/api/v1`
 
 ## Endpoints Summary
+
+### 0. Platform Information
+- `GET /info`: Returns platform metadata, author (`Fortune Anukposi`), copyright notice (`© 2026 Fortune Anukposi. All rights reserved.`), and operational mode.
 
 ### 1. Macro Regime & Assets
 - `GET /macro/regime`: Returns current overarching global macro regime (Risk-On/Off, Inflation Cycle, Growth Cycle, Liquidity).

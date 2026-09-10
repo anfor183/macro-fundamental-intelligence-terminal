@@ -30,6 +30,10 @@ async def lifespan(app: FastAPI):
     # Seed baseline universe if database is empty
     await seed_database()
 
+    # Seed trailing out-of-sample forward-test tracker history
+    from backend.app.engine.forward_test_tracker import ForwardTestTracker
+    ForwardTestTracker.seed_recent_forward_test_history()
+
     # Start live data ingestion background scheduler (100% free feeds)
     logger.info("Launching Live Ingestion Background Scheduler (Free online feeds)...")
     scheduler_task = asyncio.create_task(live_orchestrator.start_background_scheduler())
@@ -69,12 +73,14 @@ app.add_middleware(
 async def api_info():
     return {
         "platform": settings.PROJECT_NAME,
+        "author": settings.AUTHOR,
+        "copyright": settings.COPYRIGHT,
         "version": settings.VERSION,
         "status": "OPERATIONAL",
         "api_docs": "/docs",
         "api_v1": settings.API_V1_STR,
         "mode": "DEMO / HYBRID" if settings.DEMO_MODE else "PRODUCTION",
-        "supported_classes": ["forex", "index", "metal", "commodity"],
+        "supported_classes": ["forex", "index", "metal", "commodity", "crypto"],
         "disclaimer": "Fundamental bias is an analytical output, not a guarantee of future market direction."
     }
 
@@ -91,7 +97,8 @@ if os.path.exists(frontend_dist):
     @app.get("/{full_path:path}")
     async def serve_frontend(full_path: str):
         if full_path.startswith("api/") or full_path == "api" or full_path.startswith("docs") or full_path.startswith("openapi.json"):
-            return None
+            from fastapi import HTTPException
+            raise HTTPException(status_code=404, detail=f"API endpoint not found: /{full_path}")
         file_path = os.path.join(frontend_dist, full_path)
         if os.path.exists(file_path) and os.path.isfile(file_path):
             return FileResponse(file_path)
@@ -106,7 +113,7 @@ else:
             "api_docs": "/docs",
             "api_v1": settings.API_V1_STR,
             "mode": "DEMO / HYBRID" if settings.DEMO_MODE else "PRODUCTION",
-            "supported_classes": ["forex", "index", "metal", "commodity"],
+            "supported_classes": ["forex", "index", "metal", "commodity", "crypto"],
             "disclaimer": "Fundamental bias is an analytical output, not a guarantee of future market direction."
         }
 
