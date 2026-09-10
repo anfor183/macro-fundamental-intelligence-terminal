@@ -109,41 +109,41 @@ export const BacktestView: React.FC = () => {
           {/* Stat Cards */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 12 }}>
             <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border-subtle)', borderRadius: 8, padding: 16 }}>
-              <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Directional Hit Rate</div>
+              <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Directional Hit Rate</div>
               <div className="mono" style={{ fontSize: '1.6rem', fontWeight: 800, color: '#10b981', marginTop: 4 }}>
                 {metrics.directional_accuracy_pct}%
               </div>
-              <div style={{ fontSize: '0.68rem', color: 'var(--text-secondary)', marginTop: 4 }}>
+              <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: 4 }}>
                 {metrics.total_signals} evaluated signals
               </div>
             </div>
 
             <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border-subtle)', borderRadius: 8, padding: 16 }}>
-              <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Win / Loss Ratio</div>
+              <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Win / Loss Ratio</div>
               <div className="mono" style={{ fontSize: '1.6rem', fontWeight: 800, color: '#38bdf8', marginTop: 4 }}>
                 {metrics.win_loss_ratio}x
               </div>
-              <div style={{ fontSize: '0.68rem', color: 'var(--text-secondary)', marginTop: 4 }}>
+              <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: 4 }}>
                 Avg +{metrics.avg_gain_pct}% / {metrics.avg_loss_pct}%
               </div>
             </div>
 
             <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border-subtle)', borderRadius: 8, padding: 16 }}>
-              <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Max Hypothetical Drawdown</div>
+              <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Max Hypothetical Drawdown</div>
               <div className="mono" style={{ fontSize: '1.6rem', fontWeight: 800, color: '#f59e0b', marginTop: 4 }}>
                 -{metrics.max_drawdown_pct}%
               </div>
-              <div style={{ fontSize: '0.68rem', color: 'var(--text-secondary)', marginTop: 4 }}>
+              <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: 4 }}>
                 Signal series peak-to-trough
               </div>
             </div>
 
             <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border-subtle)', borderRadius: 8, padding: 16 }}>
-              <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Bias Persistence Half-Life</div>
+              <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Bias Persistence Half-Life</div>
               <div className="mono" style={{ fontSize: '1.6rem', fontWeight: 800, color: 'var(--text-primary)', marginTop: 4 }}>
                 {metrics.bias_persistence_half_life_days} days
               </div>
-              <div style={{ fontSize: '0.68rem', color: 'var(--text-secondary)', marginTop: 4 }}>
+              <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: 4 }}>
                 Decay rate of signal edge
               </div>
             </div>
@@ -157,7 +157,7 @@ export const BacktestView: React.FC = () => {
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 12 }}>
               {Object.entries(metrics.regime_breakdown).map(([regime, rate]) => (
                 <div key={regime} style={{ background: 'var(--bg-main)', border: '1px solid var(--border-subtle)', borderRadius: 6, padding: '10px 14px' }}>
-                  <div style={{ fontSize: '0.74rem', color: 'var(--text-secondary)' }}>{regime.replace(/_/g, ' ')}</div>
+                  <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>{regime.replace(/_/g, ' ')}</div>
                   <div className="mono" style={{ fontSize: '1.1rem', fontWeight: 800, color: '#38bdf8', marginTop: 4 }}>
                     {rate as number}%
                   </div>
@@ -195,7 +195,7 @@ export const BacktestView: React.FC = () => {
             </table>
           </div>
 
-          <div style={{ fontSize: '0.7rem', color: 'var(--text-dim)', textAlign: 'center' }}>
+          <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)', textAlign: 'center' }}>
             {metrics.disclaimer}
           </div>
         </>

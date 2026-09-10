@@ -136,7 +136,7 @@ export const AssetDetailModal: React.FC<AssetDetailModalProps> = ({ symbol, onCl
                 </h2>
                 <span
                   style={{
-                    fontSize: '0.68rem',
+                    fontSize: '0.75rem',
                     textTransform: 'uppercase',
                     padding: '2px 8px',
                     borderRadius: 4,
@@ -155,7 +155,7 @@ export const AssetDetailModal: React.FC<AssetDetailModalProps> = ({ symbol, onCl
                 {detail && (
                   <span
                     style={{
-                      fontSize: '0.7rem',
+                      fontSize: '0.75rem',
                       fontWeight: 700,
                       color: 'var(--text-secondary)',
                       background: 'var(--surface-3)',
@@ -206,7 +206,7 @@ export const AssetDetailModal: React.FC<AssetDetailModalProps> = ({ symbol, onCl
                 alignItems: 'center',
                 gap: 5,
                 padding: '6px 12px',
-                fontSize: '0.72rem',
+                fontSize: '0.75rem',
                 fontWeight: 700,
                 color: 'var(--accent-cyan)',
                 background: 'rgba(6, 182, 212, 0.1)',
@@ -284,7 +284,7 @@ export const AssetDetailModal: React.FC<AssetDetailModalProps> = ({ symbol, onCl
                 }}
               >
                 <div>
-                  <div style={{ fontSize: '0.7rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 700 }}>
+                  <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 700 }}>
                     Model Confidence & Provenance
                   </div>
                   <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginTop: 6 }}>
@@ -293,7 +293,7 @@ export const AssetDetailModal: React.FC<AssetDetailModalProps> = ({ symbol, onCl
                     </span>
                     <span
                       style={{
-                        fontSize: '0.68rem',
+                        fontSize: '0.75rem',
                         fontWeight: 700,
                         padding: '2px 8px',
                         borderRadius: 4,
@@ -306,7 +306,7 @@ export const AssetDetailModal: React.FC<AssetDetailModalProps> = ({ symbol, onCl
                   </div>
                 </div>
 
-                <div style={{ fontSize: '0.72rem', color: 'var(--text-secondary)', lineHeight: 1.45 }}>
+                <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', lineHeight: 1.45 }}>
                   Feed Completeness: <strong>{detail.data_quality.completeness_pct}%</strong>
                   <br />
                   Cryptographic Audit Hash: <span className="mono" style={{ color: 'var(--text-dim)' }}>sha256-verified</span>
@@ -326,7 +326,7 @@ export const AssetDetailModal: React.FC<AssetDetailModalProps> = ({ symbol, onCl
                 }}
               >
                 <div>
-                  <div style={{ fontSize: '0.7rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 700 }}>
+                  <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 700 }}>
                     Dominant Macro Catalyst
                   </div>
                   <div style={{ fontSize: '0.92rem', fontWeight: 700, color: 'var(--text-primary)', marginTop: 6, lineHeight: 1.35 }}>
@@ -385,7 +385,7 @@ export const AssetDetailModal: React.FC<AssetDetailModalProps> = ({ symbol, onCl
                   </div>
                   <span
                     style={{
-                      fontSize: '0.68rem',
+                      fontSize: '0.75rem',
                       fontWeight: 800,
                       padding: '2px 8px',
                       borderRadius: 999,
@@ -424,13 +424,13 @@ export const AssetDetailModal: React.FC<AssetDetailModalProps> = ({ symbol, onCl
 
                 <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
                   <div style={{ textAlign: 'right' }}>
-                    <div style={{ fontSize: '0.62rem', color: 'var(--text-dim)', textTransform: 'uppercase' }}>NET FUNDAMENTAL SCORE</div>
+                    <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)', textTransform: 'uppercase' }}>NET FUNDAMENTAL SCORE</div>
                     <div className="mono" style={{ fontSize: '1.25rem', fontWeight: 900, color: detail.score >= 0 ? '#10b981' : '#ef4444' }}>
                       {detail.score > 0 ? `+${detail.score.toFixed(1)}` : detail.score.toFixed(1)}
                     </div>
                   </div>
                   <div style={{ textAlign: 'right', borderLeft: '1px solid var(--border-subtle)', paddingLeft: 12 }}>
-                    <div style={{ fontSize: '0.62rem', color: 'var(--text-dim)', textTransform: 'uppercase' }}>CONFIDENCE</div>
+                    <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)', textTransform: 'uppercase' }}>CONFIDENCE</div>
                     <div className="mono" style={{ fontSize: '1.25rem', fontWeight: 900, color: '#38bdf8' }}>
                       {detail.confidence.toFixed(0)}%
                     </div>
@@ -537,7 +537,7 @@ export const AssetDetailModal: React.FC<AssetDetailModalProps> = ({ symbol, onCl
                         <div style={{ fontSize: '0.78rem', fontWeight: 600, color: 'var(--text-primary)' }}>
                           {f.label}
                         </div>
-                        <div style={{ fontSize: '0.68rem', color: 'var(--text-dim)' }}>
+                        <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)' }}>
                           Weight: {(f.weight * 100).toFixed(0)}% • Raw: {f.raw_score > 0 ? `+${f.raw_score}` : f.raw_score}
                         </div>
                       </div>
@@ -598,13 +598,13 @@ export const AssetDetailModal: React.FC<AssetDetailModalProps> = ({ symbol, onCl
                       <div style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-primary)' }}>
                         {inv.condition}
                       </div>
-                      <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: 2 }}>
+                      <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: 2 }}>
                         Impact: <span style={{ color: '#f87171' }}>{inv.impact_if_triggered}</span> • Metric to watch: {inv.metric_to_watch}
                       </div>
                     </div>
                     <span
                       style={{
-                        fontSize: '0.68rem',
+                        fontSize: '0.75rem',
                         fontWeight: 700,
                         padding: '2px 8px',
                         borderRadius: 4,

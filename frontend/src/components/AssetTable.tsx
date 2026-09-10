@@ -53,7 +53,7 @@ export const AssetTable: React.FC<AssetTableProps> = ({
             {title}
           </h3>
           <span style={{
-            fontSize: '0.7rem',
+            fontSize: '0.75rem',
             background: 'rgba(56, 189, 248, 0.1)',
             color: 'var(--accent-cyan)',
             padding: '2px 8px',
@@ -63,7 +63,7 @@ export const AssetTable: React.FC<AssetTableProps> = ({
             {assets.length} ASSETS
           </span>
         </div>
-        <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>
+        <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
           Click any row to inspect complete factor waterfall, drivers & invalidation criteria
         </div>
       </div>
@@ -75,7 +75,7 @@ export const AssetTable: React.FC<AssetTableProps> = ({
               background: 'var(--surface-2)',
               borderBottom: '1px solid var(--border-subtle)',
               color: 'var(--text-muted)',
-              fontSize: '0.7rem',
+              fontSize: '0.75rem',
               textTransform: 'uppercase',
               letterSpacing: '0.05em',
             }}>
@@ -114,7 +114,7 @@ export const AssetTable: React.FC<AssetTableProps> = ({
                         {asset.symbol}
                       </span>
                       <span style={{
-                        fontSize: '0.65rem',
+                        fontSize: '0.75rem',
                         textTransform: 'uppercase',
                         padding: '1px 5px',
                         borderRadius: 3,
@@ -125,7 +125,7 @@ export const AssetTable: React.FC<AssetTableProps> = ({
                         {asset.asset_class}
                       </span>
                     </div>
-                    <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>
+                    <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
                       {asset.name}
                     </div>
                   </td>
@@ -204,7 +204,7 @@ export const AssetTable: React.FC<AssetTableProps> = ({
                   {/* Weekly Structural Bias */}
                   <td style={{ padding: '12px 12px' }}>
                     <span style={{
-                      fontSize: '0.7rem',
+                      fontSize: '0.75rem',
                       fontWeight: 600,
                       color: 'var(--text-secondary)',
                       textTransform: 'uppercase',
@@ -228,7 +228,7 @@ export const AssetTable: React.FC<AssetTableProps> = ({
                   {/* Primary Catalyst */}
                   <td style={{ padding: '12px 16px', maxWidth: 280 }}>
                     <div style={{
-                      fontSize: '0.74rem',
+                      fontSize: '0.75rem',
                       color: 'var(--text-secondary)',
                       overflow: 'hidden',
                       textOverflow: 'ellipsis',

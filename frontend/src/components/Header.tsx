@@ -153,7 +153,7 @@ export const Header: React.FC<HeaderProps> = ({
             </span>
             <span
               style={{
-                fontSize: '0.62rem',
+                fontSize: '0.75rem',
                 fontWeight: 800,
                 background: 'rgba(6, 182, 212, 0.15)',
                 color: 'var(--accent-cyan)',
@@ -166,7 +166,7 @@ export const Header: React.FC<HeaderProps> = ({
               MACRO TERMINAL
             </span>
           </div>
-          <div style={{ fontSize: '0.7rem', color: 'var(--text-dim)' }}>
+          <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)' }}>
             Quantitative Fundamental Intelligence & Market-Bias Engine
           </div>
         </div>
@@ -184,7 +184,7 @@ export const Header: React.FC<HeaderProps> = ({
             padding: '4px 10px',
             borderRadius: 'var(--radius-sm)',
             border: '1px solid var(--border-subtle)',
-            fontSize: '0.68rem',
+            fontSize: '0.75rem',
             fontWeight: 700,
             color: 'var(--text-secondary)',
           }}
@@ -213,7 +213,7 @@ export const Header: React.FC<HeaderProps> = ({
             padding: '4px 10px',
             borderRadius: 'var(--radius-sm)',
             border: '1px solid var(--border-subtle)',
-            fontSize: '0.68rem',
+            fontSize: '0.75rem',
             fontWeight: 700,
             color: '#38bdf8',
             cursor: 'pointer',
@@ -236,7 +236,7 @@ export const Header: React.FC<HeaderProps> = ({
               padding: '12px 14px',
               boxShadow: 'var(--shadow-lg)',
               zIndex: 50,
-              fontSize: '0.72rem',
+              fontSize: '0.75rem',
             }}
           >
             <div style={{ fontWeight: 700, color: 'var(--text-primary)', marginBottom: 6 }}>
@@ -254,7 +254,7 @@ export const Header: React.FC<HeaderProps> = ({
               <span>Last Ingestion:</span>
               <span className="mono" style={{ color: 'var(--text-muted)' }}>&lt; 30s ago</span>
             </div>
-            <div style={{ fontSize: '0.65rem', color: 'var(--text-dim)', borderTop: '1px solid var(--border-subtle)', paddingTop: 4 }}>
+            <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)', borderTop: '1px solid var(--border-subtle)', paddingTop: 4 }}>
               Zero stale feeds detected. Model recalculation continuous.
             </div>
           </div>
@@ -275,15 +275,15 @@ export const Header: React.FC<HeaderProps> = ({
           >
             <span
               style={{
-                fontSize: '0.7rem',
+                fontSize: '0.75rem',
                 fontWeight: 800,
                 color: regime.risk_sentiment === 'RISK_ON' ? '#34d399' : '#f59e0b',
               }}
             >
               {regime.risk_sentiment}
             </span>
-            <span style={{ fontSize: '0.7rem', color: 'var(--text-dim)' }}>•</span>
-            <span style={{ fontSize: '0.7rem', color: '#38bdf8', fontWeight: 700 }}>
+            <span style={{ fontSize: '0.75rem', color: 'var(--text-dim)' }}>•</span>
+            <span style={{ fontSize: '0.75rem', color: '#38bdf8', fontWeight: 700 }}>
               {regime.growth_cycle}
             </span>
           </div>
@@ -317,7 +317,7 @@ export const Header: React.FC<HeaderProps> = ({
                 animation: isSyncing ? 'pulse 1s infinite' : 'none',
               }}
             />
-            <span style={{ fontSize: '0.7rem', fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '0.04em' }}>
+            <span style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '0.04em' }}>
               {isSyncing ? 'SYNCING...' : 'LIVE FEEDS'}
             </span>
             <button
@@ -371,12 +371,12 @@ export const Header: React.FC<HeaderProps> = ({
                     Continuous Live Feeds
                   </span>
                 </div>
-                <span style={{ fontSize: '0.65rem', padding: '2px 6px', borderRadius: 4, background: 'rgba(16, 185, 129, 0.15)', color: '#10b981', fontWeight: 700 }}>
+                <span style={{ fontSize: '0.75rem', padding: '2px 6px', borderRadius: 4, background: 'rgba(16, 185, 129, 0.15)', color: '#10b981', fontWeight: 700 }}>
                   100% FREE
                 </span>
               </div>
 
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 8, fontSize: '0.72rem' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 8, fontSize: '0.75rem' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--text-secondary)' }}>
                   <span>Market Prices (Yahoo Finance):</span>
                   <span style={{ fontWeight: 700, color: 'var(--text-primary)', fontFamily: 'JetBrains Mono, monospace' }}>
@@ -467,7 +467,7 @@ export const Header: React.FC<HeaderProps> = ({
               border: '1px solid var(--border-subtle)',
               borderRadius: 3,
               padding: '1px 5px',
-              fontSize: '0.65rem',
+              fontSize: '0.75rem',
               color: 'var(--text-dim)',
               fontFamily: 'JetBrains Mono, monospace',
             }}
@@ -486,7 +486,7 @@ export const Header: React.FC<HeaderProps> = ({
                 background: 'var(--surface-2)',
                 border: '1px solid var(--border-subtle)',
                 color: 'var(--text-secondary)',
-                fontSize: '0.68rem',
+                fontSize: '0.75rem',
                 fontFamily: 'JetBrains Mono, monospace',
                 fontWeight: 700,
                 padding: '4px 7px',
@@ -511,7 +511,7 @@ export const Header: React.FC<HeaderProps> = ({
             color: '#fbbf24',
             padding: '6px 12px',
             borderRadius: 'var(--radius-sm)',
-            fontSize: '0.74rem',
+            fontSize: '0.75rem',
             fontWeight: 800,
             cursor: 'pointer',
             boxShadow: '0 0 10px rgba(245, 158, 11, 0.15)',
@@ -535,7 +535,7 @@ export const Header: React.FC<HeaderProps> = ({
             display: 'flex',
             alignItems: 'center',
             gap: 4,
-            fontSize: '0.68rem',
+            fontSize: '0.75rem',
             fontWeight: 600,
           }}
         >
@@ -577,7 +577,7 @@ export const Header: React.FC<HeaderProps> = ({
               color: 'var(--text-secondary)',
               padding: '6px 9px',
               borderRadius: 'var(--radius-sm)',
-              fontSize: '0.72rem',
+              fontSize: '0.75rem',
               fontWeight: 700,
               textDecoration: 'none',
             }}

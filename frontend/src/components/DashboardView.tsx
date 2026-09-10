@@ -98,7 +98,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               <Globe size={18} color="var(--accent-cyan)" />
               <span
                 style={{
-                  fontSize: '0.74rem',
+                  fontSize: '0.75rem',
                   fontWeight: 800,
                   color: 'var(--text-muted)',
                   textTransform: 'uppercase',
@@ -109,7 +109,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               </span>
               <span
                 style={{
-                  fontSize: '0.68rem',
+                  fontSize: '0.75rem',
                   fontWeight: 800,
                   padding: '2px 8px',
                   borderRadius: 4,
@@ -125,7 +125,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               <span
                 className="mono"
                 style={{
-                  fontSize: '0.68rem',
+                  fontSize: '0.75rem',
                   color: 'var(--accent-cyan)',
                   background: 'rgba(6, 182, 212, 0.1)',
                   padding: '2px 6px',
@@ -174,7 +174,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             <div>
               <div
                 style={{
-                  fontSize: '0.65rem',
+                  fontSize: '0.75rem',
                   color: 'var(--text-dim)',
                   textTransform: 'uppercase',
                   fontWeight: 700,
@@ -192,7 +192,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             <div>
               <div
                 style={{
-                  fontSize: '0.65rem',
+                  fontSize: '0.75rem',
                   color: 'var(--text-dim)',
                   textTransform: 'uppercase',
                   fontWeight: 700,
@@ -210,7 +210,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             <div>
               <div
                 style={{
-                  fontSize: '0.65rem',
+                  fontSize: '0.75rem',
                   color: 'var(--text-dim)',
                   textTransform: 'uppercase',
                   fontWeight: 700,
@@ -277,7 +277,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           <div>
             <div
               style={{
-                fontSize: '0.74rem',
+                fontSize: '0.75rem',
                 fontWeight: 800,
                 textTransform: 'uppercase',
                 letterSpacing: '0.08em',
@@ -286,7 +286,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             >
               G10 Currency Fundamental Strength Rankings
             </div>
-            <div style={{ fontSize: '0.68rem', color: 'var(--text-dim)', marginTop: 2 }}>
+            <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)', marginTop: 2 }}>
               Normalized composite fundamental scores with weekly trajectory delta
             </div>
           </div>
@@ -297,7 +297,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               background: 'transparent',
               border: 'none',
               color: 'var(--accent-cyan)',
-              fontSize: '0.74rem',
+              fontSize: '0.75rem',
               fontWeight: 700,
               cursor: 'pointer',
               display: 'flex',
@@ -354,7 +354,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                     </span>
                     <span
                       style={{
-                        fontSize: '0.65rem',
+                        fontSize: '0.75rem',
                         fontWeight: 700,
                         color: curr.weeklyChange >= 0 ? 'var(--color-bullish)' : 'var(--color-bearish)',
                       }}

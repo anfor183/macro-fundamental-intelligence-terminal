@@ -169,7 +169,7 @@ export const MacroScoreGauge: React.FC<MacroScoreGaugeProps> = ({
         </span>
 
         <span style={{
-          fontSize: '0.68rem',
+          fontSize: '0.75rem',
           color: 'var(--text-muted)',
           marginTop: 2,
           fontFamily: 'var(--font-mono)',

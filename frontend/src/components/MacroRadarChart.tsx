@@ -109,7 +109,7 @@ export const MacroRadarChart: React.FC<MacroRadarChartProps> = ({
         <div>
           <div
             style={{
-              fontSize: '0.72rem',
+              fontSize: '0.75rem',
               fontWeight: 700,
               textTransform: 'uppercase',
               letterSpacing: '0.08em',
@@ -118,7 +118,7 @@ export const MacroRadarChart: React.FC<MacroRadarChartProps> = ({
           >
             {title}
           </div>
-          <div style={{ fontSize: '0.68rem', color: 'var(--text-dim)', marginTop: 2 }}>
+          <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)', marginTop: 2 }}>
             10-Factor Multi-Dimensional Equilibrium
           </div>
         </div>
@@ -138,7 +138,7 @@ export const MacroRadarChart: React.FC<MacroRadarChartProps> = ({
             onClick={() => setActiveBaseline('week')}
             style={{
               padding: '3px 8px',
-              fontSize: '0.68rem',
+              fontSize: '0.75rem',
               fontWeight: 600,
               borderRadius: 4,
               border: 'none',
@@ -154,7 +154,7 @@ export const MacroRadarChart: React.FC<MacroRadarChartProps> = ({
             onClick={() => setActiveBaseline('month')}
             style={{
               padding: '3px 8px',
-              fontSize: '0.68rem',
+              fontSize: '0.75rem',
               fontWeight: 600,
               borderRadius: 4,
               border: 'none',
@@ -328,7 +328,7 @@ export const MacroRadarChart: React.FC<MacroRadarChartProps> = ({
               border: '1px solid var(--border-active)',
               borderRadius: 'var(--radius-sm)',
               padding: '8px 12px',
-              fontSize: '0.72rem',
+              fontSize: '0.75rem',
               boxShadow: 'var(--shadow-md)',
               pointerEvents: 'none',
               backdropFilter: 'blur(10px)',
@@ -395,7 +395,7 @@ export const MacroRadarChart: React.FC<MacroRadarChartProps> = ({
           marginTop: 6,
           paddingTop: 8,
           borderTop: '1px solid var(--border-subtle)',
-          fontSize: '0.7rem',
+          fontSize: '0.75rem',
           color: 'var(--text-muted)',
         }}
       >

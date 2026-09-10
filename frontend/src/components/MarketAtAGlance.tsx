@@ -67,7 +67,7 @@ export const MarketAtAGlance: React.FC<MarketAtAGlanceProps> = ({
           />
           <span
             style={{
-              fontSize: '0.72rem',
+              fontSize: '0.75rem',
               fontWeight: 800,
               textTransform: 'uppercase',
               letterSpacing: '0.08em',
@@ -78,7 +78,7 @@ export const MarketAtAGlance: React.FC<MarketAtAGlanceProps> = ({
           </span>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.68rem', color: 'var(--text-dim)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.75rem', color: 'var(--text-dim)' }}>
           <ShieldCheck size={14} color="#10b981" />
           <span>System Healthy · Tier-1 Real-Time Sync</span>
         </div>
@@ -101,13 +101,13 @@ export const MarketAtAGlance: React.FC<MarketAtAGlanceProps> = ({
             borderLeft: '3px solid var(--accent-cyan)',
           }}
         >
-          <div style={{ fontSize: '0.65rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 700 }}>
+          <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 700 }}>
             Global Macro Regime
           </div>
           <div className="mono" style={{ fontSize: '0.85rem', fontWeight: 800, color: '#38bdf8', marginTop: 3 }}>
             {regime?.risk_sentiment || 'RISK-ON'} · {regime?.growth_cycle || 'EXPANSION'}
           </div>
-          <div style={{ fontSize: '0.68rem', color: 'var(--text-muted)', marginTop: 2 }}>
+          <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: 2 }}>
             Liquidity: {regime?.liquidity_cycle || 'EXPANDING'}
           </div>
         </div>
@@ -121,13 +121,13 @@ export const MarketAtAGlance: React.FC<MarketAtAGlanceProps> = ({
             borderLeft: '3px solid #10b981',
           }}
         >
-          <div style={{ fontSize: '0.65rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 700 }}>
+          <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 700 }}>
             Currency Leaders (Strongest)
           </div>
           <div className="mono" style={{ fontSize: '0.8rem', fontWeight: 700, color: '#34d399', marginTop: 3 }}>
             {leaders.join(' · ')}
           </div>
-          <div style={{ fontSize: '0.66rem', color: 'var(--text-dim)', marginTop: 2 }}>
+          <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)', marginTop: 2 }}>
             Monetary divergence & yield support
           </div>
         </div>
@@ -141,13 +141,13 @@ export const MarketAtAGlance: React.FC<MarketAtAGlanceProps> = ({
             borderLeft: '3px solid #ef4444',
           }}
         >
-          <div style={{ fontSize: '0.65rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 700 }}>
+          <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 700 }}>
             Currency Laggards (Weakest)
           </div>
           <div className="mono" style={{ fontSize: '0.8rem', fontWeight: 700, color: '#f87171', marginTop: 3 }}>
             {laggards.join(' · ')}
           </div>
-          <div style={{ fontSize: '0.66rem', color: 'var(--text-dim)', marginTop: 2 }}>
+          <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)', marginTop: 2 }}>
             Negative real rates & weak domestic demand
           </div>
         </div>
@@ -161,7 +161,7 @@ export const MarketAtAGlance: React.FC<MarketAtAGlanceProps> = ({
             borderLeft: '3px solid #10b981',
           }}
         >
-          <div style={{ fontSize: '0.65rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 700 }}>
+          <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 700 }}>
             Top Bullish Assets
           </div>
           <div style={{ display: 'flex', gap: 6, marginTop: 4 }}>
@@ -176,7 +176,7 @@ export const MarketAtAGlance: React.FC<MarketAtAGlanceProps> = ({
                   color: '#34d399',
                   borderRadius: 3,
                   padding: '2px 6px',
-                  fontSize: '0.7rem',
+                  fontSize: '0.75rem',
                   fontWeight: 700,
                   cursor: onSelectAsset ? 'pointer' : 'default',
                 }}
@@ -196,7 +196,7 @@ export const MarketAtAGlance: React.FC<MarketAtAGlanceProps> = ({
             borderLeft: '3px solid #ef4444',
           }}
         >
-          <div style={{ fontSize: '0.65rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 700 }}>
+          <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 700 }}>
             Top Bearish Assets
           </div>
           <div style={{ display: 'flex', gap: 6, marginTop: 4 }}>
@@ -211,7 +211,7 @@ export const MarketAtAGlance: React.FC<MarketAtAGlanceProps> = ({
                   color: '#f87171',
                   borderRadius: 3,
                   padding: '2px 6px',
-                  fontSize: '0.7rem',
+                  fontSize: '0.75rem',
                   fontWeight: 700,
                   cursor: onSelectAsset ? 'pointer' : 'default',
                 }}
@@ -231,13 +231,13 @@ export const MarketAtAGlance: React.FC<MarketAtAGlanceProps> = ({
             borderLeft: '3px solid #f59e0b',
           }}
         >
-          <div style={{ fontSize: '0.65rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 700 }}>
+          <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 700 }}>
             Next Major Event
           </div>
           <div className="mono" style={{ fontSize: '0.75rem', fontWeight: 700, color: '#fbbf24', marginTop: 3 }}>
             {nextEvent ? `${nextEvent.currency} ${nextEvent.event}` : 'USD CPI 09:30 UTC'}
           </div>
-          <div style={{ fontSize: '0.66rem', color: 'var(--text-muted)', marginTop: 2 }}>
+          <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: 2 }}>
             {nextEvent ? `Consensus: ${nextEvent.consensus || 'N/A'}` : 'High Volatility Expected'}
           </div>
         </div>

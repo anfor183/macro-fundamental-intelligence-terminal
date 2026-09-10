@@ -294,7 +294,7 @@ export function App() {
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
-          fontSize: '0.69rem',
+          fontSize: '0.75rem',
           color: 'var(--text-muted)',
           zIndex: 30,
         }}

@@ -72,7 +72,7 @@ function ProviderStatusBadge({ status }: { status: string }) {
     <span style={{
       display: 'inline-flex', alignItems: 'center', gap: 4,
       background: c.bg, color: c.color,
-      fontSize: '0.65rem', fontWeight: 700, padding: '2px 7px', borderRadius: 4,
+      fontSize: '0.75rem', fontWeight: 700, padding: '2px 7px', borderRadius: 4,
     }}>
       {c.icon} {status}
     </span>
@@ -90,7 +90,7 @@ function SeverityBadge({ severity }: { severity: string }) {
   return (
     <span style={{
       background: c.bg, color: c.color,
-      fontSize: '0.65rem', fontWeight: 700, padding: '2px 6px', borderRadius: 4,
+      fontSize: '0.75rem', fontWeight: 700, padding: '2px 6px', borderRadius: 4,
     }}>
       {severity}
     </span>
@@ -108,7 +108,7 @@ function EventTypeBadge({ type }: { type: string }) {
     PROVIDER_OFFLINE: 'OFFLINE',
   };
   return (
-    <span style={{ background: 'rgba(56,189,248,0.1)', color: '#38bdf8', fontSize: '0.62rem', fontWeight: 700, padding: '2px 6px', borderRadius: 4, letterSpacing: '0.04em' }}>
+    <span style={{ background: 'rgba(56,189,248,0.1)', color: '#38bdf8', fontSize: '0.75rem', fontWeight: 700, padding: '2px 6px', borderRadius: 4, letterSpacing: '0.04em' }}>
       {labels[type] || type}
     </span>
   );
@@ -121,9 +121,9 @@ function SubScoreBar({ label, score, weight, color }: { label: string; score: nu
   return (
     <div>
       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
-        <span style={{ fontSize: '0.72rem', color: 'var(--text-secondary)' }}>{label}</span>
+        <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>{label}</span>
         <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <span style={{ fontSize: '0.65rem', color: 'var(--text-muted)' }}>{weight} weight</span>
+          <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{weight} weight</span>
           <span className="mono" style={{ fontSize: '0.78rem', fontWeight: 800, color }}>{score.toFixed(1)}/100</span>
         </span>
       </div>
@@ -236,7 +236,7 @@ export const DataIntegrityDashboard: React.FC = () => {
                 display: 'inline-flex', alignItems: 'center', gap: 6,
                 background: data.circuit_breaker_active ? 'rgba(244,63,94,0.12)' : 'rgba(16,185,129,0.12)',
                 color: data.circuit_breaker_active ? '#f43f5e' : '#10b981',
-                fontSize: '0.7rem', fontWeight: 700, padding: '4px 10px', borderRadius: 6,
+                fontSize: '0.75rem', fontWeight: 700, padding: '4px 10px', borderRadius: 6,
               }}>
                 {data.circuit_breaker_active ? <Zap size={11} /> : <CheckCircle2 size={11} />}
                 Circuit Breaker {data.circuit_breaker_active ? 'OPEN' : 'CLOSED'}
@@ -259,7 +259,7 @@ export const DataIntegrityDashboard: React.FC = () => {
                 ].map(stat => (
                   <div key={stat.label} style={{ background: 'var(--bg-main)', border: '1px solid var(--border-subtle)', borderRadius: 8, padding: '10px 14px', textAlign: 'center' }}>
                     <div className="mono" style={{ fontSize: '1.4rem', fontWeight: 800, color: stat.color || 'var(--text-primary)' }}>{stat.val}</div>
-                    <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)', marginTop: 2 }}>{stat.label}</div>
+                    <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: 2 }}>{stat.label}</div>
                   </div>
                 ))}
               </div>
@@ -277,7 +277,7 @@ export const DataIntegrityDashboard: React.FC = () => {
             ] as [typeof activeTab, string, string | number][]).map(([id, label, count]) => (
               <button key={id} onClick={() => setActiveTab(id)} style={tabBtn(id)}>
                 {label}
-                <span style={{ marginLeft: 6, background: 'rgba(100,116,139,0.15)', color: 'var(--text-muted)', fontSize: '0.6rem', fontWeight: 700, padding: '1px 5px', borderRadius: 3 }}>
+                <span style={{ marginLeft: 6, background: 'rgba(100,116,139,0.15)', color: 'var(--text-muted)', fontSize: '0.75rem', fontWeight: 700, padding: '1px 5px', borderRadius: 3 }}>
                   {count}
                 </span>
               </button>
@@ -301,20 +301,20 @@ export const DataIntegrityDashboard: React.FC = () => {
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 8 }}>
                       <div>
                         <div style={{ fontSize: '0.78rem', fontWeight: 700, color: 'var(--text-primary)', lineHeight: 1.3 }}>{hb.provider_name}</div>
-                        <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)', marginTop: 2 }}>
+                        <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: 2 }}>
                           {hb.data_category} · {hb.country}
                         </div>
                       </div>
                       <ProviderStatusBadge status={hb.status} />
                     </div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.7rem', borderTop: '1px solid var(--border-subtle)', paddingTop: 8 }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', borderTop: '1px solid var(--border-subtle)', paddingTop: 8 }}>
                       <span style={{ color: 'var(--text-secondary)' }}>
                         Last seen: <span className="mono" style={{ color: hb.freshness_delta_minutes < 60 ? '#10b981' : hb.freshness_delta_minutes < 120 ? '#f59e0b' : '#f43f5e' }}>
                           {hb.freshness_delta_minutes < 60 ? `${Math.round(hb.freshness_delta_minutes)}m` : `${(hb.freshness_delta_minutes / 60).toFixed(1)}h`} ago
                         </span>
                       </span>
                       {hb.schema_drift_events_24h > 0 && (
-                        <span style={{ color: '#f59e0b', fontSize: '0.65rem' }}>
+                        <span style={{ color: '#f59e0b', fontSize: '0.75rem' }}>
                           {hb.schema_drift_events_24h} drift events
                         </span>
                       )}
@@ -358,9 +358,9 @@ export const DataIntegrityDashboard: React.FC = () => {
                       </td>
                       <td style={{ padding: '9px 12px', textAlign: 'right' }}>
                         {r.is_healthy ? (
-                          <span style={{ color: '#10b981', fontSize: '0.7rem', fontWeight: 700 }}>✓ HEALTHY</span>
+                          <span style={{ color: '#10b981', fontSize: '0.75rem', fontWeight: 700 }}>✓ HEALTHY</span>
                         ) : (
-                          <span style={{ color: '#f43f5e', fontSize: '0.7rem', fontWeight: 700 }}>⚠ DRIFT</span>
+                          <span style={{ color: '#f43f5e', fontSize: '0.75rem', fontWeight: 700 }}>⚠ DRIFT</span>
                         )}
                       </td>
                     </tr>
@@ -402,7 +402,7 @@ export const DataIntegrityDashboard: React.FC = () => {
                         <td style={{ padding: '9px 12px', textAlign: 'right' }}>
                           <SeverityBadge severity={g.severity} />
                         </td>
-                        <td style={{ padding: '9px 12px', color: 'var(--text-muted)', fontSize: '0.7rem' }}>{g.auto_action}</td>
+                        <td style={{ padding: '9px 12px', color: 'var(--text-muted)', fontSize: '0.75rem' }}>{g.auto_action}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -418,7 +418,7 @@ export const DataIntegrityDashboard: React.FC = () => {
                 <div style={{ fontSize: '0.82rem', fontWeight: 700, color: 'var(--text-primary)' }}>
                   Source Reconciliation — Cross-Provider Divergence
                 </div>
-                <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: 2 }}>
+                <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: 2 }}>
                   Flags when the same indicator differs by &gt;10% across official sources.
                 </div>
               </div>
@@ -438,9 +438,9 @@ export const DataIntegrityDashboard: React.FC = () => {
                   {data.reconciliation_results.map(r => (
                     <tr key={r.indicator_name} style={{ borderBottom: '1px solid var(--border-subtle)' }}>
                       <td style={{ padding: '9px 12px', color: 'var(--text-primary)', fontWeight: 600 }}>{r.indicator_name}</td>
-                      <td style={{ padding: '9px 12px', color: 'var(--text-muted)', fontSize: '0.7rem' }}>{r.provider_a}</td>
+                      <td style={{ padding: '9px 12px', color: 'var(--text-muted)', fontSize: '0.75rem' }}>{r.provider_a}</td>
                       <td className="mono" style={{ padding: '9px 12px', textAlign: 'right', color: 'var(--text-secondary)' }}>{r.value_a}</td>
-                      <td style={{ padding: '9px 12px', color: 'var(--text-muted)', fontSize: '0.7rem' }}>{r.provider_b}</td>
+                      <td style={{ padding: '9px 12px', color: 'var(--text-muted)', fontSize: '0.75rem' }}>{r.provider_b}</td>
                       <td className="mono" style={{ padding: '9px 12px', textAlign: 'right', color: 'var(--text-secondary)' }}>{r.value_b}</td>
                       <td className="mono" style={{ padding: '9px 12px', textAlign: 'right', color: r.is_flagged ? '#f43f5e' : '#10b981', fontWeight: 700 }}>
                         {r.divergence_pct.toFixed(2)}%
@@ -464,7 +464,7 @@ export const DataIntegrityDashboard: React.FC = () => {
                 <div style={{ fontSize: '0.82rem', fontWeight: 700, color: 'var(--text-primary)' }}>
                   Incident Center — {data.incidents.length} Active Incidents
                 </div>
-                <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>
+                <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
                   Sorted by recency
                 </div>
               </div>
@@ -483,18 +483,18 @@ export const DataIntegrityDashboard: React.FC = () => {
                     }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 8 }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
-                          <span className="mono" style={{ fontSize: '0.65rem', color: 'var(--text-dim, #475569)' }}>{inc.incident_id}</span>
+                          <span className="mono" style={{ fontSize: '0.75rem', color: 'var(--text-dim, #475569)' }}>{inc.incident_id}</span>
                           <EventTypeBadge type={inc.event_type} />
                           <SeverityBadge severity={inc.severity} />
                         </div>
-                        <span className="mono" style={{ fontSize: '0.65rem', color: 'var(--text-muted)', whiteSpace: 'nowrap', marginLeft: 12 }}>
+                        <span className="mono" style={{ fontSize: '0.75rem', color: 'var(--text-muted)', whiteSpace: 'nowrap', marginLeft: 12 }}>
                           {new Date(inc.occurred_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                         </span>
                       </div>
                       <div style={{ fontSize: '0.76rem', color: 'var(--text-secondary)', lineHeight: 1.5, marginBottom: 6 }}>
                         {inc.description}
                       </div>
-                      <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: 6 }}>
+                      <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: 6 }}>
                         <Activity size={11} style={{ color: '#38bdf8' }} />
                         Auto-action: <span style={{ color: '#38bdf8' }}>{inc.auto_action_taken}</span>
                       </div>

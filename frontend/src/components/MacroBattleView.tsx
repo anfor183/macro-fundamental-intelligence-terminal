@@ -98,7 +98,7 @@ export const MacroBattleView: React.FC<MacroBattleViewProps> = ({
         {/* Currency Selectors */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-            <label style={{ fontSize: '0.72rem', color: 'var(--text-dim)', fontWeight: 600 }}>BASE:</label>
+            <label style={{ fontSize: '0.75rem', color: 'var(--text-dim)', fontWeight: 600 }}>BASE:</label>
             <select
               value={baseCode}
               onChange={(e) => setBaseCode(e.target.value)}
@@ -125,7 +125,7 @@ export const MacroBattleView: React.FC<MacroBattleViewProps> = ({
           <span style={{ color: 'var(--accent-cyan)', fontWeight: 800, fontSize: '0.8rem' }}>VS</span>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-            <label style={{ fontSize: '0.72rem', color: 'var(--text-dim)', fontWeight: 600 }}>QUOTE:</label>
+            <label style={{ fontSize: '0.75rem', color: 'var(--text-dim)', fontWeight: 600 }}>QUOTE:</label>
             <select
               value={quoteCode}
               onChange={(e) => setQuoteCode(e.target.value)}
@@ -180,7 +180,7 @@ export const MacroBattleView: React.FC<MacroBattleViewProps> = ({
                 position: 'absolute',
                 top: 10,
                 right: 14,
-                fontSize: '0.65rem',
+                fontSize: '0.75rem',
                 fontWeight: 800,
                 padding: '2px 8px',
                 borderRadius: 4,
@@ -205,7 +205,7 @@ export const MacroBattleView: React.FC<MacroBattleViewProps> = ({
             </div>
 
             <div style={{ marginTop: 20 }}>
-              <div style={{ fontSize: '0.7rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+              <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
                 Macro Composite Score
               </div>
               <div
@@ -270,7 +270,7 @@ export const MacroBattleView: React.FC<MacroBattleViewProps> = ({
             <Scale size={20} color="var(--accent-cyan)" />
           </div>
 
-          <span style={{ fontSize: '0.68rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.08em', fontWeight: 700 }}>
+          <span style={{ fontSize: '0.75rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.08em', fontWeight: 700 }}>
             NET FUNDAMENTAL DELTA
           </span>
 
@@ -303,7 +303,7 @@ export const MacroBattleView: React.FC<MacroBattleViewProps> = ({
           <div
             style={{
               marginTop: 16,
-              fontSize: '0.68rem',
+              fontSize: '0.75rem',
               color: 'var(--text-dim)',
               textAlign: 'center',
               lineHeight: 1.4,
@@ -318,7 +318,7 @@ export const MacroBattleView: React.FC<MacroBattleViewProps> = ({
               style={{
                 marginTop: 18,
                 padding: '6px 12px',
-                fontSize: '0.7rem',
+                fontSize: '0.75rem',
                 fontWeight: 700,
                 color: '#fff',
                 background: 'var(--accent-blue)',
@@ -356,7 +356,7 @@ export const MacroBattleView: React.FC<MacroBattleViewProps> = ({
                 position: 'absolute',
                 top: 10,
                 right: 14,
-                fontSize: '0.65rem',
+                fontSize: '0.75rem',
                 fontWeight: 800,
                 padding: '2px 8px',
                 borderRadius: 4,
@@ -381,7 +381,7 @@ export const MacroBattleView: React.FC<MacroBattleViewProps> = ({
             </div>
 
             <div style={{ marginTop: 20 }}>
-              <div style={{ fontSize: '0.7rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+              <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
                 Macro Composite Score
               </div>
               <div
@@ -433,22 +433,22 @@ export const MacroBattleView: React.FC<MacroBattleViewProps> = ({
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 16 }}>
           <div style={{ background: 'var(--surface-2)', padding: '12px 14px', borderRadius: 'var(--radius-sm)', borderLeft: '3px solid #06b6d4' }}>
-            <div style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--text-primary)' }}>1. Central Bank & Monetary Stance</div>
-            <div style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', marginTop: 4, lineHeight: 1.4 }}>
+            <div style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-primary)' }}>1. Central Bank & Monetary Stance</div>
+            <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: 4, lineHeight: 1.4 }}>
               {baseCode} policy stance is {baseCurr.policy.toLowerCase()} while {quoteCode} is priced for {quoteCurr.policy.toLowerCase()}.
             </div>
           </div>
 
           <div style={{ background: 'var(--surface-2)', padding: '12px 14px', borderRadius: 'var(--radius-sm)', borderLeft: '3px solid #10b981' }}>
-            <div style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--text-primary)' }}>2. Sovereign Yield Differential</div>
-            <div style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', marginTop: 4, lineHeight: 1.4 }}>
+            <div style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-primary)' }}>2. Sovereign Yield Differential</div>
+            <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: 4, lineHeight: 1.4 }}>
               Yield spread of {yieldDiff}% creates persistent carry & institutional capital flows toward the higher-yielding sovereign paper.
             </div>
           </div>
 
           <div style={{ background: 'var(--surface-2)', padding: '12px 14px', borderRadius: 'var(--radius-sm)', borderLeft: '3px solid #f59e0b' }}>
-            <div style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--text-primary)' }}>3. Economic & Growth Resilience</div>
-            <div style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', marginTop: 4, lineHeight: 1.4 }}>
+            <div style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-primary)' }}>3. Economic & Growth Resilience</div>
+            <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: 4, lineHeight: 1.4 }}>
               Composite PMIs and macro surprise indices favor {isBaseAdvantaged ? baseCode : isQuoteAdvantaged ? quoteCode : 'neither currency exclusively'}.
             </div>
           </div>

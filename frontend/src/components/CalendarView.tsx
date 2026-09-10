@@ -65,7 +65,7 @@ export const CalendarView: React.FC<{ onSelectAsset?: (symbol: string) => void }
               background: 'var(--surface-2)',
               borderBottom: '1px solid var(--border-subtle)',
               color: 'var(--text-muted)',
-              fontSize: '0.7rem',
+              fontSize: '0.75rem',
               textTransform: 'uppercase',
               letterSpacing: '0.05em',
             }}>
@@ -103,7 +103,7 @@ export const CalendarView: React.FC<{ onSelectAsset?: (symbol: string) => void }
                       {evt.country}
                     </span>
                     <span style={{
-                      fontSize: '0.68rem',
+                      fontSize: '0.75rem',
                       marginLeft: 6,
                       padding: '1px 5px',
                       borderRadius: 3,
@@ -121,7 +121,7 @@ export const CalendarView: React.FC<{ onSelectAsset?: (symbol: string) => void }
 
                   <td style={{ padding: '12px 12px' }}>
                     <span style={{
-                      fontSize: '0.68rem',
+                      fontSize: '0.75rem',
                       fontWeight: 700,
                       padding: '2px 8px',
                       borderRadius: 4,
@@ -147,7 +147,7 @@ export const CalendarView: React.FC<{ onSelectAsset?: (symbol: string) => void }
                           key={a}
                           onClick={() => onSelectAsset && onSelectAsset(a)}
                           style={{
-                            fontSize: '0.68rem',
+                            fontSize: '0.75rem',
                             fontWeight: 700,
                             padding: '1px 6px',
                             borderRadius: 3,
@@ -160,7 +160,7 @@ export const CalendarView: React.FC<{ onSelectAsset?: (symbol: string) => void }
                         </span>
                       ))}
                     </div>
-                    <div style={{ fontSize: '0.72rem', color: 'var(--text-secondary)' }}>
+                    <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
                       {evt.sensitivity}
                     </div>
                   </td>

@@ -97,7 +97,7 @@ export const HistoricalBiasChart: React.FC<HistoricalBiasChartProps> = ({
         <div>
           <div
             style={{
-              fontSize: '0.72rem',
+              fontSize: '0.75rem',
               fontWeight: 700,
               textTransform: 'uppercase',
               letterSpacing: '0.08em',
@@ -106,12 +106,12 @@ export const HistoricalBiasChart: React.FC<HistoricalBiasChartProps> = ({
           >
             Historical Fundamental Bias & Macro Trajectory
           </div>
-          <div style={{ fontSize: '0.68rem', color: 'var(--text-dim)', marginTop: 2 }}>
+          <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)', marginTop: 2 }}>
             {symbol} Quantitative Score Progression with Catalyst Overlays
           </div>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: 14, fontSize: '0.7rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 14, fontSize: '0.75rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
             <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#10b981' }} />
             <span style={{ color: 'var(--text-secondary)' }}>Bullish Band</span>
@@ -272,7 +272,7 @@ export const HistoricalBiasChart: React.FC<HistoricalBiasChartProps> = ({
               border: '1px solid var(--border-active)',
               borderRadius: 'var(--radius-sm)',
               padding: '10px 14px',
-              fontSize: '0.72rem',
+              fontSize: '0.75rem',
               boxShadow: 'var(--shadow-md)',
               pointerEvents: 'none',
               backdropFilter: 'blur(10px)',
@@ -280,10 +280,10 @@ export const HistoricalBiasChart: React.FC<HistoricalBiasChartProps> = ({
             }}
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
-              <span style={{ color: 'var(--text-dim)', fontSize: '0.68rem' }}>{hoveredPoint.timestamp}</span>
+              <span style={{ color: 'var(--text-dim)', fontSize: '0.75rem' }}>{hoveredPoint.timestamp}</span>
               <span
                 style={{
-                  fontSize: '0.65rem',
+                  fontSize: '0.75rem',
                   fontWeight: 700,
                   padding: '1px 6px',
                   borderRadius: 3,
@@ -325,7 +325,7 @@ export const HistoricalBiasChart: React.FC<HistoricalBiasChartProps> = ({
                   paddingTop: 6,
                   borderTop: '1px solid var(--border-subtle)',
                   color: '#fbbf24',
-                  fontSize: '0.68rem',
+                  fontSize: '0.75rem',
                   display: 'flex',
                   alignItems: 'center',
                   gap: 4,

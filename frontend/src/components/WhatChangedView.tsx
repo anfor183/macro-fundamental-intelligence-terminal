@@ -92,7 +92,7 @@ export const WhatChangedView: React.FC<{ onSelectAsset?: (symbol: string) => voi
                     </span>
                   </div>
 
-                  <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: 4 }}>
+                  <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: 4 }}>
                     {dt.toLocaleDateString()} at {dt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })} UTC
                   </div>
                 </div>
@@ -112,7 +112,7 @@ export const WhatChangedView: React.FC<{ onSelectAsset?: (symbol: string) => voi
                       {item.new_score > 0 ? `+${item.new_score.toFixed(1)}` : item.new_score.toFixed(1)}
                     </span>
                     <span style={{
-                      fontSize: '0.72rem',
+                      fontSize: '0.75rem',
                       fontWeight: 700,
                       color: isScoreUp ? '#34d399' : '#f87171',
                       background: isScoreUp ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)',
@@ -122,7 +122,7 @@ export const WhatChangedView: React.FC<{ onSelectAsset?: (symbol: string) => voi
                       {isScoreUp ? `+${item.delta_score.toFixed(1)}` : item.delta_score.toFixed(1)} pts
                     </span>
                   </div>
-                  <div style={{ fontSize: '0.68rem', color: 'var(--text-dim)', marginTop: 2 }}>
+                  <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)', marginTop: 2 }}>
                     Confidence: {item.confidence.toFixed(0)}%
                   </div>
                 </div>

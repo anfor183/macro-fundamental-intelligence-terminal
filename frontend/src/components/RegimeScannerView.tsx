@@ -188,7 +188,7 @@ function PillarRing({
           {value.toFixed(0)}%
         </text>
       </svg>
-      <span style={{ fontSize: '0.6rem', color: 'var(--text-muted)', textAlign: 'center', maxWidth: size }}>
+      <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textAlign: 'center', maxWidth: size }}>
         {label}
       </span>
     </div>
@@ -202,12 +202,12 @@ function RegimeBar({ regime }: { regime: RegimeSignalRegimeBreakdown }) {
   return (
     <div style={{ marginBottom: 8 }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 3 }}>
-        <span style={{ fontSize: '0.68rem', color: 'var(--text-secondary)', maxWidth: 200, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+        <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', maxWidth: 200, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
           {regime.regime_name}
         </span>
         <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
-          <span style={{ fontSize: '0.65rem', color: 'var(--text-muted)' }}>N={regime.total}</span>
-          <span style={{ fontSize: '0.72rem', fontWeight: 700, color, fontFamily: 'monospace' }}>{regime.hit_rate_pct.toFixed(1)}%</span>
+          <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>N={regime.total}</span>
+          <span style={{ fontSize: '0.75rem', fontWeight: 700, color, fontFamily: 'monospace' }}>{regime.hit_rate_pct.toFixed(1)}%</span>
         </div>
       </div>
       <div style={{ height: 4, background: 'rgba(255,255,255,0.06)', borderRadius: 2 }}>
@@ -278,7 +278,7 @@ function AssetPastSignalsTable({
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8, flexWrap: 'wrap', gap: 6 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
           <History size={13} color="#38bdf8" />
-          <span style={{ fontSize: '0.68rem', fontWeight: 700, color: 'var(--text-secondary)' }}>
+          <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-secondary)' }}>
             HISTORICAL SIGNALS LOG ({timeline.length} Total)
           </span>
         </div>
@@ -288,7 +288,7 @@ function AssetPastSignalsTable({
               key={f}
               onClick={() => setFilter(f)}
               style={{
-                fontSize: '0.58rem',
+                fontSize: '0.75rem',
                 padding: '2px 6px',
                 borderRadius: 4,
                 border: 'none',
@@ -313,7 +313,7 @@ function AssetPastSignalsTable({
           display: 'grid',
           gridTemplateColumns: '80px 65px 70px 70px 65px 55px',
           gap: 4,
-          fontSize: '0.6rem',
+          fontSize: '0.75rem',
           color: 'var(--text-muted)',
           fontWeight: 700,
           paddingBottom: 4,
@@ -337,7 +337,7 @@ function AssetPastSignalsTable({
               display: 'grid',
               gridTemplateColumns: '80px 65px 70px 70px 65px 55px',
               gap: 4,
-              fontSize: '0.64rem',
+              fontSize: '0.75rem',
               padding: '4px 0',
               borderBottom: '1px solid rgba(255,255,255,0.03)',
               alignItems: 'center',
@@ -359,7 +359,7 @@ function AssetPastSignalsTable({
             <span style={{ textAlign: 'right' }}>
               <span
                 style={{
-                  fontSize: '0.56rem',
+                  fontSize: '0.75rem',
                   fontWeight: 800,
                   padding: '1px 5px',
                   borderRadius: 3,
@@ -382,7 +382,7 @@ function AssetPastSignalsTable({
             marginTop: 6,
             width: '100%',
             padding: '4px 0',
-            fontSize: '0.62rem',
+            fontSize: '0.75rem',
             background: 'rgba(255,255,255,0.03)',
             border: '1px solid rgba(255,255,255,0.06)',
             borderRadius: 4,
@@ -403,7 +403,7 @@ function AssetPastSignalsTable({
             marginTop: 6,
             width: '100%',
             padding: '5px 0',
-            fontSize: '0.64rem',
+            fontSize: '0.75rem',
             background: 'rgba(56,189,248,0.08)',
             border: '1px solid rgba(56,189,248,0.22)',
             borderRadius: 4,
@@ -446,12 +446,12 @@ function ForwardTestRow({ entry }: { entry: ForwardTestEntry }) {
           ? 'rgba(244,63,94,0.05)'
           : 'rgba(255,255,255,0.03)',
         marginBottom: 4,
-        fontSize: '0.7rem',
+        fontSize: '0.75rem',
         alignItems: 'center',
       }}
     >
       <span style={{ color: 'var(--text-primary)', fontWeight: 700 }}>{entry.symbol}</span>
-      <span style={{ color: entry.signal_type === 'REVERSAL' ? '#f59e0b' : '#38bdf8', fontSize: '0.64rem' }}>
+      <span style={{ color: entry.signal_type === 'REVERSAL' ? '#f59e0b' : '#38bdf8', fontSize: '0.75rem' }}>
         {entry.signal_type}
       </span>
       <span style={{ color: directionColor(entry.direction), fontWeight: 700 }}>
@@ -467,13 +467,13 @@ function ForwardTestRow({ entry }: { entry: ForwardTestEntry }) {
           padding: '2px 6px',
           borderRadius: 4,
           fontWeight: 700,
-          fontSize: '0.62rem',
+          fontSize: '0.75rem',
           textAlign: 'center',
         }}
       >
         {entry.outcome}
       </span>
-      <span style={{ color: 'var(--text-muted)', fontSize: '0.62rem' }}>
+      <span style={{ color: 'var(--text-muted)', fontSize: '0.75rem' }}>
         {new Date(entry.issue_date).toLocaleDateString('en-GB', { day: '2-digit', month: 'short' })}
       </span>
     </div>
@@ -534,7 +534,7 @@ function ForwardTestPanel({ log }: { log: ForwardTestLogResponse | null }) {
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: 5, color: 'var(--text-muted)' }}>
               {stat.icon}
-              <span style={{ fontSize: '0.62rem' }}>{stat.label}</span>
+              <span style={{ fontSize: '0.75rem' }}>{stat.label}</span>
             </div>
             <span style={{ fontSize: '1.1rem', fontWeight: 800, color: stat.color, fontFamily: 'monospace' }}>
               {stat.value}
@@ -566,7 +566,7 @@ function ForwardTestPanel({ log }: { log: ForwardTestLogResponse | null }) {
             <span style={{ color: s.color }}>{s.icon}</span>
             <div>
               <div style={{ fontSize: '0.95rem', fontWeight: 800, color: s.color, fontFamily: 'monospace' }}>{s.count}</div>
-              <div style={{ fontSize: '0.6rem', color: 'var(--text-muted)' }}>{s.label}</div>
+              <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{s.label}</div>
             </div>
           </div>
         ))}
@@ -590,7 +590,7 @@ function ForwardTestPanel({ log }: { log: ForwardTestLogResponse | null }) {
             }}
           >
             {['Asset', 'Type', 'Direction', 'P&L', 'Outcome', 'Issued'].map((h) => (
-              <span key={h} style={{ fontSize: '0.58rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+              <span key={h} style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
                 {h}
               </span>
             ))}
@@ -649,7 +649,7 @@ function SignalDeepDive({
                 color: typeColor,
                 padding: '2px 8px',
                 borderRadius: 4,
-                fontSize: '0.68rem',
+                fontSize: '0.75rem',
                 fontWeight: 700,
                 letterSpacing: '0.06em',
               }}
@@ -662,7 +662,7 @@ function SignalDeepDive({
                 color: strColor,
                 padding: '2px 8px',
                 borderRadius: 4,
-                fontSize: '0.68rem',
+                fontSize: '0.75rem',
                 fontWeight: 700,
               }}
             >
@@ -675,7 +675,7 @@ function SignalDeepDive({
           <div style={{ fontSize: '1.2rem', fontWeight: 800, color: dirColor, fontFamily: 'monospace' }}>
             {signal.direction === 'BULLISH' ? '▲' : '▼'} {signal.direction}
           </div>
-          <div style={{ fontSize: '0.68rem', color: 'var(--text-muted)' }}>
+          <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
             {signal.pillars_aligned}/3 pillars · {signal.confluence_pct.toFixed(0)}% confluence
           </div>
         </div>
@@ -683,22 +683,22 @@ function SignalDeepDive({
 
       {/* Score Sparkline */}
       <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 8, padding: '12px 14px' }}>
-        <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)', marginBottom: 8, display: 'flex', justifyContent: 'space-between' }}>
+        <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: 8, display: 'flex', justifyContent: 'space-between' }}>
           <span>26-WEEK MACRO SCORE HISTORY</span>
           <div style={{ display: 'flex', gap: 8 }}>
-            <span>Score Δ: <strong style={{ color: signal.score_delta > 0 ? '#10b981' : '#f43f5e' }}>{signal.score_delta > 0 ? '+' : ''}{signal.score_delta}</strong></span>
+            <span>Score Shift: <strong style={{ color: signal.score_delta > 0 ? '#10b981' : '#f43f5e' }}>{signal.score_delta > 0 ? '+' : ''}{signal.score_delta}</strong></span>
             <span>COT z: <strong style={{ color: Math.abs(signal.cot_zscore) > 1.5 ? '#f59e0b' : '#38bdf8' }}>{signal.cot_zscore > 0 ? '+' : ''}{signal.cot_zscore.toFixed(2)}</strong></span>
           </div>
         </div>
         <ScoreSparkline history={scoreHistory} />
-        <div style={{ fontSize: '0.57rem', color: 'var(--text-muted)', marginTop: 6 }}>
+        <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: 6 }}>
           Colored dots = COT z-score extreme (|z| &gt; 1.5). Green = bullish extreme, Red = bearish extreme.
         </div>
       </div>
 
       {/* 3 Confluence Gauges */}
       <div>
-        <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)', marginBottom: 10 }}>CONFLUENCE PILLARS</div>
+        <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: 10 }}>CONFLUENCE PILLARS</div>
         <div style={{ display: 'flex', justifyContent: 'space-around' }}>
           <PillarRing label="Macro Score" value={macroPct} color={dirColor} size={72} />
           <PillarRing label="COT Positioning" value={cotPct} color="#f59e0b" size={72} />
@@ -709,18 +709,18 @@ function SignalDeepDive({
       {/* Entry / Invalidation context */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
         <div style={{ background: `${dirColor}0a`, border: `1px solid ${dirColor}25`, borderRadius: 8, padding: '10px 12px' }}>
-          <div style={{ fontSize: '0.6rem', color: dirColor, fontWeight: 700, marginBottom: 4, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+          <div style={{ fontSize: '0.75rem', color: dirColor, fontWeight: 700, marginBottom: 4, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
             Entry Context
           </div>
-          <p style={{ fontSize: '0.72rem', color: 'var(--text-secondary)', margin: 0, lineHeight: 1.5 }}>
+          <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', margin: 0, lineHeight: 1.5 }}>
             {signal.entry_context}
           </p>
         </div>
         <div style={{ background: 'rgba(244,63,94,0.06)', border: '1px solid rgba(244,63,94,0.18)', borderRadius: 8, padding: '10px 12px' }}>
-          <div style={{ fontSize: '0.6rem', color: '#f43f5e', fontWeight: 700, marginBottom: 4, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+          <div style={{ fontSize: '0.75rem', color: '#f43f5e', fontWeight: 700, marginBottom: 4, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
             ⚠ Invalidation
           </div>
-          <p style={{ fontSize: '0.72rem', color: 'var(--text-secondary)', margin: 0, lineHeight: 1.5 }}>
+          <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', margin: 0, lineHeight: 1.5 }}>
             {signal.invalidation_context}
           </p>
         </div>
@@ -731,7 +731,7 @@ function SignalDeepDive({
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
             <FlaskConical size={14} color="#38bdf8" />
-            <span style={{ fontSize: '0.68rem', fontWeight: 700, color: '#38bdf8', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#38bdf8', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
               15-Year Backtest · {signal.signal_type}
             </span>
           </div>
@@ -746,7 +746,7 @@ function SignalDeepDive({
                   border: `1px solid ${t === signal.signal_type ? '#38bdf8' : 'rgba(255,255,255,0.1)'}`,
                   background: t === signal.signal_type ? 'rgba(56,189,248,0.12)' : 'transparent',
                   color: t === signal.signal_type ? '#38bdf8' : 'var(--text-muted)',
-                  fontSize: '0.62rem',
+                  fontSize: '0.75rem',
                   cursor: 'pointer',
                   fontWeight: 700,
                 }}
@@ -774,12 +774,12 @@ function SignalDeepDive({
               ].map((m) => (
                 <div key={m.label} style={{ textAlign: 'center' }}>
                   <div style={{ fontSize: '1rem', fontWeight: 800, color: m.color, fontFamily: 'monospace' }}>{m.value}</div>
-                  <div style={{ fontSize: '0.58rem', color: 'var(--text-muted)' }}>{m.label}</div>
+                  <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{m.label}</div>
                 </div>
               ))}
             </div>
 
-            <div style={{ fontSize: '0.6rem', color: 'var(--text-muted)' }}>
+            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
               Avg gain: <strong style={{ color: '#10b981' }}>+{backtest.avg_gain_pct.toFixed(2)}%</strong> &nbsp;
               Avg loss: <strong style={{ color: '#f43f5e' }}>-{backtest.avg_loss_pct.toFixed(2)}%</strong> &nbsp;
               Best regime: <strong style={{ color: '#f59e0b' }}>{backtest.best_regime}</strong>
@@ -789,8 +789,8 @@ function SignalDeepDive({
             {backtest.timeline.length > 0 && (
               <div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
-                  <div style={{ fontSize: '0.6rem', color: 'var(--text-muted)' }}>SIGNAL OUTCOMES TIMELINE (Green = Win, Red = Loss)</div>
-                  <div style={{ fontSize: '0.6rem', color: 'var(--text-muted)' }}>
+                  <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>SIGNAL OUTCOMES TIMELINE (Green = Win, Red = Loss)</div>
+                  <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
                     {backtest.timeline.filter((t) => t.is_correct).length}W / {backtest.timeline.filter((t) => !t.is_correct).length}L
                   </div>
                 </div>
@@ -805,13 +805,13 @@ function SignalDeepDive({
 
             {/* Regime breakdown */}
             <div>
-              <div style={{ fontSize: '0.6rem', color: 'var(--text-muted)', marginBottom: 8 }}>BY MACRO REGIME</div>
+              <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: 8 }}>BY MACRO REGIME</div>
               {backtest.regime_breakdown.map((r) => (
                 <RegimeBar key={r.regime_id} regime={r} />
               ))}
             </div>
 
-            <div style={{ fontSize: '0.58rem', color: 'var(--text-muted)', fontStyle: 'italic' }}>
+            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontStyle: 'italic' }}>
               Walk-forward backtest: {backtest.evaluation_period}. Zero look-ahead bias.
             </div>
           </div>
@@ -875,11 +875,11 @@ function SignalRow({
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
           <span style={{ fontWeight: 900, fontSize: '0.9rem', color: 'var(--text-primary)' }}>{signal.symbol}</span>
-          <span style={{ fontSize: '0.62rem', color: typeColor, background: `${typeColor}18`, padding: '1px 6px', borderRadius: 3, fontWeight: 700 }}>
+          <span style={{ fontSize: '0.75rem', color: typeColor, background: `${typeColor}18`, padding: '1px 6px', borderRadius: 3, fontWeight: 700 }}>
             {signal.signal_type}
           </span>
         </div>
-        <span style={{ fontSize: '0.68rem', fontWeight: 700, color: strColor, background: strengthBg(signal.strength), padding: '2px 6px', borderRadius: 4 }}>
+        <span style={{ fontSize: '0.75rem', fontWeight: 700, color: strColor, background: strengthBg(signal.strength), padding: '2px 6px', borderRadius: 4 }}>
           {signal.strength}
         </span>
       </div>
@@ -888,16 +888,16 @@ function SignalRow({
           {signal.direction === 'BULLISH'
             ? <ArrowUpRight size={13} color={dirColor} />
             : <ArrowDownRight size={13} color={dirColor} />}
-          <span style={{ fontSize: '0.72rem', fontWeight: 700, color: dirColor }}>{signal.direction}</span>
+          <span style={{ fontSize: '0.75rem', fontWeight: 700, color: dirColor }}>{signal.direction}</span>
         </div>
         <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-          <span style={{ fontSize: '0.62rem', color: 'var(--text-muted)' }}>
-            Δ<strong style={{ color: signal.score_delta > 0 ? '#10b981' : '#f43f5e' }}>{signal.score_delta > 0 ? '+' : ''}{signal.score_delta}</strong>
+          <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+            Shift: <strong style={{ color: signal.score_delta > 0 ? '#10b981' : '#f43f5e' }}>{signal.score_delta > 0 ? '+' : ''}{signal.score_delta}</strong>
           </span>
-          <span style={{ fontSize: '0.62rem', color: 'var(--text-muted)' }}>
+          <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
             z:<strong style={{ color: '#f59e0b' }}>{signal.cot_zscore > 0 ? '+' : ''}{signal.cot_zscore.toFixed(2)}</strong>
           </span>
-          <span style={{ fontSize: '0.65rem', fontFamily: 'monospace', color: hitRateColor(signal.backtest_hit_rate), fontWeight: 700 }}>
+          <span style={{ fontSize: '0.75rem', fontFamily: 'monospace', color: hitRateColor(signal.backtest_hit_rate), fontWeight: 700 }}>
             {signal.backtest_hit_rate.toFixed(1)}%
           </span>
         </div>
@@ -916,7 +916,7 @@ function SignalRow({
             />
           ))}
         </div>
-        <span style={{ fontSize: '0.58rem', color: 'var(--text-muted)' }}>
+        <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
           {signal.confluence_pct.toFixed(0)}% confluence · N={signal.backtest_sample_size}
         </span>
       </div>
@@ -995,11 +995,11 @@ function HistoricalSignalJournal({
             <span style={{ fontSize: '1.05rem', fontWeight: 800, color: 'var(--text-primary)' }}>
               Historical Signals Journal
             </span>
-            <span style={{ fontSize: '0.62rem', background: 'rgba(56,189,248,0.15)', color: '#38bdf8', padding: '2px 8px', borderRadius: 4, fontWeight: 700, border: '1px solid rgba(56,189,248,0.25)' }}>
+            <span style={{ fontSize: '0.75rem', background: 'rgba(56,189,248,0.15)', color: '#38bdf8', padding: '2px 8px', borderRadius: 4, fontWeight: 700, border: '1px solid rgba(56,189,248,0.25)' }}>
               15-Year Walk-Forward Ledger
             </span>
           </div>
-          <div style={{ fontSize: '0.68rem', color: 'var(--text-muted)', marginTop: 2 }}>
+          <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: 2 }}>
             Complete audit record of past major Reversal &amp; Continuation signals with exact dates, entry/exit prices, forward returns, and win/loss outcomes.
           </div>
         </div>
@@ -1010,7 +1010,7 @@ function HistoricalSignalJournal({
               display: 'flex', alignItems: 'center', gap: 5,
               padding: '6px 12px', borderRadius: 6,
               background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)',
-              color: 'var(--text-secondary)', fontSize: '0.72rem', fontWeight: 700, cursor: 'pointer',
+              color: 'var(--text-secondary)', fontSize: '0.75rem', fontWeight: 700, cursor: 'pointer',
             }}
           >
             <RefreshCw size={12} />
@@ -1023,7 +1023,7 @@ function HistoricalSignalJournal({
                 display: 'flex', alignItems: 'center', gap: 5,
                 padding: '6px 12px', borderRadius: 6,
                 background: 'rgba(56,189,248,0.15)', border: '1px solid rgba(56,189,248,0.3)',
-                color: '#38bdf8', fontSize: '0.72rem', fontWeight: 700, cursor: 'pointer',
+                color: '#38bdf8', fontSize: '0.75rem', fontWeight: 700, cursor: 'pointer',
               }}
             >
               <ScanSearch size={13} />
@@ -1036,41 +1036,41 @@ function HistoricalSignalJournal({
       {/* KPI Summary Cards */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 10 }}>
         <div style={{ background: 'var(--surface-1)', border: '1px solid var(--border-subtle)', borderRadius: 10, padding: '12px 14px' }}>
-          <div style={{ fontSize: '0.64rem', color: 'var(--text-muted)', fontWeight: 700, marginBottom: 4 }}>TOTAL SIGNALS</div>
+          <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 700, marginBottom: 4 }}>TOTAL SIGNALS</div>
           <div style={{ fontSize: '1.25rem', fontWeight: 900, color: 'var(--text-primary)' }}>{data?.total_signals || 0}</div>
-          <div style={{ fontSize: '0.58rem', color: 'var(--text-muted)' }}>15-Year Historical Horizon</div>
+          <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>15-Year Historical Horizon</div>
         </div>
 
         <div style={{ background: 'var(--surface-1)', border: '1px solid rgba(16,185,129,0.3)', borderRadius: 10, padding: '12px 14px' }}>
-          <div style={{ fontSize: '0.64rem', color: 'var(--text-muted)', fontWeight: 700, marginBottom: 4 }}>WIN RATE</div>
+          <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 700, marginBottom: 4 }}>WIN RATE</div>
           <div style={{ fontSize: '1.25rem', fontWeight: 900, color: '#10b981' }}>{data?.hit_rate_pct.toFixed(1) || '0.0'}%</div>
-          <div style={{ fontSize: '0.58rem', color: '#10b981aa' }}>Statistical edge confirmed</div>
+          <div style={{ fontSize: '0.75rem', color: '#10b981aa' }}>Statistical edge confirmed</div>
         </div>
 
         <div style={{ background: 'var(--surface-1)', border: '1px solid var(--border-subtle)', borderRadius: 10, padding: '12px 14px' }}>
-          <div style={{ fontSize: '0.64rem', color: 'var(--text-muted)', fontWeight: 700, marginBottom: 4 }}>WINS vs LOSSES</div>
+          <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 700, marginBottom: 4 }}>WINS vs LOSSES</div>
           <div style={{ fontSize: '1.1rem', fontWeight: 900, color: 'var(--text-primary)' }}>
             <span style={{ color: '#10b981' }}>{data?.total_wins || 0}W</span>
             <span style={{ color: 'var(--text-muted)', margin: '0 4px' }}>/</span>
             <span style={{ color: '#f43f5e' }}>{data?.total_losses || 0}L</span>
           </div>
-          <div style={{ fontSize: '0.58rem', color: 'var(--text-muted)' }}>Resolved outcomes</div>
+          <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Resolved outcomes</div>
         </div>
 
         <div style={{ background: 'var(--surface-1)', border: '1px solid var(--border-subtle)', borderRadius: 10, padding: '12px 14px' }}>
-          <div style={{ fontSize: '0.64rem', color: 'var(--text-muted)', fontWeight: 700, marginBottom: 4 }}>WIN / LOSS RATIO</div>
+          <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 700, marginBottom: 4 }}>WIN / LOSS RATIO</div>
           <div style={{ fontSize: '1.25rem', fontWeight: 900, color: '#38bdf8' }}>{data?.win_loss_ratio.toFixed(2) || '0.00'}x</div>
-          <div style={{ fontSize: '0.58rem', color: 'var(--text-muted)' }}>Avg win vs avg loss</div>
+          <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Avg win vs avg loss</div>
         </div>
 
         <div style={{ background: 'var(--surface-1)', border: '1px solid var(--border-subtle)', borderRadius: 10, padding: '12px 14px' }}>
-          <div style={{ fontSize: '0.64rem', color: 'var(--text-muted)', fontWeight: 700, marginBottom: 4 }}>AVG RETURN</div>
+          <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 700, marginBottom: 4 }}>AVG RETURN</div>
           <div style={{ fontSize: '1.1rem', fontWeight: 900, color: 'var(--text-primary)' }}>
             <span style={{ color: '#10b981' }}>+{data?.avg_win_pct.toFixed(2) || '0.00'}%</span>
             <span style={{ color: 'var(--text-muted)', margin: '0 4px' }}>|</span>
             <span style={{ color: '#f43f5e' }}>-{data?.avg_loss_pct.toFixed(2) || '0.00'}%</span>
           </div>
-          <div style={{ fontSize: '0.58rem', color: 'var(--text-muted)' }}>Per trade expectation</div>
+          <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Per trade expectation</div>
         </div>
       </div>
 
@@ -1093,7 +1093,7 @@ function HistoricalSignalJournal({
                   color: outcome === o
                     ? o === 'WIN' ? '#10b981' : o === 'LOSS' ? '#f43f5e' : '#38bdf8'
                     : 'var(--text-muted)',
-                  fontSize: '0.68rem',
+                  fontSize: '0.75rem',
                   fontWeight: 700,
                   cursor: 'pointer',
                 }}
@@ -1119,7 +1119,7 @@ function HistoricalSignalJournal({
                   color: signalType === t
                     ? t === 'REVERSAL' ? '#f59e0b' : t === 'CONTINUATION' ? '#38bdf8' : '#fff'
                     : 'var(--text-muted)',
-                  fontSize: '0.68rem',
+                  fontSize: '0.75rem',
                   fontWeight: 700,
                   cursor: 'pointer',
                 }}
@@ -1141,7 +1141,7 @@ function HistoricalSignalJournal({
                   border: 'none',
                   background: symbol === a ? 'rgba(16,185,129,0.18)' : 'transparent',
                   color: symbol === a ? '#10b981' : 'var(--text-muted)',
-                  fontSize: '0.68rem',
+                  fontSize: '0.75rem',
                   fontWeight: 700,
                   cursor: 'pointer',
                 }}
@@ -1167,7 +1167,7 @@ function HistoricalSignalJournal({
               background: 'rgba(255,255,255,0.05)',
               border: '1px solid rgba(255,255,255,0.1)',
               color: 'var(--text-primary)',
-              fontSize: '0.72rem',
+              fontSize: '0.75rem',
               outline: 'none',
             }}
           />
@@ -1177,9 +1177,9 @@ function HistoricalSignalJournal({
       {/* Main Journal Table */}
       <div style={{ background: 'var(--surface-1)', border: '1px solid var(--border-subtle)', borderRadius: 12, overflow: 'hidden', flex: 1, display: 'flex', flexDirection: 'column' }}>
         <div style={{ overflowX: 'auto', flex: 1 }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.74rem' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.75rem' }}>
             <thead>
-              <tr style={{ background: 'rgba(255,255,255,0.02)', borderBottom: '1px solid var(--border-subtle)', color: 'var(--text-muted)', fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+              <tr style={{ background: 'rgba(255,255,255,0.02)', borderBottom: '1px solid var(--border-subtle)', color: 'var(--text-muted)', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
                 <th style={{ padding: '10px 14px', textAlign: 'left' }}>Signal Date</th>
                 <th style={{ padding: '10px 14px', textAlign: 'left' }}>Asset</th>
                 <th style={{ padding: '10px 14px', textAlign: 'left' }}>Signal Type</th>
@@ -1189,7 +1189,7 @@ function HistoricalSignalJournal({
                 <th style={{ padding: '10px 14px', textAlign: 'right' }}>Exit Price</th>
                 <th style={{ padding: '10px 14px', textAlign: 'right' }}>Return</th>
                 <th style={{ padding: '10px 14px', textAlign: 'center' }}>Outcome</th>
-                <th style={{ padding: '10px 14px', textAlign: 'right' }}>Score Δ</th>
+                <th style={{ padding: '10px 14px', textAlign: 'right' }}>Score Shift</th>
                 <th style={{ padding: '10px 14px', textAlign: 'left' }}>Historical Regime</th>
               </tr>
             </thead>
@@ -1228,12 +1228,12 @@ function HistoricalSignalJournal({
                       </td>
                       <td style={{ padding: '9px 14px' }}>
                         <span style={{ fontWeight: 800, color: 'var(--text-primary)' }}>{s.symbol}</span>
-                        <div style={{ fontSize: '0.6rem', color: 'var(--text-muted)' }}>{s.asset_name}</div>
+                        <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{s.asset_name}</div>
                       </td>
                       <td style={{ padding: '9px 14px' }}>
                         <span
                           style={{
-                            fontSize: '0.65rem',
+                            fontSize: '0.75rem',
                             fontWeight: 700,
                             padding: '2px 7px',
                             borderRadius: 4,
@@ -1254,7 +1254,7 @@ function HistoricalSignalJournal({
                       <td style={{ padding: '9px 14px' }}>
                         <span
                           style={{
-                            fontSize: '0.62rem',
+                            fontSize: '0.75rem',
                             fontWeight: 700,
                             padding: '2px 6px',
                             borderRadius: 4,
@@ -1278,7 +1278,7 @@ function HistoricalSignalJournal({
                         <span
                           style={{
                             display: 'inline-block',
-                            fontSize: '0.62rem',
+                            fontSize: '0.75rem',
                             fontWeight: 900,
                             padding: '2px 8px',
                             borderRadius: 4,
@@ -1290,11 +1290,11 @@ function HistoricalSignalJournal({
                           {s.outcome}
                         </span>
                       </td>
-                      <td style={{ padding: '9px 14px', textAlign: 'right', fontFamily: 'monospace', fontSize: '0.68rem' }}>
+                      <td style={{ padding: '9px 14px', textAlign: 'right', fontFamily: 'monospace', fontSize: '0.75rem' }}>
                         <span style={{ color: s.macro_score > 0 ? '#10b981' : '#f43f5e' }}>{s.macro_score > 0 ? '+' : ''}{s.macro_score}</span>
                         <span style={{ color: 'var(--text-muted)', marginLeft: 6 }}>z:{s.cot_zscore > 0 ? '+' : ''}{s.cot_zscore.toFixed(2)}</span>
                       </td>
-                      <td style={{ padding: '9px 14px', fontSize: '0.66rem', color: 'var(--text-muted)' }}>
+                      <td style={{ padding: '9px 14px', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
                         {s.regime_name}
                       </td>
                     </tr>
@@ -1307,7 +1307,7 @@ function HistoricalSignalJournal({
 
         {/* Pagination Footer */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 14px', borderTop: '1px solid var(--border-subtle)', background: 'rgba(255,255,255,0.015)' }}>
-          <div style={{ fontSize: '0.68rem', color: 'var(--text-muted)' }}>
+          <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
             Showing {allFiltered.length === 0 ? 0 : (currentPage - 1) * pageSize + 1}–{Math.min(currentPage * pageSize, allFiltered.length)} of {allFiltered.length} past signals
           </div>
           <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
@@ -1320,13 +1320,13 @@ function HistoricalSignalJournal({
                 background: currentPage <= 1 ? 'rgba(255,255,255,0.02)' : 'rgba(255,255,255,0.06)',
                 border: '1px solid rgba(255,255,255,0.08)',
                 color: currentPage <= 1 ? 'var(--text-muted)' : 'var(--text-primary)',
-                fontSize: '0.68rem', cursor: currentPage <= 1 ? 'default' : 'pointer',
+                fontSize: '0.75rem', cursor: currentPage <= 1 ? 'default' : 'pointer',
               }}
             >
               <ChevronLeft size={13} />
               Prev
             </button>
-            <span style={{ fontSize: '0.68rem', color: 'var(--text-muted)', padding: '0 6px' }}>
+            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', padding: '0 6px' }}>
               Page {currentPage} of {totalPages}
             </span>
             <button
@@ -1338,7 +1338,7 @@ function HistoricalSignalJournal({
                 background: currentPage >= totalPages ? 'rgba(255,255,255,0.02)' : 'rgba(255,255,255,0.06)',
                 border: '1px solid rgba(255,255,255,0.08)',
                 color: currentPage >= totalPages ? 'var(--text-muted)' : 'var(--text-primary)',
-                fontSize: '0.68rem', cursor: currentPage >= totalPages ? 'default' : 'pointer',
+                fontSize: '0.75rem', cursor: currentPage >= totalPages ? 'default' : 'pointer',
               }}
             >
               Next
@@ -1477,7 +1477,7 @@ export const RegimeScannerView: React.FC = () => {
             <h1 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 800, color: 'var(--text-primary)' }}>
               Regime Scanner
             </h1>
-            <p style={{ margin: 0, fontSize: '0.7rem', color: 'var(--text-muted)' }}>
+            <p style={{ margin: 0, fontSize: '0.75rem', color: 'var(--text-muted)' }}>
               Major Reversals &amp; Continuations · Backtested &amp; Forward-Tested
             </p>
           </div>
@@ -1497,7 +1497,7 @@ export const RegimeScannerView: React.FC = () => {
               background: scannerTab === 'scanner' ? 'rgba(56,189,248,0.2)' : 'transparent',
               color: scannerTab === 'scanner' ? '#38bdf8' : 'var(--text-muted)',
               fontWeight: 700,
-              fontSize: '0.72rem',
+              fontSize: '0.75rem',
               cursor: 'pointer',
               transition: 'all 0.15s ease',
             }}
@@ -1505,7 +1505,7 @@ export const RegimeScannerView: React.FC = () => {
             <ScanSearch size={13} />
             Live Scanner Feed
             {signals.length > 0 && (
-              <span style={{ fontSize: '0.58rem', padding: '1px 5px', borderRadius: 4, background: scannerTab === 'scanner' ? 'rgba(56,189,248,0.3)' : 'rgba(255,255,255,0.08)', color: scannerTab === 'scanner' ? '#fff' : 'var(--text-muted)', fontWeight: 800 }}>
+              <span style={{ fontSize: '0.75rem', padding: '1px 5px', borderRadius: 4, background: scannerTab === 'scanner' ? 'rgba(56,189,248,0.3)' : 'rgba(255,255,255,0.08)', color: scannerTab === 'scanner' ? '#fff' : 'var(--text-muted)', fontWeight: 800 }}>
                 {signals.length}
               </span>
             )}
@@ -1522,14 +1522,14 @@ export const RegimeScannerView: React.FC = () => {
               background: scannerTab === 'history' ? 'rgba(16,185,129,0.2)' : 'transparent',
               color: scannerTab === 'history' ? '#10b981' : 'var(--text-muted)',
               fontWeight: 700,
-              fontSize: '0.72rem',
+              fontSize: '0.75rem',
               cursor: 'pointer',
               transition: 'all 0.15s ease',
             }}
           >
             <BookOpen size={13} />
             Won / Lost Signals Journal
-            <span style={{ fontSize: '0.58rem', padding: '1px 5px', borderRadius: 4, background: scannerTab === 'history' ? 'rgba(16,185,129,0.3)' : 'rgba(255,255,255,0.08)', color: scannerTab === 'history' ? '#fff' : 'var(--text-muted)', fontWeight: 800 }}>
+            <span style={{ fontSize: '0.75rem', padding: '1px 5px', borderRadius: 4, background: scannerTab === 'history' ? 'rgba(16,185,129,0.3)' : 'rgba(255,255,255,0.08)', color: scannerTab === 'history' ? '#fff' : 'var(--text-muted)', fontWeight: 800 }}>
               15-Yr Audit
             </span>
           </button>
@@ -1537,7 +1537,7 @@ export const RegimeScannerView: React.FC = () => {
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           {lastUpdated && (
-            <span style={{ fontSize: '0.65rem', color: 'var(--text-muted)' }}>
+            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
               Updated {lastUpdated.toLocaleTimeString()}
             </span>
           )}
@@ -1547,7 +1547,7 @@ export const RegimeScannerView: React.FC = () => {
               display: 'flex', alignItems: 'center', gap: 5,
               padding: '6px 12px', borderRadius: 6,
               background: 'rgba(56,189,248,0.1)', border: '1px solid rgba(56,189,248,0.25)',
-              color: '#38bdf8', fontSize: '0.72rem', fontWeight: 700, cursor: 'pointer',
+              color: '#38bdf8', fontSize: '0.75rem', fontWeight: 700, cursor: 'pointer',
             }}
           >
             <RefreshCw size={12} />
@@ -1577,7 +1577,7 @@ export const RegimeScannerView: React.FC = () => {
                 padding: '4px 10px', borderRadius: 5, border: 'none',
                 background: typeFilter === f ? 'rgba(56,189,248,0.18)' : 'transparent',
                 color: typeFilter === f ? '#38bdf8' : 'var(--text-muted)',
-                fontSize: '0.68rem', fontWeight: 700, cursor: 'pointer',
+                fontSize: '0.75rem', fontWeight: 700, cursor: 'pointer',
               }}
             >
               {f}
@@ -1594,7 +1594,7 @@ export const RegimeScannerView: React.FC = () => {
                 padding: '4px 10px', borderRadius: 5, border: 'none',
                 background: strengthFilter === f ? `${strengthColor(f)}22` : 'transparent',
                 color: strengthFilter === f ? strengthColor(f) : 'var(--text-muted)',
-                fontSize: '0.68rem', fontWeight: 700, cursor: 'pointer',
+                fontSize: '0.75rem', fontWeight: 700, cursor: 'pointer',
               }}
             >
               {f}
@@ -1611,7 +1611,7 @@ export const RegimeScannerView: React.FC = () => {
                 padding: '4px 10px', borderRadius: 5, border: 'none',
                 background: assetFilter === f ? 'rgba(16,185,129,0.15)' : 'transparent',
                 color: assetFilter === f ? '#10b981' : 'var(--text-muted)',
-                fontSize: '0.68rem', fontWeight: 700, cursor: 'pointer',
+                fontSize: '0.75rem', fontWeight: 700, cursor: 'pointer',
               }}
             >
               {f}
@@ -1637,12 +1637,12 @@ export const RegimeScannerView: React.FC = () => {
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
               <Zap size={13} color="#f43f5e" />
-              <span style={{ fontSize: '0.68rem', fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+              <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
                 Live Signals
               </span>
             </div>
             {!loading && (
-              <span style={{ fontSize: '0.65rem', color: 'var(--text-muted)', background: 'rgba(255,255,255,0.06)', padding: '2px 7px', borderRadius: 4 }}>
+              <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', background: 'rgba(255,255,255,0.06)', padding: '2px 7px', borderRadius: 4 }}>
                 {filteredSignals.length}
               </span>
             )}
@@ -1660,7 +1660,7 @@ export const RegimeScannerView: React.FC = () => {
               <span style={{ color: 'var(--text-muted)', fontSize: '0.78rem', textAlign: 'center' }}>
                 No signals match current filters.
               </span>
-              <span style={{ color: 'var(--text-muted)', fontSize: '0.68rem', textAlign: 'center' }}>
+              <span style={{ color: 'var(--text-muted)', fontSize: '0.75rem', textAlign: 'center' }}>
                 Try ALL filters or wait for the next macro score update.
               </span>
             </div>
@@ -1677,7 +1677,7 @@ export const RegimeScannerView: React.FC = () => {
 
           {/* Legend */}
           <div style={{ marginTop: 'auto', paddingTop: 12, borderTop: '1px solid var(--border-subtle)' }}>
-            <div style={{ fontSize: '0.58rem', color: 'var(--text-muted)', lineHeight: 1.7 }}>
+            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', lineHeight: 1.7 }}>
               <div>● <span style={{ color: '#f43f5e' }}>MAJOR</span> – All 3 criteria met, high conviction</div>
               <div>● <span style={{ color: '#f59e0b' }}>MODERATE</span> – 2/3 criteria met</div>
               <div>● Hit Rate = 15-year historical accuracy</div>
@@ -1736,7 +1736,7 @@ export const RegimeScannerView: React.FC = () => {
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
             <Activity size={13} color="#10b981" />
-            <span style={{ fontSize: '0.68rem', fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+            <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
               Forward Test Tracker
             </span>
           </div>

@@ -62,7 +62,7 @@ export const ForexRankingsView: React.FC<{ onSelectAsset?: (symbol: string) => v
               background: 'var(--surface-2)',
               borderBottom: '1px solid var(--border-subtle)',
               color: 'var(--text-muted)',
-              fontSize: '0.7rem',
+              fontSize: '0.75rem',
               textTransform: 'uppercase',
               letterSpacing: '0.05em',
             }}>
@@ -99,7 +99,7 @@ export const ForexRankingsView: React.FC<{ onSelectAsset?: (symbol: string) => v
                     <span className="mono" style={{ fontSize: '0.92rem', fontWeight: 800, color: 'var(--text-primary)' }}>
                       {p.symbol}
                     </span>
-                    <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>
+                    <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
                       {p.name}
                     </div>
                   </td>
@@ -130,7 +130,7 @@ export const ForexRankingsView: React.FC<{ onSelectAsset?: (symbol: string) => v
                     {p.confidence.toFixed(0)}%
                   </td>
 
-                  <td style={{ padding: '12px 16px', fontSize: '0.74rem', color: 'var(--text-secondary)' }}>
+                  <td style={{ padding: '12px 16px', fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
                     {p.primary_driver}
                   </td>
 

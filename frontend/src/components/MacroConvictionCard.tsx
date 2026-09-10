@@ -132,7 +132,7 @@ export const MacroConvictionCard: React.FC<MacroConvictionCardProps> = ({
           </div>
           <div
             style={{
-              fontSize: '0.68rem',
+              fontSize: '0.75rem',
               fontWeight: 700,
               textTransform: 'uppercase',
               letterSpacing: '0.08em',
@@ -218,7 +218,7 @@ export const MacroConvictionCard: React.FC<MacroConvictionCardProps> = ({
           style={{
             display: 'flex',
             justifyContent: 'space-between',
-            fontSize: '0.65rem',
+            fontSize: '0.75rem',
             color: 'var(--text-dim)',
             marginTop: 4,
             fontFamily: 'JetBrains Mono, monospace',
@@ -251,7 +251,7 @@ export const MacroConvictionCard: React.FC<MacroConvictionCardProps> = ({
         >
           <div
             style={{
-              fontSize: '0.72rem',
+              fontSize: '0.75rem',
               fontWeight: 700,
               textTransform: 'uppercase',
               letterSpacing: '0.06em',
@@ -273,7 +273,7 @@ export const MacroConvictionCard: React.FC<MacroConvictionCardProps> = ({
                   style={{
                     display: 'flex',
                     justifyContent: 'space-between',
-                    fontSize: '0.72rem',
+                    fontSize: '0.75rem',
                     marginBottom: 3,
                   }}
                 >
@@ -317,7 +317,7 @@ export const MacroConvictionCard: React.FC<MacroConvictionCardProps> = ({
                 marginTop: 12,
                 width: '100%',
                 padding: '6px',
-                fontSize: '0.68rem',
+                fontSize: '0.75rem',
                 fontWeight: 600,
                 color: 'var(--accent-cyan)',
                 background: 'rgba(6, 182, 212, 0.08)',
@@ -344,7 +344,7 @@ export const MacroConvictionCard: React.FC<MacroConvictionCardProps> = ({
         >
           <div
             style={{
-              fontSize: '0.72rem',
+              fontSize: '0.75rem',
               fontWeight: 700,
               textTransform: 'uppercase',
               letterSpacing: '0.06em',
@@ -378,12 +378,12 @@ export const MacroConvictionCard: React.FC<MacroConvictionCardProps> = ({
                     marginBottom: 2,
                   }}
                 >
-                  <span style={{ fontSize: '0.72rem', fontWeight: 600, color: 'var(--text-primary)' }}>
+                  <span style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-primary)' }}>
                     {inv.condition}
                   </span>
                   <span
                     style={{
-                      fontSize: '0.62rem',
+                      fontSize: '0.75rem',
                       fontWeight: 700,
                       padding: '1px 5px',
                       borderRadius: 3,
@@ -394,12 +394,12 @@ export const MacroConvictionCard: React.FC<MacroConvictionCardProps> = ({
                     {inv.likelihood} Risk
                   </span>
                 </div>
-                <div style={{ fontSize: '0.68rem', color: 'var(--text-muted)' }}>
+                <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
                   Impact: {inv.impact_if_triggered}
                 </div>
                 <div
                   className="mono"
-                  style={{ fontSize: '0.64rem', color: 'var(--accent-cyan)', marginTop: 3 }}
+                  style={{ fontSize: '0.75rem', color: 'var(--accent-cyan)', marginTop: 3 }}
                 >
                   Watch: {inv.metric_to_watch}
                 </div>

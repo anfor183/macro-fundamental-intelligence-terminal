@@ -45,7 +45,7 @@ function SampleBadge({ n }: { n: number }) {
     <span style={{
       display: 'inline-flex', alignItems: 'center', gap: 3,
       background: 'rgba(56,189,248,0.12)', color: '#38bdf8',
-      fontSize: '0.65rem', fontWeight: 700, padding: '2px 6px',
+      fontSize: '0.75rem', fontWeight: 700, padding: '2px 6px',
       borderRadius: 4, fontFamily: 'monospace', letterSpacing: '0.04em',
     }}>
       N={n}
@@ -57,7 +57,7 @@ function PValueBadge({ p }: { p: number }) {
   const sig = p < 0.05;
   return (
     <span style={{
-      fontSize: '0.65rem', fontWeight: 700, padding: '2px 6px',
+      fontSize: '0.75rem', fontWeight: 700, padding: '2px 6px',
       borderRadius: 4,
       background: sig ? 'rgba(16,185,129,0.15)' : 'rgba(100,116,139,0.15)',
       color: sig ? '#10b981' : 'var(--text-muted)',
@@ -583,9 +583,9 @@ export const ValidationDashboard: React.FC = () => {
         <ShieldCheck size={20} color="#10b981" />
         <span style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', lineHeight: 1.5 }}>
           <strong style={{ color: '#10b981' }}>Strict Point-in-Time (PIT) Guarantee:</strong> Signals at observation week{' '}
-          <code style={{ fontSize: '0.72rem', background: 'rgba(0,0,0,0.3)', padding: '1px 5px', borderRadius: 3 }}>T₀</code>{' '}
+          <code style={{ fontSize: '0.75rem', background: 'rgba(0,0,0,0.3)', padding: '1px 5px', borderRadius: 3 }}>T₀</code>{' '}
           were computed strictly using central bank rates, CPI prints, and yield curve spreads published on or before{' '}
-          <code style={{ fontSize: '0.72rem', background: 'rgba(0,0,0,0.3)', padding: '1px 5px', borderRadius: 3 }}>T₀</code>.
+          <code style={{ fontSize: '0.75rem', background: 'rgba(0,0,0,0.3)', padding: '1px 5px', borderRadius: 3 }}>T₀</code>.
           Zero subsequent revisions, zero future price leakage, and verified out-of-sample forward evaluation.
         </span>
       </div>
@@ -635,7 +635,7 @@ export const ValidationDashboard: React.FC = () => {
                         color: horizonWeeks15Y === h.weeks ? '#38bdf8' : 'var(--text-secondary)',
                         borderRadius: 6,
                         padding: '5px 10px',
-                        fontSize: '0.72rem',
+                        fontSize: '0.75rem',
                         fontWeight: 700,
                         cursor: 'pointer',
                       }}
@@ -702,11 +702,11 @@ export const ValidationDashboard: React.FC = () => {
                           {s.overall_hit_rate_pct.toFixed(1)}% Hit
                         </span>
                       </div>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.68rem', color: 'var(--text-secondary)' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
                         <span>Sharpe: <strong className="mono" style={{ color: 'var(--text-primary)' }}>{s.sharpe_equivalent.toFixed(2)}</strong></span>
                         <span>OOS: <strong className="mono" style={{ color: accuracyColor(s.oos_accuracy_pct) }}>{s.oos_accuracy_pct.toFixed(0)}%</strong></span>
                       </div>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.68rem', color: 'var(--text-muted)', marginTop: 4 }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: 4 }}>
                         <span>Strategy: <strong className="mono" style={{ color: s.cumulative_strategy_return_pct >= 0 ? '#10b981' : '#f43f5e' }}>{s.cumulative_strategy_return_pct >= 0 ? '+' : ''}{s.cumulative_strategy_return_pct}%</strong></span>
                         <span>B&H: <strong className="mono" style={{ color: 'var(--text-secondary)' }}>{s.cumulative_buy_hold_return_pct >= 0 ? '+' : ''}{s.cumulative_buy_hold_return_pct}%</strong></span>
                       </div>
@@ -737,7 +737,7 @@ export const ValidationDashboard: React.FC = () => {
                     <div style={{ fontSize: '0.82rem', fontWeight: 800, color: 'var(--text-primary)' }}>
                       Execution Strategy: {strategyMode15Y === 'enhanced' ? 'Enhanced High-Conviction (Macro + CFTC COT + Vol Stop)' : 'Baseline Unhedged (Pure Macro Signals)'}
                     </div>
-                    <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>
+                    <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
                       {strategyMode15Y === 'enhanced'
                         ? 'Filters out false breakouts and squeeze traps when speculative managed money is overcrowded (>80 or <20 index).'
                         : 'Raw linear macro signal execution without institutional positioning exhaustion filters.'}
@@ -753,7 +753,7 @@ export const ValidationDashboard: React.FC = () => {
                       background: strategyMode15Y === 'enhanced' ? 'linear-gradient(135deg, #10b981, #059669)' : 'transparent',
                       color: strategyMode15Y === 'enhanced' ? '#fff' : 'var(--text-muted)',
                       border: 'none', padding: '6px 14px', borderRadius: 6,
-                      fontSize: '0.74rem', fontWeight: 700, cursor: 'pointer',
+                      fontSize: '0.75rem', fontWeight: 700, cursor: 'pointer',
                       transition: 'all 0.15s ease',
                     }}
                   >
@@ -767,7 +767,7 @@ export const ValidationDashboard: React.FC = () => {
                       background: strategyMode15Y === 'baseline' ? 'rgba(56,189,248,0.2)' : 'transparent',
                       color: strategyMode15Y === 'baseline' ? '#38bdf8' : 'var(--text-muted)',
                       border: 'none', padding: '6px 14px', borderRadius: 6,
-                      fontSize: '0.74rem', fontWeight: 700, cursor: 'pointer',
+                      fontSize: '0.75rem', fontWeight: 700, cursor: 'pointer',
                       transition: 'all 0.15s ease',
                     }}
                   >
@@ -790,7 +790,7 @@ export const ValidationDashboard: React.FC = () => {
                 return (
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 12 }}>
                     <div style={metricCard(isEnh ? '#10b981' : '#38bdf8')}>
-                      <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                      <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
                         15Y Hit Rate ({isEnh ? 'Enhanced' : 'Baseline'})
                       </div>
                       <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
@@ -799,13 +799,13 @@ export const ValidationDashboard: React.FC = () => {
                         </span>
                         <SampleBadge n={activeSignals} />
                       </div>
-                      <div style={{ fontSize: '0.68rem', color: 'var(--text-secondary)' }}>
+                      <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
                         {isEnh && filteredTraps > 0 ? `${filteredTraps} squeeze traps avoided` : `${horizonWeeks15Y}-week forward direction`}
                       </div>
                     </div>
 
                     <div style={metricCard('#38bdf8')}>
-                      <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                      <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
                         Walk-Forward OOS
                       </div>
                       <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
@@ -813,13 +813,13 @@ export const ValidationDashboard: React.FC = () => {
                           {data15Y.walk_forward_oos_accuracy_pct.toFixed(1)}%
                         </span>
                       </div>
-                      <div style={{ fontSize: '0.68rem', color: 'var(--text-secondary)' }}>
+                      <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
                         Out-of-sample forward test
                       </div>
                     </div>
 
                     <div style={metricCard('#a78bfa')}>
-                      <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                      <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
                         Sharpe Equivalent
                       </div>
                       <div>
@@ -827,13 +827,13 @@ export const ValidationDashboard: React.FC = () => {
                           {sharpe.toFixed(2)}
                         </span>
                       </div>
-                      <div style={{ fontSize: '0.68rem', color: 'var(--text-secondary)' }}>
+                      <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
                         {isEnh ? 'Risk-adjusted (COT + ATR stop)' : 'Unhedged baseline signal'}
                       </div>
                     </div>
 
                     <div style={metricCard('#f59e0b')}>
-                      <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                      <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
                         Win / Loss Ratio
                       </div>
                       <div>
@@ -841,13 +841,13 @@ export const ValidationDashboard: React.FC = () => {
                           {winLoss.toFixed(2)}x
                         </span>
                       </div>
-                      <div style={{ fontSize: '0.68rem', color: 'var(--text-secondary)' }}>
+                      <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
                         Profit factor on winning calls
                       </div>
                     </div>
 
                     <div style={metricCard('#06b6d4')}>
-                      <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                      <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
                         Strategy Cumulative
                       </div>
                       <div>
@@ -855,13 +855,13 @@ export const ValidationDashboard: React.FC = () => {
                           {cumReturn >= 0 ? '+' : ''}{cumReturn.toFixed(1)}%
                         </span>
                       </div>
-                      <div style={{ fontSize: '0.68rem', color: 'var(--text-secondary)' }}>
+                      <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
                         vs Buy & Hold {data15Y.cumulative_buy_hold_return_pct >= 0 ? '+' : ''}{data15Y.cumulative_buy_hold_return_pct.toFixed(1)}%
                       </div>
                     </div>
 
                     <div style={metricCard('#ec4899')}>
-                      <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                      <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
                         Max Drawdown
                       </div>
                       <div>
@@ -869,7 +869,7 @@ export const ValidationDashboard: React.FC = () => {
                           -{maxDD.toFixed(1)}%
                         </span>
                       </div>
-                      <div style={{ fontSize: '0.68rem', color: 'var(--text-secondary)' }}>
+                      <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
                         {isEnh ? 'Controlled via volatility stops' : 'Peak-to-trough unhedged'}
                       </div>
                     </div>
@@ -886,7 +886,7 @@ export const ValidationDashboard: React.FC = () => {
                   <div style={{ background: 'var(--bg-main)', border: '1px solid var(--border-subtle)', borderRadius: 8, padding: '12px 16px' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 6 }}>
                       <ArrowUpRight size={15} color="#10b981" />
-                      <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Bullish Signals Accuracy</span>
+                      <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Bullish Signals Accuracy</span>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
                       <span className="mono" style={{ fontSize: '1.4rem', fontWeight: 800, color: accuracyColor(data15Y.bullish_hit_rate_pct) }}>
@@ -899,7 +899,7 @@ export const ValidationDashboard: React.FC = () => {
                   <div style={{ background: 'var(--bg-main)', border: '1px solid var(--border-subtle)', borderRadius: 8, padding: '12px 16px' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 6 }}>
                       <ArrowDownRight size={15} color="#f43f5e" />
-                      <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Bearish Signals Accuracy</span>
+                      <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Bearish Signals Accuracy</span>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
                       <span className="mono" style={{ fontSize: '1.4rem', fontWeight: 800, color: accuracyColor(data15Y.bearish_hit_rate_pct) }}>
@@ -912,13 +912,13 @@ export const ValidationDashboard: React.FC = () => {
                   <div style={{ background: 'var(--bg-main)', border: '1px solid var(--border-subtle)', borderRadius: 8, padding: '12px 16px' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 6 }}>
                       <Minus size={15} color="#64748b" />
-                      <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Neutral / Rangebound</span>
+                      <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Neutral / Rangebound</span>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
                       <span className="mono" style={{ fontSize: '1.4rem', fontWeight: 800, color: 'var(--text-secondary)' }}>
                         {data15Y.neutral_signals_count}
                       </span>
-                      <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>weeks (flat / zero delta)</span>
+                      <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>weeks (flat / zero delta)</span>
                     </div>
                   </div>
                 </div>
@@ -931,12 +931,12 @@ export const ValidationDashboard: React.FC = () => {
                     <div style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-primary)' }}>
                       15-Year Cumulative Equity Curve (2011–2026)
                     </div>
-                    <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: 2 }}>
+                    <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: 2 }}>
                       Macro-fundamental directional bias execution vs Buy & Hold benchmark. Base 100.0.
                     </div>
                   </div>
                   <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-                    <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>
+                    <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
                       {data15Y.equity_curve.length} weekly points
                     </span>
                   </div>
@@ -955,11 +955,11 @@ export const ValidationDashboard: React.FC = () => {
                     <div style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-primary)' }}>
                       Macroeconomic Regime Performance Breakdown (5 Eras)
                     </div>
-                    <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: 2 }}>
+                    <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: 2 }}>
                       Evaluates how fundamental signals performed across distinct monetary regimes (ZIRP, tightening, pandemic, inflation shock, pivot).
                     </div>
                   </div>
-                  <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>
+                  <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
                     5 Eras (2011–2026)
                   </span>
                 </div>
@@ -982,7 +982,7 @@ export const ValidationDashboard: React.FC = () => {
                         <tr key={r.regime_id} style={{ borderBottom: '1px solid var(--border-subtle)' }}>
                           <td style={{ padding: '10px 12px' }}>
                             <div style={{ fontWeight: 700, color: 'var(--text-primary)' }}>{r.regime_name}</div>
-                            <div style={{ fontSize: '0.67rem', color: 'var(--text-dim, #64748b)', maxWidth: 280, marginTop: 2 }}>
+                            <div style={{ fontSize: '0.75rem', color: 'var(--text-dim, #64748b)', maxWidth: 280, marginTop: 2 }}>
                               {r.description}
                             </div>
                           </td>
@@ -1023,11 +1023,11 @@ export const ValidationDashboard: React.FC = () => {
                     <div style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-primary)' }}>
                       Empirical Historical Milestones & Inflection Points (Proof of Signal Value)
                     </div>
-                    <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: 2 }}>
+                    <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: 2 }}>
                       Shows what the model predicted at historic market moments using only point-in-time data available on that day, and how price actually moved.
                     </div>
                   </div>
-                  <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>
+                  <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
                     {data15Y.milestone_case_studies.length} Milestones
                   </span>
                 </div>
@@ -1054,7 +1054,7 @@ export const ValidationDashboard: React.FC = () => {
                             <td style={{ padding: '10px 10px', fontWeight: 700, color: 'var(--text-primary)', whiteSpace: 'nowrap' }}>
                               {m.event_title}
                             </td>
-                            <td style={{ padding: '10px 10px', color: 'var(--text-secondary)', fontSize: '0.71rem', lineHeight: 1.4, maxWidth: 320 }}>
+                            <td style={{ padding: '10px 10px', color: 'var(--text-secondary)', fontSize: '0.75rem', lineHeight: 1.4, maxWidth: 320 }}>
                               {m.macro_context}
                             </td>
                             <td style={{ padding: '10px 10px', textAlign: 'center' }}>
@@ -1062,7 +1062,7 @@ export const ValidationDashboard: React.FC = () => {
                                 display: 'inline-flex', alignItems: 'center', gap: 4,
                                 background: m.predicted_bias === 'BULLISH' ? 'rgba(16,185,129,0.15)' : m.predicted_bias === 'BEARISH' ? 'rgba(244,63,94,0.15)' : 'rgba(100,116,139,0.15)',
                                 color: m.predicted_bias === 'BULLISH' ? '#10b981' : m.predicted_bias === 'BEARISH' ? '#f43f5e' : 'var(--text-muted)',
-                                padding: '2px 8px', borderRadius: 4, fontSize: '0.7rem', fontWeight: 800,
+                                padding: '2px 8px', borderRadius: 4, fontSize: '0.75rem', fontWeight: 800,
                               }}>
                                 {m.predicted_bias} ({m.model_score > 0 ? '+' : ''}{m.model_score.toFixed(1)})
                               </span>
@@ -1075,7 +1075,7 @@ export const ValidationDashboard: React.FC = () => {
                                 display: 'inline-flex', alignItems: 'center', gap: 4,
                                 background: isAccurate ? 'rgba(16,185,129,0.15)' : 'rgba(244,63,94,0.15)',
                                 color: isAccurate ? '#10b981' : '#f43f5e',
-                                padding: '2px 8px', borderRadius: 4, fontSize: '0.68rem', fontWeight: 800, letterSpacing: '0.04em',
+                                padding: '2px 8px', borderRadius: 4, fontSize: '0.75rem', fontWeight: 800, letterSpacing: '0.04em',
                               }}>
                                 {isAccurate ? '✓ ACCURATE' : '✕ INVALIDATED'}
                               </span>
@@ -1089,7 +1089,7 @@ export const ValidationDashboard: React.FC = () => {
               </div>
 
               {/* Disclaimer */}
-              <div style={{ fontSize: '0.67rem', color: 'var(--text-dim, #475569)', lineHeight: 1.6, padding: '8px 0', borderTop: '1px solid var(--border-subtle)' }}>
+              <div style={{ fontSize: '0.75rem', color: 'var(--text-dim, #475569)', lineHeight: 1.6, padding: '8px 0', borderTop: '1px solid var(--border-subtle)' }}>
                 <strong>Institutional Disclaimer:</strong> {data15Y.disclaimer}
               </div>
             </>
@@ -1140,65 +1140,65 @@ export const ValidationDashboard: React.FC = () => {
             <>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 12 }}>
                 <div style={metricCard('#10b981')}>
-                  <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Overall Hit Rate</div>
+                  <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Overall Hit Rate</div>
                   <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
                     <span className="mono" style={{ fontSize: '1.7rem', fontWeight: 800, color: accuracyColor(data52W.overall_accuracy_pct) }}>
                       {data52W.overall_accuracy_pct.toFixed(1)}%
                     </span>
                     <SampleBadge n={data52W.n_total_signals} />
                   </div>
-                  <div style={{ fontSize: '0.68rem', color: 'var(--text-secondary)' }}>Directional signals only</div>
+                  <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>Directional signals only</div>
                 </div>
 
                 <div style={metricCard('#38bdf8')}>
-                  <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>OOS Accuracy</div>
+                  <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>OOS Accuracy</div>
                   <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
                     <span className="mono" style={{ fontSize: '1.7rem', fontWeight: 800, color: accuracyColor(data52W.oos_accuracy_pct) }}>
                       {data52W.oos_accuracy_pct.toFixed(1)}%
                     </span>
                   </div>
-                  <div style={{ fontSize: '0.68rem', color: 'var(--text-secondary)' }}>Walk-forward out-of-sample</div>
+                  <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>Walk-forward out-of-sample</div>
                 </div>
 
                 <div style={metricCard('#a78bfa')}>
-                  <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Sharpe-Equiv.</div>
+                  <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Sharpe-Equiv.</div>
                   <div>
                     <span className="mono" style={{ fontSize: '1.7rem', fontWeight: 800, color: data52W.sharpe_equivalent > 0.5 ? '#10b981' : data52W.sharpe_equivalent > 0 ? '#f59e0b' : '#f43f5e' }}>
                       {data52W.sharpe_equivalent.toFixed(2)}
                     </span>
                   </div>
-                  <div style={{ fontSize: '0.68rem', color: 'var(--text-secondary)' }}>Annualised signal Sharpe</div>
+                  <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>Annualised signal Sharpe</div>
                 </div>
 
                 <div style={metricCard('#f59e0b')}>
-                  <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Win / Loss Ratio</div>
+                  <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Win / Loss Ratio</div>
                   <div>
                     <span className="mono" style={{ fontSize: '1.7rem', fontWeight: 800, color: 'var(--text-primary)' }}>
                       {data52W.win_loss_ratio.toFixed(2)}x
                     </span>
                   </div>
-                  <div style={{ fontSize: '0.68rem', color: 'var(--text-secondary)' }}>Avg +{data52W.avg_gain_pct}% / {data52W.avg_loss_pct}%</div>
+                  <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>Avg +{data52W.avg_gain_pct}% / {data52W.avg_loss_pct}%</div>
                 </div>
 
                 <div style={metricCard('#64748b')}>
-                  <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>IC</div>
+                  <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>IC</div>
                   <div>
                     <span className="mono" style={{ fontSize: '1.7rem', fontWeight: 800, color: data52W.information_coefficient > 0.05 ? '#10b981' : data52W.information_coefficient < 0 ? '#f43f5e' : 'var(--text-secondary)' }}>
                       {data52W.information_coefficient.toFixed(4)}
                     </span>
                   </div>
-                  <div style={{ fontSize: '0.68rem', color: 'var(--text-secondary)' }}>Information Coefficient</div>
+                  <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>Information Coefficient</div>
                 </div>
 
                 <div style={metricCard('#f43f5e')}>
-                  <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>False Signal Rate</div>
+                  <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>False Signal Rate</div>
                   <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
                     <span className="mono" style={{ fontSize: '1.7rem', fontWeight: 800, color: data52W.false_signal_rate_pct > 30 ? '#f43f5e' : '#f59e0b' }}>
                       {data52W.false_signal_rate_pct.toFixed(1)}%
                     </span>
                     <SampleBadge n={data52W.false_signals.length} />
                   </div>
-                  <div style={{ fontSize: '0.68rem', color: 'var(--text-secondary)' }}>High-conviction reversals ≤3d</div>
+                  <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>High-conviction reversals ≤3d</div>
                 </div>
               </div>
 
@@ -1209,11 +1209,11 @@ export const ValidationDashboard: React.FC = () => {
                     <div style={{ fontSize: '0.82rem', fontWeight: 700, color: 'var(--text-primary)' }}>
                       Walk-Forward Validation Timeline (52 Weeks)
                     </div>
-                    <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: 2 }}>
+                    <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: 2 }}>
                       Each window: 8-week training · 4-week out-of-sample validation.
                     </div>
                   </div>
-                  <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>
+                  <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
                     {data52W.walk_forward_windows.length} windows
                   </span>
                 </div>
@@ -1234,8 +1234,8 @@ export const ValidationDashboard: React.FC = () => {
                   ].map(cell => (
                     <div key={cell.label} style={{ background: `rgba(${cell.color === '#10b981' ? '16,185,129' : '244,63,94'},0.08)`, border: `1px solid rgba(${cell.color === '#10b981' ? '16,185,129' : '244,63,94'},0.2)`, borderRadius: 6, padding: '10px 14px', textAlign: 'center' }}>
                       <div className="mono" style={{ fontSize: '1.4rem', fontWeight: 800, color: cell.color }}>{cell.val}</div>
-                      <div style={{ fontSize: '0.68rem', color: 'var(--text-muted)', marginTop: 2 }}>{cell.label}</div>
-                      <div style={{ fontSize: '0.65rem', color: 'var(--text-dim, #475569)' }}>{cell.desc}</div>
+                      <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: 2 }}>{cell.label}</div>
+                      <div style={{ fontSize: '0.75rem', color: 'var(--text-dim, #475569)' }}>{cell.desc}</div>
                     </div>
                   ))}
                 </div>
@@ -1246,7 +1246,7 @@ export const ValidationDashboard: React.FC = () => {
                     { label: 'F1 Score', val: data52W.confusion_matrix.f1_score },
                   ].map(m => (
                     <div key={m.label} style={{ background: 'var(--bg-main)', border: '1px solid var(--border-subtle)', borderRadius: 6, padding: '8px 14px' }}>
-                      <div style={{ fontSize: '0.68rem', color: 'var(--text-muted)' }}>{m.label}</div>
+                      <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{m.label}</div>
                       <div className="mono" style={{ fontSize: '1rem', fontWeight: 800, color: '#38bdf8' }}>{m.val.toFixed(1)}%</div>
                     </div>
                   ))}

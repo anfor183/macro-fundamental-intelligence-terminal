@@ -129,7 +129,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           {!collapsed && (
             <span
               style={{
-                fontSize: '0.66rem',
+                fontSize: '0.75rem',
                 fontWeight: 800,
                 color: 'var(--text-dim)',
                 textTransform: 'uppercase',
@@ -163,7 +163,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             {!collapsed && (
               <div
                 style={{
-                  fontSize: '0.62rem',
+                  fontSize: '0.75rem',
                   fontWeight: 700,
                   color: 'var(--text-dim)',
                   textTransform: 'uppercase',
@@ -217,7 +217,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   {!collapsed && item.badge && (
                     <span
                       style={{
-                        fontSize: '0.62rem',
+                        fontSize: '0.75rem',
                         fontWeight: 800,
                         padding: '1px 5px',
                         borderRadius: 8,
@@ -244,14 +244,14 @@ export const Sidebar: React.FC<SidebarProps> = ({
           style={{
             padding: '10px 8px',
             borderTop: '1px solid var(--border-subtle)',
-            fontSize: '0.66rem',
+            fontSize: '0.75rem',
             color: 'var(--text-dim)',
             lineHeight: 1.4,
           }}
         >
           <div>Zero-Hallucination Core</div>
           <div style={{ color: '#10b981', fontWeight: 600, marginTop: 2 }}>● Engines Synchronized</div>
-          <div style={{ marginTop: 6, fontSize: '0.62rem', color: 'var(--text-muted)' }}>
+          <div style={{ marginTop: 6, fontSize: '0.75rem', color: 'var(--text-muted)' }}>
             © {new Date().getFullYear()} Fortune Anukposi
           </div>
         </div>

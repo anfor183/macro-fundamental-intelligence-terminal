@@ -218,7 +218,7 @@ export const CurrencyMatrixView: React.FC<CurrencyMatrixViewProps> = ({
               </span>
               <span
                 style={{
-                  fontSize: '0.68rem',
+                  fontSize: '0.75rem',
                   fontWeight: 700,
                   color: isLightMode ? '#334155' : 'var(--text-muted)',
                   background: isLightMode ? '#e2e8f0' : 'var(--surface-3)',
@@ -229,7 +229,7 @@ export const CurrencyMatrixView: React.FC<CurrencyMatrixViewProps> = ({
                 #{c.rank}
               </span>
             </div>
-            <div style={{ fontSize: '0.7rem', color: isLightMode ? '#475569' : 'var(--text-muted)', marginTop: 2 }}>
+            <div style={{ fontSize: '0.75rem', color: isLightMode ? '#475569' : 'var(--text-muted)', marginTop: 2 }}>
               {c.name}
             </div>
             <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, marginTop: 8 }}>
@@ -249,7 +249,7 @@ export const CurrencyMatrixView: React.FC<CurrencyMatrixViewProps> = ({
             </div>
             <div
               style={{
-                fontSize: '0.68rem',
+                fontSize: '0.75rem',
                 color: isLightMode ? '#475569' : 'var(--text-dim)',
                 marginTop: 6,
                 display: 'flex',
@@ -278,7 +278,7 @@ export const CurrencyMatrixView: React.FC<CurrencyMatrixViewProps> = ({
           <h3 style={{ fontSize: '0.92rem', fontWeight: 800, color: 'var(--text-primary)' }}>
             Pair Relative Macro Scores (Row Base − Column Quote)
           </h3>
-          <span className="matrix-legend-text" style={{ fontSize: '0.74rem', fontWeight: 600 }}>
+          <span className="matrix-legend-text" style={{ fontSize: '0.75rem', fontWeight: 600 }}>
             Green = Base Currency Strength (Bullish Cross) • Red = Quote Currency Strength
           </span>
         </div>
@@ -408,7 +408,7 @@ export const CurrencyMatrixView: React.FC<CurrencyMatrixViewProps> = ({
             </span>
             <span
               style={{
-                fontSize: '0.65rem',
+                fontSize: '0.75rem',
                 fontWeight: 800,
                 padding: '2px 6px',
                 borderRadius: 4,
@@ -427,7 +427,7 @@ export const CurrencyMatrixView: React.FC<CurrencyMatrixViewProps> = ({
           </div>
 
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginTop: 4 }}>
-            <span style={{ fontSize: '0.72rem', color: isLightMode ? '#475569' : 'var(--text-secondary)' }}>Relative Score:</span>
+            <span style={{ fontSize: '0.75rem', color: isLightMode ? '#475569' : 'var(--text-secondary)' }}>Relative Score:</span>
             <span
               className="mono"
               style={{
@@ -444,7 +444,7 @@ export const CurrencyMatrixView: React.FC<CurrencyMatrixViewProps> = ({
           </div>
 
           <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 2 }}>
-            <span style={{ fontSize: '0.72rem', color: isLightMode ? '#475569' : 'var(--text-secondary)' }}>Model Confidence:</span>
+            <span style={{ fontSize: '0.75rem', color: isLightMode ? '#475569' : 'var(--text-secondary)' }}>Model Confidence:</span>
             <span className="mono" style={{ fontSize: '0.75rem', fontWeight: 700, color: isLightMode ? '#0284c7' : '#38bdf8' }}>
               {hoveredCell.confidence}%
             </span>
@@ -455,7 +455,7 @@ export const CurrencyMatrixView: React.FC<CurrencyMatrixViewProps> = ({
               marginTop: 8,
               paddingTop: 6,
               borderTop: isLightMode ? '1px solid #e2e8f0' : '1px solid var(--border-subtle)',
-              fontSize: '0.68rem',
+              fontSize: '0.75rem',
               color: isLightMode ? '#334155' : 'var(--text-secondary)',
               lineHeight: 1.35,
             }}
@@ -466,7 +466,7 @@ export const CurrencyMatrixView: React.FC<CurrencyMatrixViewProps> = ({
           <div
             style={{
               marginTop: 6,
-              fontSize: '0.62rem',
+              fontSize: '0.75rem',
               color: isLightMode ? '#0369a1' : 'var(--accent-cyan)',
               textAlign: 'center',
               fontWeight: 600,

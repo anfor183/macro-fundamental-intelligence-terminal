@@ -129,7 +129,7 @@ export const EvidenceDrawer: React.FC<EvidenceDrawerProps> = ({
                 Source Provenance & Audit Trail
               </h3>
             </div>
-            <p style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: 2 }}>
+            <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: 2 }}>
               Zero-Hallucination Verified Data Ingestion Pipeline
             </p>
           </div>
@@ -168,7 +168,7 @@ export const EvidenceDrawer: React.FC<EvidenceDrawerProps> = ({
               borderRadius: 'var(--radius-sm)',
               background: 'rgba(6, 182, 212, 0.08)',
               border: '1px solid rgba(6, 182, 212, 0.25)',
-              fontSize: '0.72rem',
+              fontSize: '0.75rem',
               color: 'var(--text-secondary)',
               lineHeight: 1.45,
             }}
@@ -194,7 +194,7 @@ export const EvidenceDrawer: React.FC<EvidenceDrawerProps> = ({
                 <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                   <span
                     style={{
-                      fontSize: '0.65rem',
+                      fontSize: '0.75rem',
                       fontWeight: 700,
                       padding: '2px 6px',
                       borderRadius: 3,
@@ -207,20 +207,20 @@ export const EvidenceDrawer: React.FC<EvidenceDrawerProps> = ({
                   </span>
                   <span
                     className="mono"
-                    style={{ fontSize: '0.65rem', color: 'var(--accent-cyan)', fontWeight: 600 }}
+                    style={{ fontSize: '0.75rem', color: 'var(--accent-cyan)', fontWeight: 600 }}
                   >
                     Quality: {item.qualityScore}/100 ★★★★★
                   </span>
                 </div>
 
-                <span className="mono" style={{ fontSize: '0.65rem', color: 'var(--text-dim)' }}>
+                <span className="mono" style={{ fontSize: '0.75rem', color: 'var(--text-dim)' }}>
                   {item.timestamp}
                 </span>
               </div>
 
               {/* Publisher & Headline */}
               <div>
-                <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', fontWeight: 600 }}>
+                <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 600 }}>
                   {item.publisher}
                 </div>
                 <div
@@ -242,7 +242,7 @@ export const EvidenceDrawer: React.FC<EvidenceDrawerProps> = ({
                   background: 'var(--surface-3)',
                   padding: '10px 12px',
                   borderRadius: 'var(--radius-sm)',
-                  fontSize: '0.72rem',
+                  fontSize: '0.75rem',
                   fontStyle: 'italic',
                   color: 'var(--text-secondary)',
                   lineHeight: 1.45,
@@ -260,7 +260,7 @@ export const EvidenceDrawer: React.FC<EvidenceDrawerProps> = ({
                   alignItems: 'center',
                   paddingTop: 8,
                   borderTop: '1px solid var(--border-subtle)',
-                  fontSize: '0.68rem',
+                  fontSize: '0.75rem',
                 }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
@@ -271,7 +271,7 @@ export const EvidenceDrawer: React.FC<EvidenceDrawerProps> = ({
                 </div>
 
                 {item.clusterId && (
-                  <div className="mono" style={{ fontSize: '0.62rem', color: 'var(--text-dim)' }}>
+                  <div className="mono" style={{ fontSize: '0.75rem', color: 'var(--text-dim)' }}>
                     Cluster: {item.clusterId}
                   </div>
                 )}
@@ -289,7 +289,7 @@ export const EvidenceDrawer: React.FC<EvidenceDrawerProps> = ({
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
-            fontSize: '0.7rem',
+            fontSize: '0.75rem',
             color: 'var(--text-dim)',
           }}
         >
@@ -298,7 +298,7 @@ export const EvidenceDrawer: React.FC<EvidenceDrawerProps> = ({
             onClick={onClose}
             style={{
               padding: '6px 14px',
-              fontSize: '0.72rem',
+              fontSize: '0.75rem',
               fontWeight: 600,
               color: 'var(--text-primary)',
               background: 'var(--surface-3)',

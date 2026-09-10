@@ -45,35 +45,35 @@ export const GoldTerminalView: React.FC = () => {
       {/* Driver Cards */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 14 }}>
         <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border-subtle)', borderRadius: 8, padding: 16 }}>
-          <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>US 10Y Real Yield Impulse</div>
+          <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>US 10Y Real Yield Impulse</div>
           <div className="mono" style={{ fontSize: '1.3rem', fontWeight: 800, color: data.drivers.real_yield_pressure >= 0 ? '#10b981' : '#ef4444', marginTop: 4 }}>
             {data.drivers.real_yield_pressure > 0 ? `+${data.drivers.real_yield_pressure}` : data.drivers.real_yield_pressure}
           </div>
-          <div style={{ fontSize: '0.68rem', color: 'var(--text-secondary)', marginTop: 4 }}>TIPS inverse discount transmission</div>
+          <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: 4 }}>TIPS inverse discount transmission</div>
         </div>
 
         <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border-subtle)', borderRadius: 8, padding: 16 }}>
-          <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>USD Denominator Pressure</div>
+          <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>USD Denominator Pressure</div>
           <div className="mono" style={{ fontSize: '1.3rem', fontWeight: 800, color: data.drivers.usd_pressure >= 0 ? '#10b981' : '#ef4444', marginTop: 4 }}>
             {data.drivers.usd_pressure > 0 ? `+${data.drivers.usd_pressure}` : data.drivers.usd_pressure}
           </div>
-          <div style={{ fontSize: '0.68rem', color: 'var(--text-secondary)', marginTop: 4 }}>DXY inverse valuation effect</div>
+          <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: 4 }}>DXY inverse valuation effect</div>
         </div>
 
         <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border-subtle)', borderRadius: 8, padding: 16 }}>
-          <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Fed Rate Easing Path</div>
+          <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Fed Rate Easing Path</div>
           <div className="mono" style={{ fontSize: '1.3rem', fontWeight: 800, color: '#38bdf8', marginTop: 4 }}>
             +{data.drivers.fed_expectations}
           </div>
-          <div style={{ fontSize: '0.68rem', color: 'var(--text-secondary)', marginTop: 4 }}>Opportunity cost repricing</div>
+          <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: 4 }}>Opportunity cost repricing</div>
         </div>
 
         <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border-subtle)', borderRadius: 8, padding: 16 }}>
-          <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Central Bank Buying Pace</div>
+          <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Central Bank Buying Pace</div>
           <div className="mono" style={{ fontSize: '1.3rem', fontWeight: 800, color: '#f59e0b', marginTop: 4 }}>
             +{data.drivers.central_bank_demand}
           </div>
-          <div style={{ fontSize: '0.68rem', color: 'var(--text-secondary)', marginTop: 4 }}>Sovereign reserve accumulation</div>
+          <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: 4 }}>Sovereign reserve accumulation</div>
         </div>
       </div>
 
@@ -137,35 +137,35 @@ export const OilTerminalView: React.FC = () => {
       {/* Driver Cards */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 14 }}>
         <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border-subtle)', borderRadius: 8, padding: 16 }}>
-          <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>OPEC+ Quota Compliance</div>
+          <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>OPEC+ Quota Compliance</div>
           <div className="mono" style={{ fontSize: '1.3rem', fontWeight: 800, color: '#38bdf8', marginTop: 4 }}>
             +{data.drivers.opec_discipline}
           </div>
-          <div style={{ fontSize: '0.68rem', color: 'var(--text-secondary)', marginTop: 4 }}>Voluntary output discipline</div>
+          <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: 4 }}>Voluntary output discipline</div>
         </div>
 
         <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border-subtle)', borderRadius: 8, padding: 16 }}>
-          <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>China Industrial Demand Drag</div>
+          <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>China Industrial Demand Drag</div>
           <div className="mono" style={{ fontSize: '1.3rem', fontWeight: 800, color: '#ef4444', marginTop: 4 }}>
             {data.drivers.china_demand_drag}
           </div>
-          <div style={{ fontSize: '0.68rem', color: 'var(--text-secondary)', marginTop: 4 }}>Refinery run rates & diesel demand</div>
+          <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: 4 }}>Refinery run rates & diesel demand</div>
         </div>
 
         <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border-subtle)', borderRadius: 8, padding: 16 }}>
-          <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>US EIA Inventory Support</div>
+          <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>US EIA Inventory Support</div>
           <div className="mono" style={{ fontSize: '1.3rem', fontWeight: 800, color: '#10b981', marginTop: 4 }}>
             +{data.drivers.inventory_draw_support}
           </div>
-          <div style={{ fontSize: '0.68rem', color: 'var(--text-secondary)', marginTop: 4 }}>Drawdowns in commercial stocks</div>
+          <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: 4 }}>Drawdowns in commercial stocks</div>
         </div>
 
         <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border-subtle)', borderRadius: 8, padding: 16 }}>
-          <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Geopolitical Chokepoint Risk</div>
+          <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Geopolitical Chokepoint Risk</div>
           <div className="mono" style={{ fontSize: '1.3rem', fontWeight: 800, color: '#f59e0b', marginTop: 4 }}>
             +{data.drivers.geopolitical_risk}
           </div>
-          <div style={{ fontSize: '0.68rem', color: 'var(--text-secondary)', marginTop: 4 }}>Tanker transit risk premia</div>
+          <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: 4 }}>Tanker transit risk premia</div>
         </div>
       </div>
 

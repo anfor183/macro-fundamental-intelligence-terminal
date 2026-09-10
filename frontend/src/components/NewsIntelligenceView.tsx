@@ -84,7 +84,7 @@ export const NewsIntelligenceView: React.FC<{ onSelectAsset?: (symbol: string) =
                 border: `1px solid ${selectedCategory === cat ? 'rgba(56, 189, 248, 0.4)' : 'var(--border-subtle)'}`,
                 padding: '4px 12px',
                 borderRadius: 20,
-                fontSize: '0.72rem',
+                fontSize: '0.75rem',
                 fontWeight: 600,
                 textTransform: 'uppercase',
                 cursor: 'pointer',
@@ -122,7 +122,7 @@ export const NewsIntelligenceView: React.FC<{ onSelectAsset?: (symbol: string) =
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
                       <span style={{
-                        fontSize: '0.68rem',
+                        fontSize: '0.75rem',
                         fontWeight: 700,
                         padding: '2px 6px',
                         borderRadius: 4,
@@ -132,7 +132,7 @@ export const NewsIntelligenceView: React.FC<{ onSelectAsset?: (symbol: string) =
                         Tier {item.source_tier} • {item.source_name}
                       </span>
                       <span style={{
-                        fontSize: '0.68rem',
+                        fontSize: '0.75rem',
                         fontWeight: 700,
                         padding: '2px 6px',
                         borderRadius: 4,
@@ -142,7 +142,7 @@ export const NewsIntelligenceView: React.FC<{ onSelectAsset?: (symbol: string) =
                         {item.statement_type || 'FACT'}
                       </span>
                       <span style={{
-                        fontSize: '0.68rem',
+                        fontSize: '0.75rem',
                         fontWeight: 600,
                         color: 'var(--text-muted)',
                         textTransform: 'uppercase',
@@ -151,7 +151,7 @@ export const NewsIntelligenceView: React.FC<{ onSelectAsset?: (symbol: string) =
                       </span>
                       {item.is_simulated && (
                         <span style={{
-                          fontSize: '0.65rem',
+                          fontSize: '0.75rem',
                           fontWeight: 700,
                           padding: '2px 6px',
                           borderRadius: 4,
@@ -163,7 +163,7 @@ export const NewsIntelligenceView: React.FC<{ onSelectAsset?: (symbol: string) =
                       )}
                     </div>
 
-                    <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>
+                    <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
                       {dt.toLocaleDateString()} {dt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} UTC
                     </div>
                   </div>
@@ -178,11 +178,11 @@ export const NewsIntelligenceView: React.FC<{ onSelectAsset?: (symbol: string) =
 
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 4, paddingTop: 8, borderTop: '1px solid rgba(255,255,255,0.05)' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                      <span style={{ fontSize: '0.7rem', color: 'var(--text-dim)' }}>
+                      <span style={{ fontSize: '0.75rem', color: 'var(--text-dim)' }}>
                         Reliability Score: {item.source_reliability}%
                       </span>
                       {item.duplicate_count > 1 && (
-                        <span style={{ fontSize: '0.7rem', color: 'var(--accent-cyan)' }}>
+                        <span style={{ fontSize: '0.75rem', color: 'var(--accent-cyan)' }}>
                           {item.duplicate_count} syndicated copies clustered
                         </span>
                       )}
@@ -193,7 +193,7 @@ export const NewsIntelligenceView: React.FC<{ onSelectAsset?: (symbol: string) =
                         target="_blank"
                         rel="noreferrer"
                         style={{
-                          fontSize: '0.72rem',
+                          fontSize: '0.75rem',
                           color: 'var(--accent-cyan)',
                           textDecoration: 'none',
                           display: 'flex',
@@ -232,7 +232,7 @@ export const NewsIntelligenceView: React.FC<{ onSelectAsset?: (symbol: string) =
                       {inst.institution_name}
                     </span>
                     <span style={{
-                      fontSize: '0.68rem',
+                      fontSize: '0.75rem',
                       fontWeight: 700,
                       padding: '2px 6px',
                       borderRadius: 4,
@@ -256,7 +256,7 @@ export const NewsIntelligenceView: React.FC<{ onSelectAsset?: (symbol: string) =
                       {inst.asset_symbol}
                     </span>
                   </div>
-                  <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>
+                  <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
                     Horizon: {inst.target_horizon} • Stance: <strong style={{ color: inst.stance === 'Bullish' ? '#10b981' : (inst.stance === 'Bearish' ? '#ef4444' : '#94a3b8') }}>{inst.stance}</strong>
                   </div>
                 </div>

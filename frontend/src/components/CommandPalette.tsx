@@ -311,7 +311,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
             }}
           />
           <div style={{
-            fontSize: '0.65rem',
+            fontSize: '0.75rem',
             fontFamily: 'var(--font-mono)',
             background: 'var(--surface-3)',
             color: 'var(--text-muted)',
@@ -370,7 +370,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
                         {item.label}
                       </div>
                       {item.hint && (
-                        <div style={{ fontSize: '0.72rem', color: isSelected ? 'var(--text-secondary)' : 'var(--text-muted)', marginTop: 2 }}>
+                        <div style={{ fontSize: '0.75rem', color: isSelected ? 'var(--text-secondary)' : 'var(--text-muted)', marginTop: 2 }}>
                           {item.hint}
                         </div>
                       )}
@@ -379,7 +379,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
 
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                     <span style={{
-                      fontSize: '0.65rem',
+                      fontSize: '0.75rem',
                       fontFamily: 'var(--font-mono)',
                       color: 'var(--text-secondary)',
                       textTransform: 'uppercase',
@@ -406,7 +406,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
-          fontSize: '0.68rem',
+          fontSize: '0.75rem',
           color: 'var(--text-secondary)',
           fontFamily: 'var(--font-mono)',
         }}>

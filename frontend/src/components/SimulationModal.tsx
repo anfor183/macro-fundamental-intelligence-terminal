@@ -120,7 +120,7 @@ export const SimulationModal: React.FC<SimulationModalProps> = ({
                 Macro Scenario Simulator
               </h2>
               <span style={{
-                fontSize: '0.65rem',
+                fontSize: '0.75rem',
                 fontWeight: 700,
                 background: 'rgba(245, 158, 11, 0.15)',
                 color: '#fbbf24',
@@ -192,7 +192,7 @@ export const SimulationModal: React.FC<SimulationModalProps> = ({
                       {sc.title}
                     </span>
                     <span style={{
-                      fontSize: '0.65rem',
+                      fontSize: '0.75rem',
                       fontWeight: 700,
                       padding: '2px 6px',
                       borderRadius: 3,
@@ -237,7 +237,7 @@ export const SimulationModal: React.FC<SimulationModalProps> = ({
         <div style={{
           padding: '14px 24px',
           borderTop: '1px solid var(--border-subtle)',
-          fontSize: '0.7rem',
+          fontSize: '0.75rem',
           color: 'var(--text-dim)',
           background: 'var(--surface-2)',
         }}>

@@ -151,7 +151,7 @@ export const CatalystStream: React.FC<CatalystStreamProps> = ({
             >
               Catalyst Stream
             </div>
-            <div style={{ fontSize: '0.66rem', color: 'var(--text-dim)' }}>
+            <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)' }}>
               Live Quantitative Impact Heartbeat
             </div>
           </div>
@@ -172,7 +172,7 @@ export const CatalystStream: React.FC<CatalystStreamProps> = ({
             onClick={() => setFilterMagnitude('all')}
             style={{
               padding: '2px 7px',
-              fontSize: '0.65rem',
+              fontSize: '0.75rem',
               fontWeight: 600,
               borderRadius: 3,
               border: 'none',
@@ -185,9 +185,10 @@ export const CatalystStream: React.FC<CatalystStreamProps> = ({
           </button>
           <button
             onClick={() => setFilterMagnitude('high')}
+            title="Large score shifts (7 or more points)"
             style={{
-              padding: '2px 7px',
-              fontSize: '0.65rem',
+              padding: '3px 9px',
+              fontSize: '0.75rem',
               fontWeight: 600,
               borderRadius: 3,
               border: 'none',
@@ -196,13 +197,14 @@ export const CatalystStream: React.FC<CatalystStreamProps> = ({
               cursor: 'pointer',
             }}
           >
-            |Δ| ≥ 7
+            Shift ≥ 7
           </button>
           <button
             onClick={() => setFilterMagnitude('tier1')}
+            title="Tier 1 Official Economic Releases only"
             style={{
-              padding: '2px 7px',
-              fontSize: '0.65rem',
+              padding: '3px 9px',
+              fontSize: '0.75rem',
               fontWeight: 600,
               borderRadius: 3,
               border: 'none',
@@ -265,12 +267,12 @@ export const CatalystStream: React.FC<CatalystStreamProps> = ({
                       display: 'inline-block',
                     }}
                   />
-                  <span className="mono" style={{ fontSize: '0.68rem', color: 'var(--text-dim)' }}>
+                  <span className="mono" style={{ fontSize: '0.75rem', color: 'var(--text-dim)' }}>
                     {item.timestamp} ({item.timeAgo})
                   </span>
                   <span
                     style={{
-                      fontSize: '0.6rem',
+                      fontSize: '0.75rem',
                       fontWeight: 700,
                       padding: '1px 5px',
                       borderRadius: 3,
@@ -298,7 +300,7 @@ export const CatalystStream: React.FC<CatalystStreamProps> = ({
                   <span
                     className="mono"
                     style={{
-                      fontSize: '0.72rem',
+                      fontSize: '0.75rem',
                       fontWeight: 800,
                       color: deltaColor,
                     }}
@@ -314,7 +316,7 @@ export const CatalystStream: React.FC<CatalystStreamProps> = ({
               </div>
 
               {/* Summary */}
-              <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', lineHeight: 1.3 }}>
+              <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', lineHeight: 1.3 }}>
                 {item.summary}
               </div>
 
@@ -327,7 +329,7 @@ export const CatalystStream: React.FC<CatalystStreamProps> = ({
                       onClick={() => onSelectAsset && onSelectAsset(ast)}
                       style={{
                         padding: '1px 5px',
-                        fontSize: '0.62rem',
+                        fontSize: '0.75rem',
                         fontFamily: 'JetBrains Mono, monospace',
                         fontWeight: 700,
                         borderRadius: 3,
@@ -351,7 +353,7 @@ export const CatalystStream: React.FC<CatalystStreamProps> = ({
                       gap: 3,
                       background: 'none',
                       border: 'none',
-                      fontSize: '0.65rem',
+                      fontSize: '0.75rem',
                       color: 'var(--accent-cyan)',
                       cursor: 'pointer',
                       fontWeight: 600,

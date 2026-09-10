@@ -121,7 +121,7 @@ export const WatchlistPortfolio: React.FC<WatchlistPortfolioProps> = ({
               {currentTheme.label}
             </h3>
           </div>
-          <p style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: 2 }}>
+          <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: 2 }}>
             {currentTheme.description}
           </p>
         </div>
@@ -145,7 +145,7 @@ export const WatchlistPortfolio: React.FC<WatchlistPortfolioProps> = ({
               onClick={() => setActiveGroup(key)}
               style={{
                 padding: '4px 10px',
-                fontSize: '0.68rem',
+                fontSize: '0.75rem',
                 fontWeight: 600,
                 borderRadius: 4,
                 border: 'none',
@@ -233,7 +233,7 @@ export const WatchlistPortfolio: React.FC<WatchlistPortfolioProps> = ({
                       <Pin size={13} fill={isPinned ? 'var(--accent-cyan)' : 'none'} />
                     </button>
                   </div>
-                  <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: 2 }}>
+                  <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: 2 }}>
                     {asset.name}
                   </div>
                 </div>
@@ -259,7 +259,7 @@ export const WatchlistPortfolio: React.FC<WatchlistPortfolioProps> = ({
                   </div>
                   <span
                     style={{
-                      fontSize: '0.65rem',
+                      fontSize: '0.75rem',
                       fontWeight: 700,
                       padding: '1px 5px',
                       borderRadius: 3,

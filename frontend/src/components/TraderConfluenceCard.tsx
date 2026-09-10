@@ -97,7 +97,7 @@ export const TraderConfluenceCard: React.FC<Props> = ({ symbol }) => {
               Trader's Macro Confluence & Positioning Engine
             </h3>
           </div>
-          <div style={{ fontSize: '0.74rem', color: 'var(--text-muted)' }}>
+          <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
             {card.asset_name} · Spot: <span className="mono" style={{ color: 'var(--text-primary)', fontWeight: 700 }}>{card.current_price}</span> · Daily ATR(14): <span className="mono" style={{ color: '#38bdf8' }}>{card.daily_atr}</span>
           </div>
         </div>
@@ -111,13 +111,13 @@ export const TraderConfluenceCard: React.FC<Props> = ({ symbol }) => {
             padding: '8px 14px',
             textAlign: 'right',
           }}>
-            <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
               Final Macro Bias
             </div>
             <div style={{ fontSize: '1.1rem', fontWeight: 900, color: bColor, letterSpacing: '0.03em' }}>
               {card.high_conviction_bias}
             </div>
-            <div className="mono" style={{ fontSize: '0.7rem', color: 'var(--text-secondary)' }}>
+            <div className="mono" style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
               Score: {card.high_conviction_score > 0 ? '+' : ''}{card.high_conviction_score.toFixed(1)} · Conf: {card.confidence_pct.toFixed(0)}%
             </div>
           </div>
@@ -145,7 +145,7 @@ export const TraderConfluenceCard: React.FC<Props> = ({ symbol }) => {
               {card.primary_direction}
             </span>
           </div>
-          <div style={{ fontSize: '0.72rem', color: 'var(--text-secondary)' }}>
+          <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
             Macro Invalidation: <strong className="mono" style={{ color: '#f43f5e' }}>{card.invalidation_price_level}</strong>
           </div>
         </div>
@@ -209,13 +209,13 @@ export const TraderConfluenceCard: React.FC<Props> = ({ symbol }) => {
           }} />
         </div>
 
-        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.66rem', color: 'var(--text-muted)' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
           <span>Extreme Short Crowding (0)</span>
           <span>Balanced / Neutral (50)</span>
           <span>Extreme Long Crowding (100)</span>
         </div>
 
-        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 10, fontSize: '0.72rem', color: 'var(--text-secondary)' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 10, fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
           <span>3Y COT Z-Score: <strong className="mono" style={{ color: 'var(--text-primary)' }}>{card.cot_zscore_3y > 0 ? '+' : ''}{card.cot_zscore_3y}</strong></span>
           <span>Positioning Stance: <strong style={{ color: crowdingColor(card.cot_crowding_index) }}>{card.cot_sentiment_label.replace(/_/g, ' ')}</strong></span>
         </div>
@@ -239,7 +239,7 @@ export const TraderConfluenceCard: React.FC<Props> = ({ symbol }) => {
                 XGBoost ML Directional Ensemble
               </span>
               <span style={{
-                fontSize: '0.66rem',
+                fontSize: '0.75rem',
                 padding: '1px 6px',
                 borderRadius: 4,
                 background: 'rgba(168,85,247,0.2)',
@@ -249,14 +249,14 @@ export const TraderConfluenceCard: React.FC<Props> = ({ symbol }) => {
                 {card.ml_prediction.model_version}
               </span>
             </div>
-            <div style={{ display: 'flex', gap: 12, alignItems: 'center', fontSize: '0.72rem' }}>
+            <div style={{ display: 'flex', gap: 12, alignItems: 'center', fontSize: '0.75rem' }}>
               <span>ML Bias: <strong style={{ color: biasColor(card.ml_prediction.predicted_bias) }}>{card.ml_prediction.predicted_bias}</strong></span>
               <span>ML Conviction: <strong style={{ color: '#38bdf8' }}>{card.ml_prediction.ml_conviction_score.toFixed(0)}%</strong></span>
             </div>
           </div>
 
           {/* Probability Distribution Chips */}
-          <div style={{ display: 'flex', gap: 10, fontSize: '0.7rem' }}>
+          <div style={{ display: 'flex', gap: 10, fontSize: '0.75rem' }}>
             <span style={{ color: 'var(--text-muted)' }}>Probabilities:</span>
             <span style={{ color: '#34d399', fontWeight: 700 }}>
               Bull: {(card.ml_prediction.probability_distribution.BULLISH * 100).toFixed(0)}%
@@ -272,12 +272,12 @@ export const TraderConfluenceCard: React.FC<Props> = ({ symbol }) => {
           {/* Top Contributing Features */}
           {card.ml_prediction.feature_importances && card.ml_prediction.feature_importances.length > 0 && (
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 2 }}>
-              <span style={{ fontSize: '0.68rem', color: 'var(--text-muted)', alignSelf: 'center' }}>Top Drivers:</span>
+              <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', alignSelf: 'center' }}>Top Drivers:</span>
               {card.ml_prediction.feature_importances.slice(0, 3).map((f, i) => (
                 <span
                   key={i}
                   style={{
-                    fontSize: '0.68rem',
+                    fontSize: '0.75rem',
                     background: 'var(--surface-1)',
                     border: '1px solid var(--border-subtle)',
                     borderRadius: 4,
@@ -313,9 +313,9 @@ export const TraderConfluenceCard: React.FC<Props> = ({ symbol }) => {
                 gap: 6,
               }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>{p.label}</span>
+                  <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{p.label}</span>
                   <span style={{
-                    fontSize: '0.62rem',
+                    fontSize: '0.75rem',
                     fontWeight: 800,
                     padding: '2px 6px',
                     borderRadius: 4,
@@ -329,9 +329,9 @@ export const TraderConfluenceCard: React.FC<Props> = ({ symbol }) => {
                   <span className="mono" style={{ fontSize: '1.1rem', fontWeight: 800, color: pColor }}>
                     {p.score > 0 ? '+' : ''}{p.score.toFixed(1)}
                   </span>
-                  <span style={{ fontSize: '0.65rem', color: 'var(--text-muted)' }}>({(p.weight * 100).toFixed(0)}% wt)</span>
+                  <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>({(p.weight * 100).toFixed(0)}% wt)</span>
                 </div>
-                <div style={{ fontSize: '0.67rem', color: 'var(--text-dim, #64748b)', lineHeight: 1.3 }}>
+                <div style={{ fontSize: '0.75rem', color: 'var(--text-dim, #64748b)', lineHeight: 1.3 }}>
                   {p.details}
                 </div>
               </div>
@@ -362,10 +362,10 @@ export const TraderConfluenceCard: React.FC<Props> = ({ symbol }) => {
                 <XCircle size={15} color="#f43f5e" style={{ flexShrink: 0, marginTop: 2 }} />
               )}
               <div>
-                <div style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--text-primary)' }}>
+                <div style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-primary)' }}>
                   {item.title}
                 </div>
-                <div style={{ fontSize: '0.66rem', color: 'var(--text-secondary)' }}>
+                <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
                   {item.note}
                 </div>
               </div>

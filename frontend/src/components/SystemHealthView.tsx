@@ -68,7 +68,7 @@ export const SystemHealthView: React.FC = () => {
                 <div style={{ fontSize: '1.05rem', fontWeight: 800, color: 'var(--text-primary)' }}>
                   ALL SYSTEMS OPERATIONAL • ZERO DATA INTEGRITY WARNINGS
                 </div>
-                <div style={{ fontSize: '0.74rem', color: 'var(--text-secondary)', marginTop: 2 }}>
+                <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: 2 }}>
                   Active Feeds: {health.active_sources_count} Official Sources • Processed Events: {health.total_events_processed} • Latency Nominal
                 </div>
               </div>
@@ -78,7 +78,7 @@ export const SystemHealthView: React.FC = () => {
               <div className="mono" style={{ fontSize: '0.8rem', color: 'var(--accent-cyan)', fontWeight: 700 }}>
                 Data Freshness: {health.data_freshness_seconds}s ago
               </div>
-              <div style={{ fontSize: '0.68rem', color: 'var(--text-muted)' }}>
+              <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
                 Poll Interval: 300s (Immediate on Material Events)
               </div>
             </div>
@@ -106,7 +106,7 @@ export const SystemHealthView: React.FC = () => {
                       {c.component}
                     </span>
                     <span style={{
-                      fontSize: '0.65rem',
+                      fontSize: '0.75rem',
                       fontWeight: 700,
                       padding: '2px 6px',
                       borderRadius: 4,
@@ -117,13 +117,13 @@ export const SystemHealthView: React.FC = () => {
                     </span>
                   </div>
                   {c.message && (
-                    <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: 4 }}>
+                    <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: 4 }}>
                       {c.message}
                     </div>
                   )}
                 </div>
 
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.72rem', color: 'var(--text-secondary)', borderTop: '1px solid var(--border-subtle)', paddingTop: 8 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--text-secondary)', borderTop: '1px solid var(--border-subtle)', paddingTop: 8 }}>
                   <span>Latency: <strong className="mono" style={{ color: '#38bdf8' }}>{c.latency_ms.toFixed(1)}ms</strong></span>
                   <span>Error Rate: <strong className="mono" style={{ color: '#10b981' }}>{c.error_rate_pct.toFixed(2)}%</strong></span>
                 </div>

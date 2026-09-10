@@ -179,7 +179,7 @@ export const AICopilotView: React.FC = () => {
                 style={{
                   background: 'linear-gradient(135deg, #6366f1, #a855f7)',
                   color: '#fff',
-                  fontSize: '0.68rem',
+                  fontSize: '0.75rem',
                   fontWeight: 800,
                   padding: '2px 8px',
                   borderRadius: 999,
@@ -255,7 +255,7 @@ export const AICopilotView: React.FC = () => {
               <span style={{ fontSize: '0.92rem', fontWeight: 800, color: 'var(--text-primary)' }}>
                 Ask Macro Copilot
               </span>
-              <span style={{ fontSize: '0.74rem', color: 'var(--text-muted)' }}>
+              <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
                 (Reasoning grounded in verified central bank transcripts & macroeconomic data)
               </span>
             </div>
@@ -303,7 +303,7 @@ export const AICopilotView: React.FC = () => {
 
             {/* Quick Prompt Presets */}
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-              <span style={{ fontSize: '0.74rem', color: 'var(--text-muted)', alignSelf: 'center' }}>
+              <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', alignSelf: 'center' }}>
                 Quick Scenarios:
               </span>
               {PRESET_QUERIES.map((preset, idx) => (
@@ -318,7 +318,7 @@ export const AICopilotView: React.FC = () => {
                     border: '1px solid var(--border-subtle)',
                     borderRadius: 999,
                     padding: '4px 12px',
-                    fontSize: '0.74rem',
+                    fontSize: '0.75rem',
                     color: 'var(--text-secondary)',
                     cursor: 'pointer',
                     transition: 'all 0.15s ease',
@@ -354,7 +354,7 @@ export const AICopilotView: React.FC = () => {
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                   <span
                     style={{
-                      fontSize: '0.72rem',
+                      fontSize: '0.75rem',
                       fontWeight: 700,
                       padding: '3px 10px',
                       borderRadius: 999,
@@ -365,7 +365,7 @@ export const AICopilotView: React.FC = () => {
                   >
                     Provider: {copilotResult.provider}
                   </span>
-                  <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>
+                  <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
                     {new Date(copilotResult.timestamp).toLocaleTimeString()}
                   </span>
                 </div>
@@ -412,14 +412,14 @@ export const AICopilotView: React.FC = () => {
                           <span style={{ fontWeight: 700, fontSize: '0.78rem', color: 'var(--text-primary)' }}>
                             {c.title}
                           </span>
-                          <span style={{ fontSize: '0.7rem', color: '#34d399', fontWeight: 700 }}>
+                          <span style={{ fontSize: '0.75rem', color: '#34d399', fontWeight: 700 }}>
                             {(c.relevance_score * 100).toFixed(0)}% match
                           </span>
                         </div>
-                        <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginBottom: 6 }}>
+                        <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: 6 }}>
                           {c.institution} • {c.date}
                         </div>
-                        <div style={{ fontSize: '0.74rem', color: 'var(--text-secondary)' }}>
+                        <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
                           {c.takeaway}
                         </div>
                       </div>
@@ -479,13 +479,13 @@ export const AICopilotView: React.FC = () => {
                     padding: 16,
                   }}
                 >
-                  <div style={{ fontSize: '0.74rem', color: 'var(--text-muted)', marginBottom: 4 }}>
+                  <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: 4 }}>
                     {kpi.label}
                   </div>
                   <div style={{ fontSize: '1.25rem', fontWeight: 900, color: kpi.color, marginBottom: 4 }}>
                     {kpi.value}
                   </div>
-                  <div style={{ fontSize: '0.7rem', color: 'var(--text-secondary)' }}>
+                  <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
                     {kpi.sub}
                   </div>
                 </div>
@@ -611,7 +611,7 @@ export const AICopilotView: React.FC = () => {
               {/* Weights Table */}
               {dynamicWeights && (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 8, maxHeight: 320, overflowY: 'auto' }}>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1.8fr 1fr 1fr 1fr', fontSize: '0.72rem', fontWeight: 800, color: 'var(--text-muted)', paddingBottom: 6, borderBottom: '1px solid var(--border-subtle)' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1.8fr 1fr 1fr 1fr', fontSize: '0.75rem', fontWeight: 800, color: 'var(--text-muted)', paddingBottom: 6, borderBottom: '1px solid var(--border-subtle)' }}>
                     <span>FACTOR</span>
                     <span style={{ textAlign: 'right' }}>STATIC</span>
                     <span style={{ textAlign: 'right' }}>DYNAMIC</span>
@@ -745,7 +745,7 @@ export const AICopilotView: React.FC = () => {
                   </span>
                   <span
                     style={{
-                      fontSize: '0.74rem',
+                      fontSize: '0.75rem',
                       fontWeight: 800,
                       padding: '3px 10px',
                       borderRadius: 999,
@@ -757,7 +757,7 @@ export const AICopilotView: React.FC = () => {
                   </span>
                   <span
                     style={{
-                      fontSize: '0.74rem',
+                      fontSize: '0.75rem',
                       fontWeight: 800,
                       padding: '3px 10px',
                       borderRadius: 999,
@@ -776,37 +776,37 @@ export const AICopilotView: React.FC = () => {
               {/* Dimensional Polarities */}
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 14 }}>
                 <div style={{ background: 'var(--surface-1)', padding: 16, borderRadius: 'var(--radius-md)' }}>
-                  <div style={{ fontSize: '0.74rem', color: 'var(--text-muted)', marginBottom: 4 }}>
+                  <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: 4 }}>
                     Monetary Stance (Hawkish / Dovish)
                   </div>
                   <div style={{ fontSize: '1.25rem', fontWeight: 900, color: nlpResult.hawkish_dovish_score > 0 ? '#f87171' : '#34d399' }}>
                     {nlpResult.hawkish_dovish_score > 0 ? `+${nlpResult.hawkish_dovish_score}` : nlpResult.hawkish_dovish_score}
                   </div>
-                  <div style={{ fontSize: '0.7rem', color: 'var(--text-secondary)' }}>
+                  <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
                     {nlpResult.hawkish_dovish_score > 15 ? 'Hawkish / Restrictive Policy' : nlpResult.hawkish_dovish_score < -15 ? 'Dovish / Accommodative Easing' : 'Balanced Policy Neutral'}
                   </div>
                 </div>
 
                 <div style={{ background: 'var(--surface-1)', padding: 16, borderRadius: 'var(--radius-md)' }}>
-                  <div style={{ fontSize: '0.74rem', color: 'var(--text-muted)', marginBottom: 4 }}>
+                  <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: 4 }}>
                     Growth Sentiment Impulse
                   </div>
                   <div style={{ fontSize: '1.25rem', fontWeight: 900, color: nlpResult.growth_sentiment >= 0 ? '#34d399' : '#f87171' }}>
                     {nlpResult.growth_sentiment > 0 ? `+${nlpResult.growth_sentiment}` : nlpResult.growth_sentiment}
                   </div>
-                  <div style={{ fontSize: '0.7rem', color: 'var(--text-secondary)' }}>
+                  <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
                     {nlpResult.growth_sentiment > 15 ? 'Economic Expansion & Beat' : nlpResult.growth_sentiment < -15 ? 'Contraction & Recession Risk' : 'Baseline Trend'}
                   </div>
                 </div>
 
                 <div style={{ background: 'var(--surface-1)', padding: 16, borderRadius: 'var(--radius-md)' }}>
-                  <div style={{ fontSize: '0.74rem', color: 'var(--text-muted)', marginBottom: 4 }}>
+                  <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: 4 }}>
                     Inflation Pressure Index
                   </div>
                   <div style={{ fontSize: '1.25rem', fontWeight: 900, color: nlpResult.inflation_pressure > 0 ? '#fbbf24' : '#38bdf8' }}>
                     {nlpResult.inflation_pressure > 0 ? `+${nlpResult.inflation_pressure}` : nlpResult.inflation_pressure}
                   </div>
-                  <div style={{ fontSize: '0.7rem', color: 'var(--text-secondary)' }}>
+                  <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
                     {nlpResult.inflation_pressure > 15 ? 'Accelerating Price Pressures' : nlpResult.inflation_pressure < -15 ? 'Disinflationary Cooling' : 'Anchor at Target'}
                   </div>
                 </div>
@@ -815,7 +815,7 @@ export const AICopilotView: React.FC = () => {
               {/* Detected Entities */}
               {nlpResult.detected_currencies.length > 0 && (
                 <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-                  <span style={{ fontSize: '0.74rem', color: 'var(--text-muted)' }}>Detected Entities:</span>
+                  <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Detected Entities:</span>
                   {nlpResult.detected_currencies.map((c) => (
                     <span
                       key={c}
@@ -824,7 +824,7 @@ export const AICopilotView: React.FC = () => {
                         border: '1px solid var(--border-subtle)',
                         borderRadius: 4,
                         padding: '2px 8px',
-                        fontSize: '0.72rem',
+                        fontSize: '0.75rem',
                         fontWeight: 700,
                         color: 'var(--text-primary)',
                       }}
@@ -919,7 +919,7 @@ export const AICopilotView: React.FC = () => {
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                   <span
                     style={{
-                      fontSize: '0.7rem',
+                      fontSize: '0.75rem',
                       fontWeight: 800,
                       padding: '2px 8px',
                       borderRadius: 4,
@@ -929,7 +929,7 @@ export const AICopilotView: React.FC = () => {
                   >
                     {r.institution} • {r.category.replace(/_/g, ' ')}
                   </span>
-                  <span style={{ fontSize: '0.72rem', color: '#34d399', fontWeight: 700 }}>
+                  <span style={{ fontSize: '0.75rem', color: '#34d399', fontWeight: 700 }}>
                     {(r.relevance_score * 100).toFixed(0)}% match
                   </span>
                 </div>
@@ -938,7 +938,7 @@ export const AICopilotView: React.FC = () => {
                   {r.title}
                 </h4>
 
-                <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>
+                <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
                   Date: {r.date}
                 </div>
 
@@ -946,11 +946,11 @@ export const AICopilotView: React.FC = () => {
                   "{r.content}"
                 </p>
 
-                <div style={{ background: 'var(--surface-1)', padding: 10, borderRadius: 'var(--radius-sm)', fontSize: '0.74rem' }}>
+                <div style={{ background: 'var(--surface-1)', padding: 10, borderRadius: 'var(--radius-sm)', fontSize: '0.75rem' }}>
                   <strong style={{ color: '#c084fc' }}>Takeaway:</strong> {r.key_takeaway}
                 </div>
 
-                <div style={{ fontSize: '0.72rem', color: '#fbbf24' }}>
+                <div style={{ fontSize: '0.75rem', color: '#fbbf24' }}>
                   <strong>Market Impact:</strong> {r.historical_asset_reaction}
                 </div>
               </div>
