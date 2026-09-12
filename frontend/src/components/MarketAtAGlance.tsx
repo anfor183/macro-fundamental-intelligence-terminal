@@ -11,6 +11,7 @@ import {
   ArrowDownRight,
 } from 'lucide-react';
 import { MacroRegime, AssetItem, CalendarEvent } from '../types/macro';
+import { useTimezone } from '../context/TimezoneContext';
 
 interface MarketAtAGlanceProps {
   regime: MacroRegime | null;
@@ -27,6 +28,8 @@ export const MarketAtAGlance: React.FC<MarketAtAGlanceProps> = ({
   onSelectAsset,
   onNavigateTab,
 }) => {
+  const { formatTime } = useTimezone();
+
   // Compute Leaders & Laggards
   const sortedAssets = [...assets].sort((a, b) => b.score - a.score);
   const topBullish = sortedAssets.slice(0, 3);
@@ -235,7 +238,7 @@ export const MarketAtAGlance: React.FC<MarketAtAGlanceProps> = ({
             Next Major Event
           </div>
           <div className="mono" style={{ fontSize: '0.75rem', fontWeight: 700, color: '#fbbf24', marginTop: 3 }}>
-            {nextEvent ? `${nextEvent.currency} ${nextEvent.event}` : 'USD CPI 09:30 UTC'}
+            {nextEvent ? `${nextEvent.currency} ${nextEvent.event} • ${formatTime(nextEvent.event_time)}` : 'USD Core CPI • 15:30 WAT'}
           </div>
           <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: 2 }}>
             {nextEvent ? `Consensus: ${nextEvent.consensus || 'N/A'}` : 'High Volatility Expected'}

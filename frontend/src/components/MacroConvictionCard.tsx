@@ -90,6 +90,7 @@ export const MacroConvictionCard: React.FC<MacroConvictionCardProps> = ({
         boxShadow: 'var(--shadow-sm)',
         position: 'relative',
         overflow: 'hidden',
+        height: '100%',
       }}
     >
       {/* Background subtle atmospheric tint */}
@@ -238,6 +239,7 @@ export const MacroConvictionCard: React.FC<MacroConvictionCardProps> = ({
           gap: '16px',
           paddingTop: 8,
           borderTop: '1px solid var(--border-subtle)',
+          flex: 1,
         }}
       >
         {/* Left: What is driving it? */}
@@ -247,6 +249,8 @@ export const MacroConvictionCard: React.FC<MacroConvictionCardProps> = ({
             borderRadius: 'var(--radius-md)',
             padding: '14px',
             border: '1px solid var(--border-subtle)',
+            display: 'flex',
+            flexDirection: 'column',
           }}
         >
           <div
@@ -314,9 +318,10 @@ export const MacroConvictionCard: React.FC<MacroConvictionCardProps> = ({
             <button
               onClick={onOpenEvidence}
               style={{
-                marginTop: 12,
+                marginTop: 'auto',
+                paddingTop: 10,
                 width: '100%',
-                padding: '6px',
+                padding: '7px',
                 fontSize: '0.75rem',
                 fontWeight: 600,
                 color: 'var(--accent-cyan)',
@@ -340,6 +345,8 @@ export const MacroConvictionCard: React.FC<MacroConvictionCardProps> = ({
             borderRadius: 'var(--radius-md)',
             padding: '14px',
             border: '1px solid var(--border-subtle)',
+            display: 'flex',
+            flexDirection: 'column',
           }}
         >
           <div

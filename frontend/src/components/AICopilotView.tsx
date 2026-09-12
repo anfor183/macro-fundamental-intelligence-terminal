@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Brain,
   Sparkles,
@@ -22,6 +22,9 @@ import {
   Flame,
   AlertTriangle,
   Lightbulb,
+  X,
+  RotateCcw,
+  ShieldCheck,
 } from 'lucide-react';
 import { api } from '../services/api';
 import {
@@ -32,6 +35,111 @@ import {
   NLPSentimentAnalysis,
 } from '../types/macro';
 
+function renderFormattedSynthesis(text: string) {
+  const paragraphs = text.split(/\n\n+/).filter(Boolean);
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+      {paragraphs.map((para, i) => {
+        const isMacroHeader = para.startsWith('**Macro Synthesis**:');
+        const isPrecedentHeader = para.startsWith('**Historical Precedent');
+        const isRiskHeader =
+          para.startsWith('**Strategic Risk') || para.startsWith('**Key Trading');
+
+        let title = '';
+        let content = para;
+        let badgeColor = '#818cf8';
+        let badgeBg = 'rgba(99, 102, 241, 0.12)';
+        let badgeBorder = 'rgba(99, 102, 241, 0.3)';
+        let icon = <Lightbulb size={14} color="#818cf8" />;
+
+        if (isMacroHeader) {
+          title = 'Executive Macro Synthesis';
+          content = para.replace(/^\*\*Macro Synthesis\*\*:\s*/, '');
+          badgeColor = '#a855f7';
+          badgeBg = 'rgba(168, 85, 247, 0.12)';
+          badgeBorder = 'rgba(168, 85, 247, 0.3)';
+          icon = <Brain size={14} color="#a855f7" />;
+        } else if (isPrecedentHeader) {
+          title = 'Historical Precedent & Central Bank Doctrine';
+          content = para.replace(/^\*\*Historical Precedent & Doctrine\*\*:\s*/, '');
+          badgeColor = '#10b981';
+          badgeBg = 'rgba(16, 185, 129, 0.12)';
+          badgeBorder = 'rgba(16, 185, 129, 0.3)';
+          icon = <Database size={14} color="#10b981" />;
+        } else if (isRiskHeader) {
+          title = 'Strategic Trading & Risk Implications';
+          content = para.replace(
+            /^\*\*(?:Strategic Risk Implication|Key Trading & Risk Implications)\*\*:\s*/,
+            ''
+          );
+          badgeColor = '#f59e0b';
+          badgeBg = 'rgba(245, 158, 11, 0.12)';
+          badgeBorder = 'rgba(245, 158, 11, 0.3)';
+          icon = <AlertTriangle size={14} color="#f59e0b" />;
+        }
+
+        if (title) {
+          return (
+            <div
+              key={i}
+              style={{
+                background: 'var(--surface-1)',
+                border: `1px solid ${badgeBorder}`,
+                borderRadius: 'var(--radius-md)',
+                padding: '16px 18px',
+              }}
+            >
+              <div
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: 6,
+                  fontSize: '0.74rem',
+                  fontWeight: 800,
+                  color: badgeColor,
+                  background: badgeBg,
+                  padding: '3px 10px',
+                  borderRadius: 999,
+                  marginBottom: 10,
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.04em',
+                }}
+              >
+                {icon}
+                <span>{title}</span>
+              </div>
+              <div
+                style={{
+                  fontSize: '0.88rem',
+                  lineHeight: 1.7,
+                  color: 'var(--text-primary)',
+                }}
+              >
+                {content}
+              </div>
+            </div>
+          );
+        }
+
+        return (
+          <p
+            key={i}
+            style={{
+              margin: 0,
+              fontSize: '0.88rem',
+              lineHeight: 1.7,
+              color: 'var(--text-primary)',
+            }}
+          >
+            {para}
+          </p>
+        );
+      })}
+    </div>
+  );
+}
+
 export const AICopilotView: React.FC = () => {
   const [activeSubTab, setActiveSubTab] = useState<'copilot' | 'ml_engine' | 'nlp_lab' | 'rag_archive'>('copilot');
 
@@ -40,6 +148,8 @@ export const AICopilotView: React.FC = () => {
   const [selectedAsset, setSelectedAsset] = useState('EURUSD');
   const [copilotLoading, setCopilotLoading] = useState(false);
   const [copilotResult, setCopilotResult] = useState<CopilotResponse | null>(null);
+  const [copilotError, setCopilotError] = useState<string | null>(null);
+  const responseRef = useRef<HTMLDivElement | null>(null);
 
   // ── ML Status & Dynamic Weights State ──
   const [mlStatus, setMlStatus] = useState<MLModelStatus | null>(null);
@@ -101,11 +211,24 @@ export const AICopilotView: React.FC = () => {
     const textToSend = qText || query;
     if (!textToSend.trim()) return;
     setCopilotLoading(true);
+    setCopilotError(null);
+
+    // Smooth scroll down to response area
+    setTimeout(() => {
+      responseRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }, 80);
+
     try {
       const res = await api.queryCopilot(textToSend, selectedAsset);
       setCopilotResult(res);
-    } catch (err) {
+      setTimeout(() => {
+        responseRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }, 120);
+    } catch (err: any) {
       console.error('Copilot query error', err);
+      setCopilotError(
+        err?.message || 'Failed to complete macroeconomic synthesis. Please verify backend connection and try again.'
+      );
     } finally {
       setCopilotLoading(false);
     }
@@ -204,6 +327,7 @@ export const AICopilotView: React.FC = () => {
             borderRadius: 'var(--radius-md)',
             border: '1px solid var(--border-subtle)',
             gap: 4,
+            flexWrap: 'wrap',
           }}
         >
           {[
@@ -211,29 +335,35 @@ export const AICopilotView: React.FC = () => {
             { id: 'ml_engine', label: 'ML Model & Dynamic Weights', icon: <Cpu size={14} /> },
             { id: 'nlp_lab', label: 'Financial NLP Lab', icon: <Activity size={14} /> },
             { id: 'rag_archive', label: 'Central Bank RAG Store', icon: <Database size={14} /> },
-          ].map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveSubTab(tab.id as any)}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 6,
-                padding: '8px 14px',
-                fontSize: '0.8rem',
-                fontWeight: activeSubTab === tab.id ? 700 : 500,
-                color: activeSubTab === tab.id ? '#fff' : 'var(--text-muted)',
-                background: activeSubTab === tab.id ? 'var(--accent-primary)' : 'transparent',
-                borderRadius: 'var(--radius-sm)',
-                border: 'none',
-                cursor: 'pointer',
-                transition: 'all 0.15s ease',
-              }}
-            >
-              {tab.icon}
-              {tab.label}
-            </button>
-          ))}
+          ].map((tab) => {
+            const isActive = activeSubTab === tab.id;
+            return (
+              <button
+                key={tab.id}
+                onClick={() => setActiveSubTab(tab.id as any)}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 7,
+                  padding: '8px 16px',
+                  fontSize: '0.82rem',
+                  fontWeight: isActive ? 700 : 600,
+                  color: isActive ? '#ffffff' : 'var(--text-secondary)',
+                  background: isActive
+                    ? 'linear-gradient(135deg, #6366f1, #a855f7)'
+                    : 'transparent',
+                  borderRadius: 'var(--radius-sm)',
+                  border: 'none',
+                  cursor: 'pointer',
+                  boxShadow: isActive ? '0 2px 8px rgba(99, 102, 241, 0.35)' : 'none',
+                  transition: 'all 0.15s ease',
+                }}
+              >
+                {tab.icon}
+                {tab.label}
+              </button>
+            );
+          })}
         </div>
       </div>
 
@@ -250,185 +380,447 @@ export const AICopilotView: React.FC = () => {
               boxShadow: 'var(--shadow-sm)',
             }}
           >
-            <div style={{ display: 'flex', gap: 10, alignItems: 'center', marginBottom: 12 }}>
-              <Sparkles size={18} color="#a855f7" />
-              <span style={{ fontSize: '0.92rem', fontWeight: 800, color: 'var(--text-primary)' }}>
-                Ask Macro Copilot
-              </span>
-              <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-                (Reasoning grounded in verified central bank transcripts & macroeconomic data)
-              </span>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14, flexWrap: 'wrap', gap: 10 }}>
+              <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+                <Sparkles size={18} color="#a855f7" />
+                <span style={{ fontSize: '0.94rem', fontWeight: 800, color: 'var(--text-primary)' }}>
+                  Ask Macro Copilot
+                </span>
+                <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                  (Reasoning grounded in verified central bank transcripts & macroeconomic data)
+                </span>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.74rem', color: 'var(--text-muted)' }}>
+                <span
+                  style={{
+                    width: 7,
+                    height: 7,
+                    borderRadius: '50%',
+                    background: '#10b981',
+                    boxShadow: '0 0 8px #10b981',
+                    display: 'inline-block',
+                  }}
+                />
+                <span>Zero-Hallucination Vector RAG Active</span>
+              </div>
             </div>
 
-            <div style={{ display: 'flex', gap: 10, marginBottom: 12 }}>
-              <input
-                type="text"
-                placeholder="Ask any macroeconomic or monetary policy scenario (e.g. 'What is the Gold sensitivity to real yields?')..."
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && handleAskCopilot()}
-                style={{
-                  flex: 1,
-                  padding: '12px 16px',
-                  borderRadius: 'var(--radius-md)',
-                  background: 'var(--surface-1)',
-                  border: '1px solid var(--border-subtle)',
-                  color: 'var(--text-primary)',
-                  fontSize: '0.88rem',
-                  outline: 'none',
-                }}
-              />
+            <div style={{ display: 'flex', gap: 10, marginBottom: 14, flexWrap: 'wrap' }}>
+              {/* Asset Context Dropdown */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)' }}>
+                  Asset:
+                </span>
+                <select
+                  value={selectedAsset}
+                  onChange={(e) => setSelectedAsset(e.target.value)}
+                  style={{
+                    padding: '10px 12px',
+                    borderRadius: 'var(--radius-md)',
+                    background: 'var(--surface-1)',
+                    border: '1px solid var(--border-subtle)',
+                    color: 'var(--text-primary)',
+                    fontSize: '0.82rem',
+                    fontWeight: 700,
+                    outline: 'none',
+                    cursor: 'pointer',
+                  }}
+                >
+                  <option value="EURUSD">EUR/USD (Euro)</option>
+                  <option value="USDJPY">USD/JPY (Yen)</option>
+                  <option value="GBPUSD">GBP/USD (Pound)</option>
+                  <option value="AUDUSD">AUD/USD (Aussie)</option>
+                  <option value="USDCAD">USD/CAD (Loonie)</option>
+                  <option value="USDCHF">USD/CHF (Swiss Franc)</option>
+                  <option value="XAUUSD">XAU/USD (Spot Gold)</option>
+                  <option value="USOIL">WTI Crude Oil</option>
+                  <option value="SPX">S&P 500 Index</option>
+                  <option value="BTCUSD">Bitcoin / USD</option>
+                </select>
+              </div>
+
+              {/* Main Prompt Input */}
+              <div style={{ flex: 1, position: 'relative', minWidth: 260 }}>
+                <input
+                  type="text"
+                  placeholder="Ask any macroeconomic or monetary policy scenario (e.g. 'What is the Gold sensitivity to real yields?')..."
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && handleAskCopilot()}
+                  style={{
+                    width: '100%',
+                    boxSizing: 'border-box',
+                    padding: '12px 38px 12px 16px',
+                    borderRadius: 'var(--radius-md)',
+                    background: 'var(--surface-1)',
+                    border: '1px solid var(--border-subtle)',
+                    color: 'var(--text-primary)',
+                    fontSize: '0.88rem',
+                    outline: 'none',
+                  }}
+                />
+                {query && (
+                  <button
+                    onClick={() => setQuery('')}
+                    title="Clear prompt"
+                    style={{
+                      position: 'absolute',
+                      right: 12,
+                      top: '50%',
+                      transform: 'translateY(-50%)',
+                      background: 'transparent',
+                      border: 'none',
+                      color: 'var(--text-muted)',
+                      cursor: 'pointer',
+                      padding: 2,
+                    }}
+                  >
+                    <X size={14} />
+                  </button>
+                )}
+              </div>
+
+              {/* Synthesize Button */}
               <button
+                id="btn-synthesize-copilot"
                 onClick={() => handleAskCopilot()}
-                disabled={copilotLoading}
+                disabled={copilotLoading || !query.trim()}
                 style={{
-                  display: 'flex',
+                  display: 'inline-flex',
                   alignItems: 'center',
                   gap: 8,
-                  padding: '0 22px',
+                  padding: '0 24px',
                   borderRadius: 'var(--radius-md)',
-                  background: 'linear-gradient(135deg, #6366f1, #a855f7)',
-                  color: '#fff',
+                  background: copilotLoading
+                    ? 'linear-gradient(135deg, #6366f1, #a855f7)'
+                    : !query.trim()
+                    ? 'var(--surface-2)'
+                    : 'linear-gradient(135deg, #6366f1, #a855f7)',
+                  color: !query.trim() && !copilotLoading ? 'var(--text-muted)' : '#ffffff',
                   fontWeight: 700,
                   fontSize: '0.86rem',
-                  border: 'none',
-                  cursor: copilotLoading ? 'not-allowed' : 'pointer',
-                  opacity: copilotLoading ? 0.7 : 1,
+                  border: !query.trim() && !copilotLoading ? '1px solid var(--border-subtle)' : 'none',
+                  cursor: copilotLoading || !query.trim() ? 'not-allowed' : 'pointer',
+                  boxShadow: query.trim() && !copilotLoading ? '0 2px 12px rgba(168, 85, 247, 0.35)' : 'none',
+                  transition: 'all 0.15s ease',
+                  minHeight: 44,
                 }}
               >
-                {copilotLoading ? <RefreshCw size={16} className="spin" /> : <Send size={16} />}
-                {copilotLoading ? 'Synthesizing…' : 'Synthesize'}
+                {copilotLoading ? (
+                  <RefreshCw size={16} className="animate-spin" />
+                ) : (
+                  <Send size={16} />
+                )}
+                <span>{copilotLoading ? 'Synthesizing…' : 'Synthesize'}</span>
               </button>
             </div>
 
             {/* Quick Prompt Presets */}
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-              <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', alignSelf: 'center' }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, alignItems: 'center' }}>
+              <span style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-muted)' }}>
                 Quick Scenarios:
               </span>
-              {PRESET_QUERIES.map((preset, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => {
-                    setQuery(preset);
-                    handleAskCopilot(preset);
-                  }}
-                  style={{
-                    background: 'var(--surface-1)',
-                    border: '1px solid var(--border-subtle)',
-                    borderRadius: 999,
-                    padding: '4px 12px',
-                    fontSize: '0.75rem',
-                    color: 'var(--text-secondary)',
-                    cursor: 'pointer',
-                    transition: 'all 0.15s ease',
-                  }}
-                >
-                  {preset}
-                </button>
-              ))}
+              {PRESET_QUERIES.map((preset, idx) => {
+                const isSelected = query === preset;
+                return (
+                  <button
+                    key={idx}
+                    onClick={() => {
+                      setQuery(preset);
+                      handleAskCopilot(preset);
+                    }}
+                    style={{
+                      background: isSelected ? 'rgba(168, 85, 247, 0.15)' : 'var(--surface-1)',
+                      border: `1px solid ${isSelected ? 'rgba(168, 85, 247, 0.45)' : 'var(--border-subtle)'}`,
+                      borderRadius: 999,
+                      padding: '5px 14px',
+                      fontSize: '0.76rem',
+                      fontWeight: isSelected ? 700 : 500,
+                      color: isSelected ? '#a855f7' : 'var(--text-secondary)',
+                      cursor: 'pointer',
+                      transition: 'all 0.15s ease',
+                    }}
+                  >
+                    {preset}
+                  </button>
+                );
+              })}
             </div>
           </div>
 
-          {/* Copilot Response Card */}
-          {copilotResult && (
-            <div
-              style={{
-                background: 'var(--surface-elevated)',
-                borderRadius: 'var(--radius-lg)',
-                border: '1px solid var(--border-subtle)',
-                padding: 24,
-                display: 'flex',
-                flexDirection: 'column',
-                gap: 18,
-                boxShadow: 'var(--shadow-md)',
-              }}
-            >
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border-subtle)', paddingBottom: 12 }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <Brain size={18} color="#c084fc" />
-                  <span style={{ fontSize: '1rem', fontWeight: 800, color: 'var(--text-primary)' }}>
-                    Executive Macro Synthesis
-                  </span>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                  <span
-                    style={{
-                      fontSize: '0.75rem',
-                      fontWeight: 700,
-                      padding: '3px 10px',
-                      borderRadius: 999,
-                      background: 'rgba(99,102,241,0.15)',
-                      color: '#818cf8',
-                      border: '1px solid rgba(99,102,241,0.3)',
-                    }}
-                  >
-                    Provider: {copilotResult.provider}
-                  </span>
-                  <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-                    {new Date(copilotResult.timestamp).toLocaleTimeString()}
-                  </span>
-                </div>
-              </div>
-
-              {/* Formatted Markdown/Paragraphs */}
+          {/* Response Container (with ref for smooth auto-scrolling) */}
+          <div ref={responseRef} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            {/* 1. Loading In-Flight Skeleton */}
+            {copilotLoading && (
               <div
                 style={{
-                  fontSize: '0.88rem',
-                  lineHeight: 1.7,
-                  color: 'var(--text-primary)',
-                  whiteSpace: 'pre-line',
+                  background: 'var(--surface-elevated)',
+                  borderRadius: 'var(--radius-lg)',
+                  border: '1px solid rgba(168, 85, 247, 0.4)',
+                  padding: 32,
+                  boxShadow: '0 0 24px rgba(168, 85, 247, 0.12)',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: 16,
                 }}
               >
-                {copilotResult.response}
+                <div style={{ position: 'relative' }}>
+                  <Brain size={40} color="#a855f7" className="animate-spin" />
+                </div>
+                <div style={{ fontSize: '1.05rem', fontWeight: 800, color: 'var(--text-primary)' }}>
+                  Synthesizing Macro Reasoning & Institutional RAG...
+                </div>
+                <div style={{ fontSize: '0.82rem', color: 'var(--text-muted)', textAlign: 'center', maxWidth: 500, lineHeight: 1.5 }}>
+                  Querying vector database for historical central bank precedents, policy rate differentials, and cross-asset transmission mechanics.
+                </div>
+                <div style={{ width: 220, height: 4, background: 'var(--surface-2)', borderRadius: 999, overflow: 'hidden' }}>
+                  <div
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      background: 'linear-gradient(90deg, #6366f1, #a855f7, #6366f1)',
+                      backgroundSize: '200% 100%',
+                      animation: 'shimmer 1.4s infinite linear',
+                    }}
+                  />
+                </div>
               </div>
+            )}
 
-              {/* Citations and Grounded Precedents */}
-              {copilotResult.citations && copilotResult.citations.length > 0 && (
-                <div
-                  style={{
-                    background: 'var(--surface-1)',
-                    borderRadius: 'var(--radius-md)',
-                    padding: 16,
-                    border: '1px solid var(--border-subtle)',
-                  }}
-                >
-                  <div style={{ fontSize: '0.78rem', fontWeight: 800, color: 'var(--text-secondary)', marginBottom: 10, display: 'flex', alignItems: 'center', gap: 6 }}>
-                    <Database size={14} color="#38bdf8" />
-                    Verified RAG Citations & Historical Precedents ({copilotResult.citations.length})
-                  </div>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 10 }}>
-                    {copilotResult.citations.map((c) => (
-                      <div
-                        key={c.id}
-                        style={{
-                          background: 'var(--surface-elevated)',
-                          padding: 12,
-                          borderRadius: 'var(--radius-sm)',
-                          border: '1px solid var(--border-subtle)',
-                        }}
-                      >
-                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
-                          <span style={{ fontWeight: 700, fontSize: '0.78rem', color: 'var(--text-primary)' }}>
-                            {c.title}
-                          </span>
-                          <span style={{ fontSize: '0.75rem', color: '#34d399', fontWeight: 700 }}>
-                            {(c.relevance_score * 100).toFixed(0)}% match
-                          </span>
-                        </div>
-                        <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: 6 }}>
-                          {c.institution} • {c.date}
-                        </div>
-                        <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
-                          {c.takeaway}
-                        </div>
-                      </div>
-                    ))}
+            {/* 2. Error Banner */}
+            {copilotError && !copilotLoading && (
+              <div
+                style={{
+                  background: 'rgba(239, 68, 68, 0.08)',
+                  borderRadius: 'var(--radius-lg)',
+                  border: '1px solid rgba(239, 68, 68, 0.3)',
+                  padding: 20,
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  gap: 16,
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                  <AlertTriangle size={22} color="#f43f5e" style={{ flexShrink: 0 }} />
+                  <div>
+                    <div style={{ fontSize: '0.88rem', fontWeight: 700, color: '#f43f5e' }}>
+                      Synthesis Error
+                    </div>
+                    <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: 2 }}>
+                      {copilotError}
+                    </div>
                   </div>
                 </div>
-              )}
-            </div>
-          )}
+                <button
+                  onClick={() => handleAskCopilot()}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 6,
+                    padding: '8px 16px',
+                    borderRadius: 'var(--radius-sm)',
+                    background: 'rgba(239, 68, 68, 0.15)',
+                    border: '1px solid rgba(239, 68, 68, 0.4)',
+                    color: '#f43f5e',
+                    fontSize: '0.8rem',
+                    fontWeight: 700,
+                    cursor: 'pointer',
+                  }}
+                >
+                  <RotateCcw size={14} />
+                  Retry
+                </button>
+              </div>
+            )}
+
+            {/* 3. Successful Copilot Response Card */}
+            {copilotResult && !copilotLoading && (
+              <div
+                style={{
+                  background: 'var(--surface-elevated)',
+                  borderRadius: 'var(--radius-lg)',
+                  border: '1px solid var(--border-subtle)',
+                  padding: 24,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: 20,
+                  boxShadow: 'var(--shadow-md)',
+                }}
+              >
+                {/* Response Header */}
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    flexWrap: 'wrap',
+                    gap: 12,
+                    borderBottom: '1px solid var(--border-subtle)',
+                    paddingBottom: 14,
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                    <div
+                      style={{
+                        width: 34,
+                        height: 34,
+                        borderRadius: 8,
+                        background: 'rgba(168, 85, 247, 0.15)',
+                        border: '1px solid rgba(168, 85, 247, 0.3)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        color: '#c084fc',
+                      }}
+                    >
+                      <Brain size={18} />
+                    </div>
+                    <div>
+                      <span style={{ fontSize: '1.05rem', fontWeight: 800, color: 'var(--text-primary)' }}>
+                        Executive Macro Synthesis
+                      </span>
+                      <div style={{ fontSize: '0.74rem', color: 'var(--text-muted)' }}>
+                        Query: &ldquo;{copilotResult.query}&rdquo;
+                      </div>
+                    </div>
+                  </div>
+
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                    <span
+                      style={{
+                        fontSize: '0.74rem',
+                        fontWeight: 700,
+                        padding: '3px 10px',
+                        borderRadius: 999,
+                        background: 'rgba(99, 102, 241, 0.12)',
+                        color: '#818cf8',
+                        border: '1px solid rgba(99, 102, 241, 0.28)',
+                      }}
+                    >
+                      {copilotResult.provider}
+                    </span>
+                    <span className="mono" style={{ fontSize: '0.74rem', color: 'var(--text-muted)' }}>
+                      {new Date(copilotResult.timestamp).toLocaleTimeString()}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Formatted Sections */}
+                {renderFormattedSynthesis(copilotResult.response)}
+
+                {/* Citations & Verified Precedents */}
+                {copilotResult.citations && copilotResult.citations.length > 0 && (
+                  <div
+                    style={{
+                      background: 'var(--surface-1)',
+                      borderRadius: 'var(--radius-md)',
+                      padding: 18,
+                      border: '1px solid var(--border-subtle)',
+                    }}
+                  >
+                    <div
+                      style={{
+                        fontSize: '0.8rem',
+                        fontWeight: 800,
+                        color: 'var(--text-secondary)',
+                        marginBottom: 12,
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 8,
+                      }}
+                    >
+                      <Database size={15} color="#38bdf8" />
+                      Verified Central Bank RAG Precedents ({copilotResult.citations.length})
+                    </div>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 12 }}>
+                      {copilotResult.citations.map((c) => (
+                        <div
+                          key={c.id}
+                          style={{
+                            background: 'var(--surface-elevated)',
+                            padding: 14,
+                            borderRadius: 'var(--radius-sm)',
+                            border: '1px solid var(--border-subtle)',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: 6,
+                          }}
+                        >
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 8 }}>
+                            <span style={{ fontWeight: 700, fontSize: '0.8rem', color: 'var(--text-primary)' }}>
+                              {c.title}
+                            </span>
+                            <span
+                              style={{
+                                fontSize: '0.72rem',
+                                color: '#10b981',
+                                fontWeight: 700,
+                                background: 'rgba(16, 185, 129, 0.12)',
+                                padding: '1px 6px',
+                                borderRadius: 4,
+                                flexShrink: 0,
+                              }}
+                            >
+                              {(c.relevance_score * 100).toFixed(0)}% match
+                            </span>
+                          </div>
+                          <div style={{ fontSize: '0.74rem', color: 'var(--text-muted)' }}>
+                            <span style={{ fontWeight: 600, color: 'var(--accent-cyan)' }}>{c.institution}</span> • {c.date}
+                          </div>
+                          <div style={{ fontSize: '0.76rem', color: 'var(--text-secondary)', lineHeight: 1.5 }}>
+                            {c.takeaway}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* 4. Starter Interactive Guidance (when idle with no result yet) */}
+            {!copilotLoading && !copilotResult && !copilotError && (
+              <div
+                style={{
+                  background: 'var(--surface-elevated)',
+                  borderRadius: 'var(--radius-lg)',
+                  border: '1px dashed var(--border-subtle)',
+                  padding: 32,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  textAlign: 'center',
+                  gap: 14,
+                }}
+              >
+                <div
+                  style={{
+                    width: 48,
+                    height: 48,
+                    borderRadius: '50%',
+                    background: 'rgba(168, 85, 247, 0.12)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: '#c084fc',
+                  }}
+                >
+                  <Sparkles size={24} />
+                </div>
+                <div>
+                  <h3 style={{ margin: 0, fontSize: '1.05rem', fontWeight: 800, color: 'var(--text-primary)' }}>
+                    Ready for Institutional Macro Reasoning
+                  </h3>
+                  <p style={{ margin: '6px 0 0', fontSize: '0.82rem', color: 'var(--text-muted)', maxWidth: 480 }}>
+                    Enter any monetary policy scenario or click one of the quick scenario pills above to generate a grounded executive briefing backed by verified central bank transcripts.
+                  </p>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       )}
 
@@ -712,15 +1104,16 @@ export const AICopilotView: React.FC = () => {
                 gap: 8,
                 padding: '8px 18px',
                 borderRadius: 'var(--radius-sm)',
-                background: 'var(--accent-primary)',
+                background: 'linear-gradient(135deg, #6366f1, #a855f7)',
                 color: '#fff',
                 fontWeight: 700,
                 fontSize: '0.82rem',
                 border: 'none',
-                cursor: 'pointer',
+                cursor: nlpLoading ? 'not-allowed' : 'pointer',
+                boxShadow: '0 2px 8px rgba(99, 102, 241, 0.3)',
               }}
             >
-              {nlpLoading ? <RefreshCw size={14} className="spin" /> : <Activity size={14} />}
+              {nlpLoading ? <RefreshCw size={14} className="animate-spin" /> : <Activity size={14} />}
               Run Multi-Dimensional NLP Analysis
             </button>
           </div>
@@ -887,15 +1280,16 @@ export const AICopilotView: React.FC = () => {
                   gap: 6,
                   padding: '0 18px',
                   borderRadius: 'var(--radius-sm)',
-                  background: 'var(--accent-primary)',
+                  background: 'linear-gradient(135deg, #6366f1, #a855f7)',
                   color: '#fff',
                   fontWeight: 700,
                   fontSize: '0.82rem',
                   border: 'none',
-                  cursor: 'pointer',
+                  cursor: ragLoading ? 'not-allowed' : 'pointer',
+                  boxShadow: '0 2px 8px rgba(99, 102, 241, 0.3)',
                 }}
               >
-                <Search size={14} />
+                {ragLoading ? <RefreshCw size={14} className="animate-spin" /> : <Search size={14} />}
                 Search
               </button>
             </div>

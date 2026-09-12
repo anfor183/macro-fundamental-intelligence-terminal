@@ -112,7 +112,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
         justifyContent: 'space-between',
         padding: collapsed ? '14px 6px' : '14px 10px',
         flexShrink: 0,
-        minHeight: 'calc(100vh - 61px)',
+        height: '100%',
+        minHeight: 0,
+        overflowY: 'auto',
         transition: 'width 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
       }}
     >

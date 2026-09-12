@@ -28,6 +28,8 @@ interface DashboardViewProps {
   onSelectAsset: (symbol: string) => void;
   onNavigateTab: (tab: any) => void;
   onOpenEvidence?: () => void;
+  onRefresh?: () => Promise<void> | void;
+  density?: 'compact' | 'standard' | 'comfortable';
 }
 
 export const DashboardView: React.FC<DashboardViewProps> = ({
@@ -38,6 +40,8 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   onSelectAsset,
   onNavigateTab,
   onOpenEvidence,
+  onRefresh,
+  density = 'standard',
 }) => {
   const [selectedClass, setSelectedClass] = useState<string>('all');
 
@@ -65,7 +69,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   const featuredAsset = assets.find((a) => a.symbol === 'EURUSD') || assets[0];
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: density === 'compact' ? 10 : density === 'comfortable' ? 24 : 16 }}>
       {/* 1. Market At A Glance (10-Second Executive Summary) */}
       <MarketAtAGlance
         regime={regime}
@@ -235,6 +239,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           display: 'grid',
           gridTemplateColumns: 'minmax(420px, 1.3fr) minmax(360px, 1fr)',
           gap: 20,
+          alignItems: 'stretch',
         }}
       >
         {/* Signature #1: Macro Conviction Card */}
@@ -251,9 +256,11 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
         {/* Signature #3: Real-Time Catalyst Stream */}
         <CatalystStream
+          compact={density === 'compact'}
           whatChanged={whatChanged}
           onSelectAsset={onSelectAsset}
           onOpenEvidence={() => onOpenEvidence && onOpenEvidence()}
+          onRefresh={onRefresh}
         />
       </div>
 

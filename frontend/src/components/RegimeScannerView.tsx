@@ -79,6 +79,20 @@ function returnColor(val: number) {
   return '#64748b';
 }
 
+function formatSignalType(type?: string): string {
+  if (!type) return '';
+  if (type === 'PULLBACK_EXHAUSTION') return 'Pullback';
+  if (type === 'CONTINUATION') return 'Continuation';
+  if (type === 'REVERSAL') return 'Reversal';
+  return type.replace(/_/g, ' ');
+}
+
+function signalTypeColor(type?: string): string {
+  if (type === 'REVERSAL') return '#f59e0b';
+  if (type === 'PULLBACK_EXHAUSTION') return '#a855f7';
+  return '#38bdf8';
+}
+
 function formatAssetPrice(symbol?: string, price?: number | null) {
   if (price === undefined || price === null || price === 0) return '—';
   if (symbol === 'USDJPY' || symbol === 'SPX' || symbol === 'CL' || symbol === 'XAUUSD') {
@@ -431,49 +445,113 @@ function ForwardTestRow({ entry }: { entry: ForwardTestEntry }) {
   const ret = entry.realized_return_pct;
   const color = outcomeColor(entry.outcome);
   const retColor = returnColor(ret);
+  const typeCol = signalTypeColor(entry.signal_type);
 
   return (
     <div
       style={{
         display: 'grid',
-        gridTemplateColumns: '70px 80px 80px 70px 70px 70px',
-        gap: 4,
-        padding: '7px 10px',
+        gridTemplateColumns: '56px 72px 76px 58px 62px 66px',
+        gap: 6,
+        padding: '6px 8px',
         borderRadius: 6,
         background: entry.outcome === 'WIN'
-          ? 'rgba(16,185,129,0.05)'
+          ? 'rgba(16,185,129,0.06)'
           : entry.outcome === 'LOSS'
-          ? 'rgba(244,63,94,0.05)'
-          : 'rgba(255,255,255,0.03)',
+          ? 'rgba(244,63,94,0.06)'
+          : 'rgba(255,255,255,0.025)',
         marginBottom: 4,
-        fontSize: '0.75rem',
+        fontSize: '0.72rem',
         alignItems: 'center',
       }}
     >
-      <span style={{ color: 'var(--text-primary)', fontWeight: 700 }}>{entry.symbol}</span>
-      <span style={{ color: entry.signal_type === 'REVERSAL' ? '#f59e0b' : '#38bdf8', fontSize: '0.75rem' }}>
-        {entry.signal_type}
+      <span
+        style={{
+          color: 'var(--text-primary)',
+          fontWeight: 700,
+          whiteSpace: 'nowrap',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+        }}
+        title={entry.symbol}
+      >
+        {entry.symbol}
       </span>
-      <span style={{ color: directionColor(entry.direction), fontWeight: 700 }}>
-        {entry.direction === 'BULLISH' ? '▲' : '▼'} {entry.direction}
+      <span
+        title={entry.signal_type}
+        style={{
+          color: typeCol,
+          background: `${typeCol}18`,
+          padding: '1px 5px',
+          borderRadius: 3,
+          fontWeight: 700,
+          fontSize: '0.7rem',
+          whiteSpace: 'nowrap',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          textAlign: 'center',
+          display: 'inline-block',
+          maxWidth: '100%',
+        }}
+      >
+        {formatSignalType(entry.signal_type)}
       </span>
-      <span style={{ color: retColor, fontFamily: 'monospace', fontWeight: 700 }}>
+      <span
+        style={{
+          color: directionColor(entry.direction),
+          fontWeight: 700,
+          whiteSpace: 'nowrap',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          display: 'flex',
+          alignItems: 'center',
+          gap: 3,
+        }}
+        title={entry.direction}
+      >
+        <span style={{ flexShrink: 0 }}>{entry.direction === 'BULLISH' ? '▲' : '▼'}</span>
+        <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{entry.direction}</span>
+      </span>
+      <span
+        style={{
+          color: retColor,
+          fontFamily: 'monospace',
+          fontWeight: 700,
+          textAlign: 'right',
+          whiteSpace: 'nowrap',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+        }}
+      >
         {ret > 0 ? '+' : ''}{ret.toFixed(2)}%
       </span>
       <span
         style={{
           color,
           background: `${color}18`,
-          padding: '2px 6px',
+          padding: '2px 5px',
           borderRadius: 4,
           fontWeight: 700,
-          fontSize: '0.75rem',
+          fontSize: '0.68rem',
           textAlign: 'center',
+          whiteSpace: 'nowrap',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          display: 'inline-block',
         }}
       >
         {entry.outcome}
       </span>
-      <span style={{ color: 'var(--text-muted)', fontSize: '0.75rem' }}>
+      <span
+        style={{
+          color: 'var(--text-muted)',
+          fontSize: '0.7rem',
+          textAlign: 'right',
+          whiteSpace: 'nowrap',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+        }}
+      >
         {new Date(entry.issue_date).toLocaleDateString('en-GB', { day: '2-digit', month: 'short' })}
       </span>
     </div>
@@ -497,27 +575,30 @@ function ForwardTestPanel({ log }: { log: ForwardTestLogResponse | null }) {
   const { stats, entries } = log;
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 12, minWidth: 0 }}>
       {/* Stats Banner */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 8 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: 6 }}>
         {[
           {
-            label: 'Rolling Accuracy',
+            label: 'Rolling Acc.',
+            fullLabel: 'Rolling Accuracy',
             value: `${stats.rolling_accuracy_pct.toFixed(1)}%`,
             color: hitRateColor(stats.rolling_accuracy_pct),
-            icon: <Target size={14} />,
+            icon: <Target size={13} />,
           },
           {
             label: 'Forward Sharpe',
+            fullLabel: 'Forward Sharpe Ratio',
             value: stats.forward_sharpe.toFixed(2),
             color: stats.forward_sharpe > 0 ? '#10b981' : '#f43f5e',
-            icon: <BarChart3 size={14} />,
+            icon: <BarChart3 size={13} />,
           },
           {
             label: 'Signals Logged',
+            fullLabel: 'Total Signals Logged',
             value: `${stats.total_logged}`,
             color: '#38bdf8',
-            icon: <ClipboardList size={14} />,
+            icon: <ClipboardList size={13} />,
           },
         ].map((stat) => (
           <div
@@ -526,17 +607,30 @@ function ForwardTestPanel({ log }: { log: ForwardTestLogResponse | null }) {
               background: 'rgba(255,255,255,0.03)',
               border: '1px solid rgba(255,255,255,0.07)',
               borderRadius: 8,
-              padding: '10px 12px',
+              padding: '8px 8px',
               display: 'flex',
               flexDirection: 'column',
               gap: 4,
+              minWidth: 0,
             }}
           >
-            <div style={{ display: 'flex', alignItems: 'center', gap: 5, color: 'var(--text-muted)' }}>
-              {stat.icon}
-              <span style={{ fontSize: '0.75rem' }}>{stat.label}</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 5, color: 'var(--text-muted)', minWidth: 0 }}>
+              <span style={{ display: 'inline-flex', flexShrink: 0 }}>{stat.icon}</span>
+              <span
+                style={{
+                  fontSize: '0.7rem',
+                  fontWeight: 600,
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  lineHeight: 1.2,
+                }}
+                title={stat.fullLabel}
+              >
+                {stat.label}
+              </span>
             </div>
-            <span style={{ fontSize: '1.1rem', fontWeight: 800, color: stat.color, fontFamily: 'monospace' }}>
+            <span style={{ fontSize: '1.05rem', fontWeight: 800, color: stat.color, fontFamily: 'monospace', lineHeight: 1.1 }}>
               {stat.value}
             </span>
           </div>
@@ -544,7 +638,7 @@ function ForwardTestPanel({ log }: { log: ForwardTestLogResponse | null }) {
       </div>
 
       {/* W/L breakdown */}
-      <div style={{ display: 'flex', gap: 8 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: 6 }}>
         {[
           { label: 'Wins', count: stats.wins, color: '#10b981', icon: <CheckCircle2 size={12} /> },
           { label: 'Losses', count: stats.losses, color: '#f43f5e', icon: <XCircle size={12} /> },
@@ -553,20 +647,20 @@ function ForwardTestPanel({ log }: { log: ForwardTestLogResponse | null }) {
           <div
             key={s.label}
             style={{
-              flex: 1,
               background: `${s.color}0d`,
               border: `1px solid ${s.color}25`,
               borderRadius: 6,
-              padding: '6px 10px',
+              padding: '6px 8px',
               display: 'flex',
               alignItems: 'center',
               gap: 6,
+              minWidth: 0,
             }}
           >
-            <span style={{ color: s.color }}>{s.icon}</span>
-            <div>
-              <div style={{ fontSize: '0.95rem', fontWeight: 800, color: s.color, fontFamily: 'monospace' }}>{s.count}</div>
-              <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{s.label}</div>
+            <span style={{ color: s.color, display: 'inline-flex', flexShrink: 0 }}>{s.icon}</span>
+            <div style={{ minWidth: 0 }}>
+              <div style={{ fontSize: '0.9rem', fontWeight: 800, color: s.color, fontFamily: 'monospace', lineHeight: 1 }}>{s.count}</div>
+              <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', whiteSpace: 'nowrap' }}>{s.label}</div>
             </div>
           </div>
         ))}
@@ -578,27 +672,40 @@ function ForwardTestPanel({ log }: { log: ForwardTestLogResponse | null }) {
           No signals have been issued yet. Detected signals are automatically logged here.
         </div>
       ) : (
-        <div>
-          {/* Header */}
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: '70px 80px 80px 70px 70px 70px',
-              gap: 4,
-              padding: '4px 10px',
-              marginBottom: 4,
-            }}
-          >
-            {['Asset', 'Type', 'Direction', 'P&L', 'Outcome', 'Issued'].map((h) => (
-              <span key={h} style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                {h}
-              </span>
-            ))}
-          </div>
-          <div style={{ maxHeight: 350, overflowY: 'auto' }}>
-            {entries.map((e) => (
-              <ForwardTestRow key={e.signal_id} entry={e} />
-            ))}
+        <div style={{ minWidth: 0, display: 'flex', flexDirection: 'column' }}>
+          <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch', paddingBottom: 4 }}>
+            <div style={{ minWidth: 396 }}>
+              {/* Header */}
+              <div
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: '56px 72px 76px 58px 62px 66px',
+                  gap: 6,
+                  padding: '6px 8px',
+                  marginBottom: 6,
+                  borderBottom: '1px solid var(--border-subtle, rgba(255,255,255,0.06))',
+                  fontSize: '0.7rem',
+                  fontWeight: 700,
+                  color: 'var(--text-muted)',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.05em',
+                  alignItems: 'center',
+                }}
+              >
+                <span>Asset</span>
+                <span style={{ textAlign: 'center' }}>Type</span>
+                <span>Direction</span>
+                <span style={{ textAlign: 'right' }}>P&L</span>
+                <span style={{ textAlign: 'center' }}>Outcome</span>
+                <span style={{ textAlign: 'right' }}>Issued</span>
+              </div>
+              {/* Rows */}
+              <div style={{ maxHeight: 380, overflowY: 'auto', paddingRight: 2 }}>
+                {entries.map((e) => (
+                  <ForwardTestRow key={e.signal_id} entry={e} />
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       )}
@@ -838,25 +945,28 @@ function SignalRow({
 }) {
   const strColor = strengthColor(signal.strength);
   const dirColor = directionColor(signal.direction);
-  const typeColor = signal.signal_type === 'REVERSAL' ? '#f59e0b' : '#38bdf8';
+  const typeColor = signalTypeColor(signal.signal_type);
 
   return (
     <div
       onClick={onClick}
       style={{
-        padding: '10px 12px',
+        padding: '11px 12px 13px 12px',
         borderRadius: 8,
         border: selected
-          ? `1px solid ${strColor}50`
+          ? `1px solid ${strColor}60`
           : '1px solid rgba(255,255,255,0.06)',
         background: selected
           ? `${strColor}0d`
           : 'rgba(255,255,255,0.025)',
         cursor: 'pointer',
-        marginBottom: 6,
+        marginBottom: 8,
         transition: 'all 0.15s ease',
         position: 'relative',
-        overflow: 'hidden',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 7,
+        boxSizing: 'border-box',
       }}
     >
       {signal.strength === 'MAJOR' && (
@@ -872,38 +982,72 @@ function SignalRow({
           }}
         />
       )}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
-          <span style={{ fontWeight: 900, fontSize: '0.9rem', color: 'var(--text-primary)' }}>{signal.symbol}</span>
-          <span style={{ fontSize: '0.75rem', color: typeColor, background: `${typeColor}18`, padding: '1px 6px', borderRadius: 3, fontWeight: 700 }}>
-            {signal.signal_type}
+
+      {/* Line 1: Asset symbol + Signal Type badge + Strength badge */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 6, minWidth: 0 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6, minWidth: 0, overflow: 'hidden' }}>
+          <span style={{ fontWeight: 900, fontSize: '0.9rem', color: 'var(--text-primary)', flexShrink: 0 }}>
+            {signal.symbol}
+          </span>
+          <span
+            title={signal.signal_type}
+            style={{
+              fontSize: '0.7rem',
+              color: typeColor,
+              background: `${typeColor}18`,
+              padding: '1px 6px',
+              borderRadius: 3,
+              fontWeight: 700,
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+            }}
+          >
+            {formatSignalType(signal.signal_type)}
           </span>
         </div>
-        <span style={{ fontSize: '0.75rem', fontWeight: 700, color: strColor, background: strengthBg(signal.strength), padding: '2px 6px', borderRadius: 4 }}>
+        <span
+          style={{
+            fontSize: '0.7rem',
+            fontWeight: 700,
+            color: strColor,
+            background: strengthBg(signal.strength),
+            padding: '2px 6px',
+            borderRadius: 4,
+            flexShrink: 0,
+            whiteSpace: 'nowrap',
+          }}
+        >
           {signal.strength}
         </span>
       </div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+
+      {/* Line 2: Direction indicator + Shift, z-score, Hit Rate */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 6, minWidth: 0 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 4, flexShrink: 0 }}>
           {signal.direction === 'BULLISH'
-            ? <ArrowUpRight size={13} color={dirColor} />
-            : <ArrowDownRight size={13} color={dirColor} />}
-          <span style={{ fontSize: '0.75rem', fontWeight: 700, color: dirColor }}>{signal.direction}</span>
+            ? <ArrowUpRight size={13} color={dirColor} style={{ flexShrink: 0 }} />
+            : <ArrowDownRight size={13} color={dirColor} style={{ flexShrink: 0 }} />}
+          <span style={{ fontSize: '0.72rem', fontWeight: 700, color: dirColor, whiteSpace: 'nowrap' }}>
+            {signal.direction}
+          </span>
         </div>
-        <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-          <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+        <div style={{ display: 'flex', gap: 6, alignItems: 'center', flexShrink: 0 }}>
+          <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', whiteSpace: 'nowrap' }}>
             Shift: <strong style={{ color: signal.score_delta > 0 ? '#10b981' : '#f43f5e' }}>{signal.score_delta > 0 ? '+' : ''}{signal.score_delta}</strong>
           </span>
-          <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+          <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', whiteSpace: 'nowrap' }}>
             z:<strong style={{ color: '#f59e0b' }}>{signal.cot_zscore > 0 ? '+' : ''}{signal.cot_zscore.toFixed(2)}</strong>
           </span>
-          <span style={{ fontSize: '0.75rem', fontFamily: 'monospace', color: hitRateColor(signal.backtest_hit_rate), fontWeight: 700 }}>
+          <span style={{ fontSize: '0.72rem', fontFamily: 'monospace', color: hitRateColor(signal.backtest_hit_rate), fontWeight: 700, whiteSpace: 'nowrap' }}>
             {signal.backtest_hit_rate.toFixed(1)}%
           </span>
         </div>
       </div>
-      <div style={{ marginTop: 4, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <div style={{ display: 'flex', gap: 3 }}>
+
+      {/* Line 3: Confluence dots + Percentage + Sample Size */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 6, minWidth: 0, paddingTop: 2 }}>
+        <div style={{ display: 'flex', gap: 4, alignItems: 'center' }}>
           {[...Array(3)].map((_, i) => (
             <div
               key={i}
@@ -911,12 +1055,13 @@ function SignalRow({
                 width: 6,
                 height: 6,
                 borderRadius: '50%',
-                background: i < signal.pillars_aligned ? '#10b981' : 'rgba(255,255,255,0.1)',
+                background: i < signal.pillars_aligned ? '#10b981' : 'rgba(255,255,255,0.15)',
+                flexShrink: 0,
               }}
             />
           ))}
         </div>
-        <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+        <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', whiteSpace: 'nowrap', lineHeight: 1.2 }}>
           {signal.confluence_pct.toFixed(0)}% confluence · N={signal.backtest_sample_size}
         </span>
       </div>
@@ -1371,7 +1516,18 @@ export const RegimeScannerView: React.FC = () => {
   const [strengthFilter, setStrengthFilter] = useState('ALL');
   const [assetFilter, setAssetFilter] = useState('ALL');
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [refreshSuccess, setRefreshSuccess] = useState(false);
+  const refreshTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const loadingRef = useRef(false);
+
+  useEffect(() => {
+    return () => {
+      if (refreshTimerRef.current) {
+        clearTimeout(refreshTimerRef.current);
+      }
+    };
+  }, []);
 
   const handleOpenJournal = useCallback((sym?: string) => {
     if (sym) setJournalSymbol(sym);
@@ -1402,6 +1558,44 @@ export const RegimeScannerView: React.FC = () => {
       console.error('Failed to load forward test log:', err);
     }
   }, []);
+
+  const handleManualRefresh = useCallback(async () => {
+    if (isRefreshing) return;
+    setIsRefreshing(true);
+    setRefreshSuccess(false);
+    if (refreshTimerRef.current) {
+      clearTimeout(refreshTimerRef.current);
+    }
+
+    try {
+      const [signalsRes, forwardLogRes] = await Promise.allSettled([
+        api.getRegimeSignals(),
+        api.getForwardTestLog(),
+      ]);
+
+      if (signalsRes.status === 'fulfilled') {
+        setSignals(signalsRes.value.signals);
+      } else {
+        console.error('Failed to load regime signals on refresh:', signalsRes.reason);
+      }
+
+      if (forwardLogRes.status === 'fulfilled') {
+        setForwardLog(forwardLogRes.value);
+      } else {
+        console.error('Failed to load forward test log on refresh:', forwardLogRes.reason);
+      }
+
+      setLastUpdated(new Date());
+      setRefreshSuccess(true);
+      refreshTimerRef.current = setTimeout(() => {
+        setRefreshSuccess(false);
+      }, 2000);
+    } catch (err) {
+      console.error('Error refreshing scanner:', err);
+    } finally {
+      setIsRefreshing(false);
+    }
+  }, [isRefreshing]);
 
   const loadSignalDetail = useCallback(async (signal: RegimeSignal) => {
     setSelectedSignal(signal);
@@ -1535,23 +1729,64 @@ export const RegimeScannerView: React.FC = () => {
           </button>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           {lastUpdated && (
             <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
               Updated {lastUpdated.toLocaleTimeString()}
             </span>
           )}
           <button
-            onClick={() => { loadSignals(); loadForwardLog(); }}
+            onClick={handleManualRefresh}
+            disabled={isRefreshing}
+            title="Scan for live market signals & update forward test log"
             style={{
-              display: 'flex', alignItems: 'center', gap: 5,
-              padding: '6px 12px', borderRadius: 6,
-              background: 'rgba(56,189,248,0.1)', border: '1px solid rgba(56,189,248,0.25)',
-              color: '#38bdf8', fontSize: '0.75rem', fontWeight: 700, cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 7,
+              padding: '8px 16px',
+              borderRadius: 8,
+              border: refreshSuccess
+                ? '1px solid rgba(16,185,129,0.45)'
+                : isRefreshing
+                ? '1px solid rgba(56,189,248,0.45)'
+                : '1px solid rgba(56,189,248,0.3)',
+              background: refreshSuccess
+                ? 'rgba(16,185,129,0.18)'
+                : isRefreshing
+                ? 'rgba(56,189,248,0.22)'
+                : 'rgba(56,189,248,0.12)',
+              color: refreshSuccess
+                ? '#10b981'
+                : isRefreshing
+                ? '#38bdf8'
+                : '#38bdf8',
+              fontSize: '0.82rem',
+              fontWeight: 700,
+              cursor: isRefreshing ? 'not-allowed' : 'pointer',
+              transition: 'all 0.2s ease',
+              boxShadow: refreshSuccess
+                ? '0 0 14px rgba(16,185,129,0.25)'
+                : isRefreshing
+                ? '0 0 14px rgba(56,189,248,0.25)'
+                : 'none',
             }}
           >
-            <RefreshCw size={12} />
-            Refresh
+            {refreshSuccess ? (
+              <>
+                <CheckCircle2 size={15} style={{ flexShrink: 0, color: '#10b981' }} />
+                <span>Refreshed!</span>
+              </>
+            ) : isRefreshing ? (
+              <>
+                <RefreshCw size={15} style={{ flexShrink: 0, animation: 'spin 0.8s linear infinite' }} />
+                <span>Refreshing...</span>
+              </>
+            ) : (
+              <>
+                <RefreshCw size={15} style={{ flexShrink: 0 }} />
+                <span>Refresh</span>
+              </>
+            )}
           </button>
         </div>
       </div>
@@ -1621,7 +1856,7 @@ export const RegimeScannerView: React.FC = () => {
       </div>
 
       {/* Main 3-column layout */}
-      <div style={{ display: 'grid', gridTemplateColumns: '280px 1fr 300px', gap: 14, flex: 1, minHeight: 0 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'minmax(300px, 330px) minmax(340px, 1fr) minmax(380px, 420px)', gap: 14, flex: 1, minHeight: 0 }}>
         {/* ── PANEL A: Live Signal Feed ── */}
         <div
           style={{
@@ -1632,6 +1867,7 @@ export const RegimeScannerView: React.FC = () => {
             overflowY: 'auto',
             display: 'flex',
             flexDirection: 'column',
+            minWidth: 0,
           }}
         >
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
@@ -1693,6 +1929,7 @@ export const RegimeScannerView: React.FC = () => {
             borderRadius: 12,
             padding: '18px 20px',
             overflowY: 'auto',
+            minWidth: 0,
           }}
         >
           {selectedSignal ? (
@@ -1732,6 +1969,7 @@ export const RegimeScannerView: React.FC = () => {
             display: 'flex',
             flexDirection: 'column',
             gap: 12,
+            minWidth: 0,
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>

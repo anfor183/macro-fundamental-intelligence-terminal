@@ -2,8 +2,10 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { Calendar, AlertCircle, Clock, CheckCircle2, RefreshCw, Zap, TrendingUp, TrendingDown, Minus } from 'lucide-react';
 import { CalendarEvent } from '../types/macro';
 import { api } from '../services/api';
+import { useTimezone } from '../context/TimezoneContext';
 
 export const CalendarView: React.FC<{ onSelectAsset?: (symbol: string) => void }> = ({ onSelectAsset }) => {
+  const { activeOption, formatDateTime } = useTimezone();
   const [events, setEvents] = useState<CalendarEvent[]>([]);
   const [loading, setLoading] = useState(true);
   const [isSyncing, setIsSyncing] = useState(false);
@@ -257,7 +259,7 @@ export const CalendarView: React.FC<{ onSelectAsset?: (symbol: string) => void }
               textTransform: 'uppercase',
               letterSpacing: '0.05em',
             }}>
-              <th style={{ padding: '10px 16px' }}>Time (UTC)</th>
+              <th style={{ padding: '10px 16px' }}>Time ({activeOption.abbr})</th>
               <th style={{ padding: '10px 12px' }}>Status</th>
               <th style={{ padding: '10px 12px' }}>Country</th>
               <th style={{ padding: '10px 16px' }}>Event</th>
@@ -303,7 +305,7 @@ export const CalendarView: React.FC<{ onSelectAsset?: (symbol: string) => void }
                       <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                         <Clock size={13} color={isToday ? '#f59e0b' : 'var(--accent-cyan)'} />
                         <span style={{ fontWeight: isToday ? 800 : 500, color: isToday ? 'var(--text-primary)' : 'var(--text-secondary)' }}>
-                          {eventDate.toLocaleDateString()} {eventDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                          {formatDateTime(evt.event_time)}
                         </span>
                       </div>
                     </td>

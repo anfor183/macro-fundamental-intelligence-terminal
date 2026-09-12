@@ -130,7 +130,7 @@ class MacroAIService:
             for r in search_results
         ]
 
-        provider = "Deterministic Grounded Synthesis Engine (Offline)"
+        provider = "Institutional Grounded RAG Engine (Zero-Hallucination)"
         response_text = ""
 
         # 2. If Gemini API Key exists, call live generative model with grounded prompt

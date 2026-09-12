@@ -102,7 +102,14 @@ if os.path.exists(frontend_dist):
         file_path = os.path.join(frontend_dist, full_path)
         if os.path.exists(file_path) and os.path.isfile(file_path):
             return FileResponse(file_path)
-        return FileResponse(os.path.join(frontend_dist, "index.html"))
+        
+        # Always serve index.html with no-cache headers to prevent stale SPA builds
+        no_cache_headers = {
+            "Cache-Control": "no-cache, no-store, must-revalidate",
+            "Pragma": "no-cache",
+            "Expires": "0",
+        }
+        return FileResponse(os.path.join(frontend_dist, "index.html"), headers=no_cache_headers)
 else:
     @app.get("/")
     async def root():

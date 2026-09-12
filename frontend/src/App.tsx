@@ -72,8 +72,11 @@ export function App() {
     return saved === 'compact' || saved === 'comfortable' ? saved : 'standard';
   });
 
-  const loadAllData = async () => {
+  const loadAllData = async (triggerSync = false) => {
     try {
+      if (triggerSync) {
+        await api.triggerLiveSync();
+      }
       const [regData, astData, wcData, calData] = await Promise.all([
         api.getRegime(),
         api.getAssets(),
@@ -130,9 +133,9 @@ export function App() {
   }, [activeTab]);
 
   useEffect(() => {
-    loadAllData();
-    // Auto-refresh interval every 60s
-    const interval = setInterval(loadAllData, 60000);
+    loadAllData(false);
+    // Continuous auto-refresh interval every 30s across the platform
+    const interval = setInterval(() => loadAllData(false), 30000);
     return () => clearInterval(interval);
   }, []);
 
@@ -167,7 +170,9 @@ export function App() {
       style={{
         display: 'flex',
         flexDirection: 'column',
-        minHeight: '100vh',
+        height: '100vh',
+        width: '100vw',
+        overflow: 'hidden',
         background: 'var(--bg-main)',
       }}
     >
@@ -187,10 +192,11 @@ export function App() {
             d === 'standard' ? 'compact' : d === 'compact' ? 'comfortable' : 'standard'
           )
         }
+        onRefresh={() => loadAllData(true)}
       />
 
       {/* Main Terminal Workspace */}
-      <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
+      <div style={{ display: 'flex', flex: 1, minHeight: 0, overflow: 'hidden' }}>
         {/* Left Navigation Sidebar */}
         <Sidebar
           activeTab={activeTab}
@@ -202,9 +208,10 @@ export function App() {
         <main
           style={{
             flex: 1,
+            minHeight: 0,
+            height: '100%',
             padding: '20px 28px',
             overflowY: 'auto',
-            maxHeight: 'calc(100vh - 58px)',
           }}
         >
           {searchQuery.trim() ? (
@@ -233,6 +240,8 @@ export function App() {
               onSelectAsset={setSelectedAsset}
               onNavigateTab={setActiveTab}
               onOpenEvidence={() => setIsEvidenceDrawerOpen(true)}
+              onRefresh={() => loadAllData(true)}
+              density={density}
             />
           ) : activeTab === 'battle' ? (
             <MacroBattleView
@@ -252,6 +261,7 @@ export function App() {
               theme={theme}
               onSelectPairAsset={setSelectedAsset}
               onOpenMacroBattle={handleOpenMacroBattle}
+              onRefresh={() => loadAllData(false)}
             />
           ) : activeTab === 'gold' ? (
             <GoldTerminalView />
@@ -270,7 +280,7 @@ export function App() {
           ) : activeTab === 'news' ? (
             <NewsIntelligenceView onSelectAsset={setSelectedAsset} />
           ) : activeTab === 'what_changed' ? (
-            <WhatChangedView onSelectAsset={setSelectedAsset} />
+            <WhatChangedView onSelectAsset={setSelectedAsset} onRefresh={() => loadAllData(false)} />
           ) : activeTab === 'backtest' ? (
             <BacktestView />
           ) : activeTab === 'regime_scanner' ? (
@@ -297,6 +307,7 @@ export function App() {
           fontSize: '0.75rem',
           color: 'var(--text-muted)',
           zIndex: 30,
+          flexShrink: 0,
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>

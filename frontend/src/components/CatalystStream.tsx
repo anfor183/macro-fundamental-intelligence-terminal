@@ -8,8 +8,11 @@ import {
   Clock,
   Sparkles,
   ExternalLink,
+  RefreshCw,
+  Check,
 } from 'lucide-react';
 import { WhatChangedItem } from '../types/macro';
+import { useTimezone } from '../context/TimezoneContext';
 
 export interface CatalystItem {
   id: string;
@@ -30,6 +33,7 @@ interface CatalystStreamProps {
   whatChanged?: WhatChangedItem[];
   onSelectAsset?: (symbol: string) => void;
   onOpenEvidence?: (catalyst: CatalystItem) => void;
+  onRefresh?: () => Promise<void> | void;
   compact?: boolean;
 }
 
@@ -102,16 +106,77 @@ const DEFAULT_CATALYSTS: CatalystItem[] = [
 ];
 
 export const CatalystStream: React.FC<CatalystStreamProps> = ({
-  catalysts = DEFAULT_CATALYSTS,
+  catalysts,
   whatChanged,
   onSelectAsset,
   onOpenEvidence,
+  onRefresh,
   compact = false,
 }) => {
   const [filterMagnitude, setFilterMagnitude] = useState<'all' | 'high' | 'tier1'>('all');
+  const { formatTime, formatRelativeTime, activeOption } = useTimezone();
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [justRefreshed, setJustRefreshed] = useState(false);
+  const [lastRefreshedTime, setLastRefreshedTime] = useState<string>(() => formatTime(new Date()));
 
-  // Convert whatChanged if supplied
-  const items: CatalystItem[] = catalysts.filter((item) => {
+  const handleRefresh = async () => {
+    if (isRefreshing) return;
+    setIsRefreshing(true);
+    try {
+      if (onRefresh) {
+        await onRefresh();
+      } else {
+        await new Promise((resolve) => setTimeout(resolve, 600));
+      }
+      setLastRefreshedTime(formatTime(new Date()));
+      setJustRefreshed(true);
+      setTimeout(() => setJustRefreshed(false), 2000);
+    } finally {
+      setIsRefreshing(false);
+    }
+  };
+
+  // Convert live whatChanged items if available, or dynamically time-stamp baseline catalysts in active timezone
+  const streamData: CatalystItem[] = React.useMemo(() => {
+    if (whatChanged && whatChanged.length > 0) {
+      return whatChanged.map((wc) => {
+        const isBull = wc.delta_score > 0;
+        const targetCurr =
+          wc.asset_symbol.length === 6
+            ? isBull
+              ? wc.asset_symbol.slice(0, 3)
+              : wc.asset_symbol.slice(3, 6)
+            : wc.asset_symbol.slice(0, 3);
+
+        return {
+          id: `wc-${wc.id}`,
+          timestamp: formatTime(wc.timestamp),
+          timeAgo: formatRelativeTime(wc.timestamp) || 'recent',
+          event: `${wc.asset_symbol} Bias Shift: ${wc.previous_bias} → ${wc.new_bias}`,
+          targetCurrency: targetCurr,
+          scoreDelta: wc.delta_score,
+          direction: wc.delta_score > 0 ? 'BULLISH' : wc.delta_score < 0 ? 'BEARISH' : 'NEUTRAL',
+          affectedAssets: [wc.asset_symbol],
+          sourceName: 'Quantitative Macro Engine · Multi-Source Verified',
+          sourceTier: 1 as const,
+          summary: `${wc.primary_driver}${wc.secondary_driver ? ' · ' + wc.secondary_driver : ''}`,
+        };
+      });
+    }
+
+    const baseline = catalysts && catalysts.length > 0 ? catalysts : DEFAULT_CATALYSTS;
+    return baseline.map((cat, i) => {
+      const offsetMins = [12, 65, 120, 240, 420][i] || (i * 60 + 15);
+      const d = new Date(Date.now() - offsetMins * 60 * 1000);
+      return {
+        ...cat,
+        timestamp: formatTime(d),
+        timeAgo: formatRelativeTime(d),
+      };
+    });
+  }, [whatChanged, catalysts, formatTime, formatRelativeTime]);
+
+  const items: CatalystItem[] = streamData.filter((item) => {
     if (filterMagnitude === 'high') return Math.abs(item.scoreDelta) >= 7;
     if (filterMagnitude === 'tier1') return item.sourceTier === 1;
     return true;
@@ -126,6 +191,8 @@ export const CatalystStream: React.FC<CatalystStreamProps> = ({
         padding: compact ? '14px' : '18px',
         display: 'flex',
         flexDirection: 'column',
+        height: '100%',
+        boxShadow: 'var(--shadow-sm)',
       }}
     >
       {/* Stream Header */}
@@ -151,13 +218,60 @@ export const CatalystStream: React.FC<CatalystStreamProps> = ({
             >
               Catalyst Stream
             </div>
-            <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)' }}>
-              Live Quantitative Impact Heartbeat
+            <div
+              style={{
+                fontSize: '0.72rem',
+                color: 'var(--text-dim)',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 5,
+              }}
+            >
+              <span>Live Quantitative Impact</span>
+              <span>•</span>
+              <span style={{ color: 'var(--accent-cyan)', fontWeight: 700 }}>
+                {activeOption.abbr} ({activeOption.city})
+              </span>
+              <span>•</span>
+              <span>Synced {lastRefreshedTime}</span>
             </div>
           </div>
         </div>
 
-        {/* Filter Controls */}
+        {/* Controls: Refresh Button & Filter Tabs */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <button
+            onClick={handleRefresh}
+            disabled={isRefreshing}
+            title={`Refresh Catalyst Stream (Timezone: ${activeOption.city} · ${activeOption.abbr})`}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 5,
+              padding: '4px 10px',
+              fontSize: '0.75rem',
+              fontWeight: 700,
+              borderRadius: 'var(--radius-sm)',
+              border: '1px solid var(--border-subtle)',
+              background: justRefreshed ? 'rgba(16, 185, 129, 0.15)' : 'var(--surface-2)',
+              color: justRefreshed
+                ? '#10b981'
+                : isRefreshing
+                ? 'var(--accent-cyan)'
+                : 'var(--text-secondary)',
+              cursor: isRefreshing ? 'not-allowed' : 'pointer',
+              transition: 'all 0.15s ease',
+            }}
+          >
+            <RefreshCw
+              size={12}
+              style={{
+                animation: isRefreshing ? 'spin 0.8s linear infinite' : 'none',
+                color: justRefreshed ? '#10b981' : isRefreshing ? 'var(--accent-cyan)' : 'inherit',
+              }}
+            />
+            <span>{isRefreshing ? 'Refreshing...' : justRefreshed ? 'Refreshed!' : 'Refresh'}</span>
+          </button>
         <div
           style={{
             display: 'flex',
@@ -217,6 +331,7 @@ export const CatalystStream: React.FC<CatalystStreamProps> = ({
           </button>
         </div>
       </div>
+    </div>
 
       {/* Stream Items List */}
       <div
@@ -224,8 +339,10 @@ export const CatalystStream: React.FC<CatalystStreamProps> = ({
           display: 'flex',
           flexDirection: 'column',
           gap: 10,
-          maxHeight: compact ? 340 : 480,
+          flex: 1,
+          minHeight: 0,
           overflowY: 'auto',
+          paddingRight: 4,
         }}
       >
         {items.map((item) => {

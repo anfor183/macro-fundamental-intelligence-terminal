@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import {
   Grid3X3,
   ArrowUpDown,
@@ -9,9 +9,11 @@ import {
   ArrowDownRight,
   Minus,
   Swords,
+  CheckCircle2,
 } from 'lucide-react';
 import { CurrencyMatrixItem } from '../types/macro';
 import { api } from '../services/api';
+import { useTimezone } from '../context/TimezoneContext';
 
 interface CellHoverData {
   base: string;
@@ -29,6 +31,7 @@ interface CurrencyMatrixViewProps {
   theme?: 'dark' | 'light';
   onSelectPairAsset?: (symbol: string) => void;
   onOpenMacroBattle?: (base: string, quote: string) => void;
+  onRefresh?: () => void;
 }
 
 function getMatrixCellStyles(score: number, isLight: boolean) {
@@ -60,7 +63,10 @@ export const CurrencyMatrixView: React.FC<CurrencyMatrixViewProps> = ({
   theme = 'dark',
   onSelectPairAsset,
   onOpenMacroBattle,
+  onRefresh,
 }) => {
+  const { activeOption, formatTime } = useTimezone();
+
   // Live reactive light mode detection across React props, DOM data-theme and body classes
   const [isLightMode, setIsLightMode] = useState<boolean>(() => {
     if (typeof document !== 'undefined') {
@@ -94,23 +100,69 @@ export const CurrencyMatrixView: React.FC<CurrencyMatrixViewProps> = ({
 
   const [matrix, setMatrix] = useState<CurrencyMatrixItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [justRefreshed, setJustRefreshed] = useState(false);
+  const [lastRefreshedDate, setLastRefreshedDate] = useState<Date | null>(null);
   const [hoveredCell, setHoveredCell] = useState<CellHoverData | null>(null);
+  const refreshTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const loadData = () => {
-    setLoading(true);
-    api.getCurrencyMatrix()
-      .then((data) => {
-        setMatrix(data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error(err);
-        setLoading(false);
-      });
+  const loadData = async (triggerSync = false) => {
+    if (isRefreshing) return;
+    if (triggerSync) {
+      setIsRefreshing(true);
+      setJustRefreshed(false);
+      if (refreshTimerRef.current) clearTimeout(refreshTimerRef.current);
+    } else {
+      setLoading(true);
+    }
+
+    try {
+      if (triggerSync) {
+        try {
+          await api.triggerLiveSync();
+        } catch (syncErr) {
+          console.warn('Live sync warning on matrix refresh:', syncErr);
+        }
+      }
+      const data = await api.getCurrencyMatrix();
+      setMatrix(data);
+      setLastRefreshedDate(new Date());
+
+      if (triggerSync) {
+        if (onRefresh) {
+          try {
+            onRefresh();
+          } catch (e) {
+            console.error('Parent refresh error:', e);
+          }
+        }
+        setJustRefreshed(true);
+        refreshTimerRef.current = setTimeout(() => {
+          setJustRefreshed(false);
+        }, 3500);
+      }
+    } catch (err) {
+      console.error('Failed to load currency matrix:', err);
+    } finally {
+      setLoading(false);
+      setIsRefreshing(false);
+    }
   };
 
   useEffect(() => {
-    loadData();
+    loadData(false);
+    const interval = setInterval(() => {
+      api.getCurrencyMatrix()
+        .then((data) => {
+          setMatrix(data);
+          setLastRefreshedDate(new Date());
+        })
+        .catch(console.error);
+    }, 30000);
+    return () => {
+      clearInterval(interval);
+      if (refreshTimerRef.current) clearTimeout(refreshTimerRef.current);
+    };
   }, []);
 
   const currencies = matrix.map((m) => m.currency);
@@ -155,34 +207,140 @@ export const CurrencyMatrixView: React.FC<CurrencyMatrixViewProps> = ({
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 20, position: 'relative' }}>
       {/* Top Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          flexWrap: 'wrap',
+          gap: 14,
+        }}
+      >
         <div>
-          <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-primary)' }}>
-            Global Currency Relative-Value Strength Matrix
-          </h2>
-          <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginTop: 2 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-primary)', margin: 0 }}>
+              Global Currency Relative-Value Strength Matrix
+            </h2>
+            <span
+              style={{
+                fontSize: '0.68rem',
+                fontWeight: 700,
+                padding: '3px 8px',
+                borderRadius: 4,
+                background: 'rgba(56, 189, 248, 0.12)',
+                color: 'var(--accent-cyan)',
+                border: '1px solid rgba(56, 189, 248, 0.25)',
+                textTransform: 'uppercase',
+                letterSpacing: '0.05em',
+              }}
+            >
+              11×11 Cross Matrix
+            </span>
+          </div>
+          <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginTop: 4 }}>
             Base vs. Quote relative fundamental strength model • Hover cells for driver attribution
+            {lastRefreshedDate && (
+              <span style={{ marginLeft: 8, color: 'var(--text-muted)' }}>
+                • Synced{' '}
+                <span className="mono" style={{ color: 'var(--text-secondary)', fontWeight: 600 }}>
+                  {formatTime(lastRefreshedDate, true)}
+                </span>
+              </span>
+            )}
           </div>
         </div>
-        <button
-          onClick={loadData}
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 6,
-            background: 'var(--surface-2)',
-            border: '1px solid var(--border-subtle)',
-            color: 'var(--text-secondary)',
-            padding: '6px 12px',
-            borderRadius: 'var(--radius-sm)',
-            fontSize: '0.75rem',
-            fontWeight: 600,
-            cursor: 'pointer',
-          }}
-        >
-          <RefreshCw size={14} className={loading ? 'animate-spin' : ''} />
-          Refresh Matrix
-        </button>
+
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+          {lastRefreshedDate && (
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 6,
+                fontSize: '0.75rem',
+                color: 'var(--text-muted)',
+              }}
+            >
+              <span
+                style={{
+                  display: 'inline-block',
+                  width: 7,
+                  height: 7,
+                  borderRadius: '50%',
+                  background: isRefreshing ? '#38bdf8' : '#10b981',
+                  boxShadow: isRefreshing
+                    ? '0 0 8px #38bdf8'
+                    : '0 0 8px #10b981',
+                }}
+              />
+              <span>{isRefreshing ? 'Recalculating...' : 'Live Synced'}</span>
+            </div>
+          )}
+
+          <button
+            id="refresh-matrix-btn"
+            onClick={() => loadData(true)}
+            disabled={isRefreshing}
+            title="Recalculate fundamental cross-currency strength matrix"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 8,
+              padding: '9px 18px',
+              borderRadius: 8,
+              border: justRefreshed
+                ? '1px solid rgba(16, 185, 129, 0.45)'
+                : isRefreshing
+                ? '1px solid rgba(56, 189, 248, 0.55)'
+                : isLightMode
+                ? '1px solid rgba(2, 132, 199, 0.35)'
+                : '1px solid rgba(56, 189, 248, 0.3)',
+              background: justRefreshed
+                ? 'rgba(16, 185, 129, 0.16)'
+                : isRefreshing
+                ? 'rgba(56, 189, 248, 0.2)'
+                : isLightMode
+                ? 'rgba(2, 132, 199, 0.08)'
+                : 'rgba(56, 189, 248, 0.1)',
+              color: justRefreshed
+                ? '#10b981'
+                : isRefreshing
+                ? (isLightMode ? '#0284c7' : '#38bdf8')
+                : (isLightMode ? '#0284c7' : '#38bdf8'),
+              fontSize: '0.84rem',
+              fontWeight: 700,
+              letterSpacing: '0.01em',
+              cursor: isRefreshing ? 'not-allowed' : 'pointer',
+              transition: 'all 0.2s ease',
+              boxShadow: justRefreshed
+                ? '0 0 16px rgba(16, 185, 129, 0.25)'
+                : isRefreshing
+                ? '0 0 16px rgba(56, 189, 248, 0.25)'
+                : 'none',
+            }}
+          >
+            {justRefreshed ? (
+              <>
+                <CheckCircle2 size={16} style={{ flexShrink: 0, color: '#10b981' }} />
+                <span>Matrix Refreshed!</span>
+              </>
+            ) : isRefreshing ? (
+              <>
+                <RefreshCw
+                  size={16}
+                  className="animate-spin"
+                  style={{ flexShrink: 0 }}
+                />
+                <span>Recalculating Matrix...</span>
+              </>
+            ) : (
+              <>
+                <RefreshCw size={16} style={{ flexShrink: 0 }} />
+                <span>Refresh Matrix</span>
+              </>
+            )}
+          </button>
+        </div>
       </div>
 
       {/* Ranked Currencies Cards */}
@@ -272,8 +430,25 @@ export const CurrencyMatrixView: React.FC<CurrencyMatrixViewProps> = ({
           padding: '18px',
           overflowX: 'auto',
           boxShadow: 'var(--shadow-sm)',
+          position: 'relative',
         }}
       >
+        {isRefreshing && (
+          <div
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              height: 3,
+              background: 'linear-gradient(90deg, #38bdf8, #10b981, #38bdf8)',
+              backgroundSize: '200% 100%',
+              animation: 'shimmer 1.5s infinite linear',
+              borderTopLeftRadius: 'var(--radius-lg)',
+              borderTopRightRadius: 'var(--radius-lg)',
+            }}
+          />
+        )}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
           <h3 style={{ fontSize: '0.92rem', fontWeight: 800, color: 'var(--text-primary)' }}>
             Pair Relative Macro Scores (Row Base − Column Quote)

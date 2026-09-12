@@ -65,6 +65,8 @@ body.theme-dark {
   --accent-gold: #f59e0b;
   --accent-gold-bg: rgba(245, 158, 11, 0.12);
   --accent-purple: #8b5cf6;
+  --accent-primary: #8b5cf6;
+  --accent-primary-hover: #7c3aed;
 
   /* Matrix Heatmap Table Tokens (Dark Mode) */
   --matrix-pos-bg-rgb: 16, 185, 129;
@@ -159,6 +161,8 @@ body.theme-light {
   --accent-gold: #b45309;
   --accent-gold-bg: rgba(217, 119, 6, 0.12);
   --accent-purple: #7c3aed;
+  --accent-primary: #7c3aed;
+  --accent-primary-hover: #6d28d9;
 
   /* Matrix Heatmap Table Tokens (Light Mode - High Contrast) */
   --matrix-pos-bg-rgb: 16, 185, 129;
@@ -183,23 +187,200 @@ body.theme-light {
 }
 
 /* ==========================================================================
-   DENSITY MODES
+   DENSITY MODES (Compact / Standard / Comfortable)
+   High information throughput for active trading terminals
    ========================================================================== */
 
-[data-density="compact"],
-body.density-compact {
-  --density-pad-x: 10px;
-  --density-pad-y: 6px;
-  --density-gap: 10px;
-  --density-font-scale: 0.94;
+/* Standard (Default Balanced Terminal Layout) */
+:root,
+[data-density="standard"],
+html[data-density="standard"],
+body.density-standard {
+  --density-pad-x: 16px;
+  --density-pad-y: 12px;
+  --density-gap: 16px;
+  --density-font-scale: 1;
 }
 
+/* --------------------------------------------------------------------------
+   1. COMPACT DENSITY (Traders View: High Data Throughput, 2x Density)
+   -------------------------------------------------------------------------- */
+[data-density="compact"],
+html[data-density="compact"],
+body.density-compact {
+  --density-pad-x: 8px;
+  --density-pad-y: 4px;
+  --density-gap: 8px;
+  --density-font-scale: 0.88;
+  font-size: 13.5px !important;
+}
+
+/* Compact Workspace & Main Area */
+[data-density="compact"] main,
+body.density-compact main {
+  padding: 10px 18px !important;
+}
+
+/* Compact Table Headers & Rows */
+[data-density="compact"] table th,
+body.density-compact table th {
+  padding: 5px 8px !important;
+  font-size: 0.70rem !important;
+  line-height: 1.25 !important;
+}
+
+[data-density="compact"] table td,
+body.density-compact table td {
+  padding: 5px 8px !important;
+  font-size: 0.73rem !important;
+  line-height: 1.25 !important;
+}
+
+/* Compact Cards and Section Containers */
+[data-density="compact"] .density-card,
+[data-density="compact"] div[style*="padding: '22px'"],
+[data-density="compact"] div[style*="padding: 22px"],
+[data-density="compact"] div[style*="padding: '20px 24px'"],
+[data-density="compact"] div[style*="padding: 20px 24px"],
+[data-density="compact"] div[style*="padding: '20px'"],
+[data-density="compact"] div[style*="padding: 20px"],
+[data-density="compact"] div[style*="padding: '16px 20px'"],
+[data-density="compact"] div[style*="padding: 16px 20px"],
+[data-density="compact"] div[style*="padding: '18px'"],
+[data-density="compact"] div[style*="padding: 18px"],
+body.density-compact .density-card,
+body.density-compact div[style*="padding: '22px'"],
+body.density-compact div[style*="padding: 22px"],
+body.density-compact div[style*="padding: '20px 24px'"],
+body.density-compact div[style*="padding: 20px 24px"],
+body.density-compact div[style*="padding: '20px'"],
+body.density-compact div[style*="padding: 20px"],
+body.density-compact div[style*="padding: '16px 20px'"],
+body.density-compact div[style*="padding: 16px 20px"],
+body.density-compact div[style*="padding: '18px'"],
+body.density-compact div[style*="padding: 18px"] {
+  padding: 10px 14px !important;
+}
+
+/* Compact Container Spacing & Gaps */
+[data-density="compact"] div[style*="gap: 20"],
+[data-density="compact"] div[style*="gap: 24"],
+[data-density="compact"] div[style*="gap: 18"],
+body.density-compact div[style*="gap: 20"],
+body.density-compact div[style*="gap: 24"],
+body.density-compact div[style*="gap: 18"] {
+  gap: 10px !important;
+}
+
+[data-density="compact"] div[style*="gap: 16"],
+[data-density="compact"] div[style*="gap: 14"],
+[data-density="compact"] div[style*="gap: 12"],
+body.density-compact div[style*="gap: 16"],
+body.density-compact div[style*="gap: 14"],
+body.density-compact div[style*="gap: 12"] {
+  gap: 6px !important;
+}
+
+/* Compact List Items (Catalyst Stream & What Changed) */
+[data-density="compact"] div[style*="background: 'var(--bg-card)'"],
+[data-density="compact"] div[style*="background: var(--bg-card)"],
+body.density-compact div[style*="background: 'var(--bg-card)'"],
+body.density-compact div[style*="background: var(--bg-card)"] {
+  padding: 8px 12px !important;
+}
+
+/* Compact Sidebar item padding */
+[data-density="compact"] aside button,
+body.density-compact aside button {
+  padding-top: 5px !important;
+  padding-bottom: 5px !important;
+  font-size: 0.75rem !important;
+}
+
+/* --------------------------------------------------------------------------
+   2. COMFORTABLE DENSITY (Presentation View: Roomy & Relaxed)
+   -------------------------------------------------------------------------- */
 [data-density="comfortable"],
+html[data-density="comfortable"],
 body.density-comfortable {
-  --density-pad-x: 22px;
-  --density-pad-y: 16px;
-  --density-gap: 22px;
-  --density-font-scale: 1.04;
+  --density-pad-x: 24px;
+  --density-pad-y: 18px;
+  --density-gap: 24px;
+  --density-font-scale: 1.08;
+  font-size: 15.5px !important;
+}
+
+/* Comfortable Workspace & Main Area */
+[data-density="comfortable"] main,
+body.density-comfortable main {
+  padding: 26px 36px !important;
+}
+
+/* Comfortable Table Headers & Rows */
+[data-density="comfortable"] table th,
+body.density-comfortable table th {
+  padding: 14px 18px !important;
+  font-size: 0.85rem !important;
+  line-height: 1.55 !important;
+}
+
+[data-density="comfortable"] table td,
+body.density-comfortable table td {
+  padding: 14px 18px !important;
+  font-size: 0.88rem !important;
+  line-height: 1.6 !important;
+}
+
+/* Comfortable Cards and Section Containers */
+[data-density="comfortable"] .density-card,
+[data-density="comfortable"] div[style*="padding: '22px'"],
+[data-density="comfortable"] div[style*="padding: 22px"],
+[data-density="comfortable"] div[style*="padding: '20px 24px'"],
+[data-density="comfortable"] div[style*="padding: 20px 24px"],
+[data-density="comfortable"] div[style*="padding: '20px'"],
+[data-density="comfortable"] div[style*="padding: 20px"],
+[data-density="comfortable"] div[style*="padding: '16px 20px'"],
+[data-density="comfortable"] div[style*="padding: 16px 20px"],
+[data-density="comfortable"] div[style*="padding: '18px'"],
+[data-density="comfortable"] div[style*="padding: 18px"],
+body.density-comfortable .density-card,
+body.density-comfortable div[style*="padding: '22px'"],
+body.density-comfortable div[style*="padding: 22px"],
+body.density-comfortable div[style*="padding: '20px 24px'"],
+body.density-comfortable div[style*="padding: 20px 24px"],
+body.density-comfortable div[style*="padding: '20px'"],
+body.density-comfortable div[style*="padding: 20px"],
+body.density-comfortable div[style*="padding: '16px 20px'"],
+body.density-comfortable div[style*="padding: 16px 20px"],
+body.density-comfortable div[style*="padding: '18px'"],
+body.density-comfortable div[style*="padding: 18px"] {
+  padding: 24px 30px !important;
+}
+
+/* Comfortable Container Spacing & Gaps */
+[data-density="comfortable"] div[style*="gap: 20"],
+[data-density="comfortable"] div[style*="gap: 24"],
+[data-density="comfortable"] div[style*="gap: 18"],
+body.density-comfortable div[style*="gap: 20"],
+body.density-comfortable div[style*="gap: 24"],
+body.density-comfortable div[style*="gap: 18"] {
+  gap: 26px !important;
+}
+
+/* Comfortable List Items */
+[data-density="comfortable"] div[style*="background: 'var(--bg-card)'"],
+[data-density="comfortable"] div[style*="background: var(--bg-card)"],
+body.density-comfortable div[style*="background: 'var(--bg-card)'"],
+body.density-comfortable div[style*="background: var(--bg-card)"] {
+  padding: 20px 24px !important;
+}
+
+/* Comfortable Sidebar item padding */
+[data-density="comfortable"] aside button,
+body.density-comfortable aside button {
+  padding-top: 10px !important;
+  padding-bottom: 10px !important;
+  font-size: 0.85rem !important;
 }
 
 /* ==========================================================================
@@ -218,10 +399,18 @@ html, body {
   font-family: var(--font-sans);
   font-size: 16px;
   line-height: 1.5;
-  overflow-x: hidden;
+  overflow: hidden;
+  height: 100%;
+  width: 100%;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+#root {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
 }
 
 /* Ensure no interactive element or label falls below 12px */
@@ -238,15 +427,15 @@ button, input, select, textarea {
 
 /* Custom Scrollbars */
 ::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
+  width: 6px;
+  height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: var(--bg-main);
+  background: transparent;
 }
 ::-webkit-scrollbar-thumb {
   background: var(--border-active);
-  border-radius: 3px;
+  border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
   background: var(--text-muted);
@@ -326,6 +515,15 @@ button, input, select, textarea {
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
   border-radius: 4px;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-spin {
+  animation: spin 0.8s linear infinite;
 }
 
 @keyframes pulse-subtle {

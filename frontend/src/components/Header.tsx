@@ -15,9 +15,13 @@ import {
   RefreshCw,
   Radio,
   Wifi,
+  Globe,
+  ChevronDown,
+  Check,
 } from 'lucide-react';
 import { MacroRegime, LiveStatus } from '../types/macro';
 import { api } from '../services/api';
+import { useTimezone } from '../context/TimezoneContext';
 
 interface HeaderProps {
   regime: MacroRegime | null;
@@ -30,6 +34,7 @@ interface HeaderProps {
   onToggleTheme?: () => void;
   density?: 'compact' | 'standard' | 'comfortable';
   onCycleDensity?: () => void;
+  onRefresh?: () => Promise<void> | void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -43,6 +48,7 @@ export const Header: React.FC<HeaderProps> = ({
   onToggleTheme,
   density: propDensity = 'standard',
   onCycleDensity,
+  onRefresh,
 }) => {
   const [internalTheme, setInternalTheme] = useState<'dark' | 'light'>(propTheme);
   const [internalDensity, setInternalDensity] = useState<'compact' | 'standard' | 'comfortable'>(propDensity);
@@ -50,6 +56,9 @@ export const Header: React.FC<HeaderProps> = ({
   const [liveStatus, setLiveStatus] = useState<LiveStatus | null>(null);
   const [isSyncing, setIsSyncing] = useState(false);
   const [showLivePopover, setShowLivePopover] = useState(false);
+  const { timezone, setTimezone, activeOption, availableOptions, currentClock } = useTimezone();
+  const [showTimezonePopover, setShowTimezonePopover] = useState(false);
+  const [densityFeedback, setDensityFeedback] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchStatus = async () => {
@@ -72,6 +81,9 @@ export const Header: React.FC<HeaderProps> = ({
       await api.triggerLiveSync();
       const updated = await api.getLiveStatus();
       setLiveStatus(updated);
+      if (onRefresh) {
+        await onRefresh();
+      }
     } catch (err) {
       console.error('Live sync error:', err);
     } finally {
@@ -94,15 +106,23 @@ export const Header: React.FC<HeaderProps> = ({
   };
 
   const cycleDensity = () => {
+    const next =
+      activeDensity === 'standard' ? 'compact' : activeDensity === 'compact' ? 'comfortable' : 'standard';
     if (onCycleDensity) {
       onCycleDensity();
     } else {
-      const next =
-        internalDensity === 'standard' ? 'compact' : internalDensity === 'compact' ? 'comfortable' : 'standard';
       setInternalDensity(next);
       document.documentElement.setAttribute('data-density', next);
-      document.body.className = `density-${next}`;
+      document.body.className = `theme-${activeTheme} density-${next}`;
     }
+    setDensityFeedback(
+      next === 'compact'
+        ? 'Compact Mode: High Information Density'
+        : next === 'comfortable'
+        ? 'Comfortable Mode: Roomy Layout'
+        : 'Standard Mode: Balanced Spacing'
+    );
+    setTimeout(() => setDensityFeedback(null), 2200);
   };
 
   const quickSymbols = ['EURUSD', 'XAUUSD', 'SPX', 'CL', 'USDJPY', 'GBPUSD'];
@@ -521,27 +541,264 @@ export const Header: React.FC<HeaderProps> = ({
           <span>SIMULATOR</span>
         </button>
 
+        {/* Timezone Selector (Default: Lagos, Nigeria · WAT) */}
+        <div style={{ position: 'relative' }}>
+          <button
+            onClick={() => setShowTimezonePopover(!showTimezonePopover)}
+            title={`Active Timezone: ${activeOption.city}, ${activeOption.country} (${activeOption.abbr} · ${activeOption.offset})`}
+            style={{
+              background: showTimezonePopover ? 'var(--surface-3)' : 'var(--surface-2)',
+              border: showTimezonePopover ? '1px solid var(--accent-cyan)' : '1px solid var(--border-subtle)',
+              borderRadius: 'var(--radius-sm)',
+              padding: '6px 10px',
+              color: 'var(--text-primary)',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 6,
+              fontSize: '0.75rem',
+              fontWeight: 700,
+              transition: 'all 0.15s ease',
+            }}
+          >
+            <span style={{ fontSize: '0.9rem' }}>{activeOption.flag}</span>
+            <span style={{ color: 'var(--accent-cyan)', fontFamily: 'JetBrains Mono, monospace' }}>
+              {activeOption.abbr}
+            </span>
+            <span style={{ color: 'var(--text-secondary)', fontWeight: 500 }}>
+              {activeOption.city}
+            </span>
+            <ChevronDown size={12} color="var(--text-dim)" />
+          </button>
+
+          {/* Timezone Selection Popover */}
+          {showTimezonePopover && (
+            <div
+              style={{
+                position: 'absolute',
+                top: 'calc(100% + 8px)',
+                right: 0,
+                width: 320,
+                background: 'var(--surface-1)',
+                border: '1px solid var(--border-subtle)',
+                borderRadius: 'var(--radius-md)',
+                boxShadow: 'var(--shadow-lg)',
+                padding: '12px',
+                zIndex: 70,
+                backdropFilter: 'blur(16px)',
+              }}
+            >
+              {/* Header with live clock */}
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  marginBottom: 10,
+                  borderBottom: '1px solid var(--border-subtle)',
+                  paddingBottom: 8,
+                }}
+              >
+                <div>
+                  <div
+                    style={{
+                      fontSize: '0.75rem',
+                      fontWeight: 800,
+                      textTransform: 'uppercase',
+                      color: 'var(--text-primary)',
+                      letterSpacing: '0.06em',
+                    }}
+                  >
+                    Terminal Timezone
+                  </div>
+                  <div style={{ fontSize: '0.72rem', color: 'var(--text-dim)' }}>
+                    Default: Lagos, Nigeria (WAT · UTC+1)
+                  </div>
+                </div>
+                <div
+                  className="mono"
+                  style={{
+                    fontSize: '0.75rem',
+                    fontWeight: 700,
+                    color: 'var(--accent-cyan)',
+                    background: 'rgba(6, 182, 212, 0.1)',
+                    padding: '2px 6px',
+                    borderRadius: 4,
+                  }}
+                >
+                  {currentClock}
+                </div>
+              </div>
+
+              {/* Timezone List */}
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: 4,
+                  maxHeight: 280,
+                  overflowY: 'auto',
+                }}
+              >
+                {availableOptions.map((opt) => {
+                  const isSelected = opt.id === timezone;
+                  return (
+                    <button
+                      key={opt.id}
+                      onClick={() => {
+                        setTimezone(opt.id);
+                        setShowTimezonePopover(false);
+                      }}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        padding: '7px 8px',
+                        borderRadius: 'var(--radius-sm)',
+                        border: 'none',
+                        background: isSelected ? 'rgba(6, 182, 212, 0.12)' : 'transparent',
+                        color: isSelected ? 'var(--accent-cyan)' : 'var(--text-primary)',
+                        cursor: 'pointer',
+                        textAlign: 'left',
+                        transition: 'background 0.12s ease',
+                      }}
+                      onMouseEnter={(e) => {
+                        if (!isSelected) e.currentTarget.style.background = 'var(--surface-2)';
+                      }}
+                      onMouseLeave={(e) => {
+                        if (!isSelected) e.currentTarget.style.background = 'transparent';
+                      }}
+                    >
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                        <span style={{ fontSize: '1rem' }}>{opt.flag}</span>
+                        <div>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                            <span style={{ fontSize: '0.78rem', fontWeight: isSelected ? 800 : 600 }}>
+                              {opt.city}, {opt.country}
+                            </span>
+                            {opt.isDefault && (
+                              <span
+                                style={{
+                                  fontSize: '0.65rem',
+                                  padding: '1px 5px',
+                                  borderRadius: 3,
+                                  background: 'rgba(16, 185, 129, 0.15)',
+                                  color: '#10b981',
+                                  fontWeight: 800,
+                                }}
+                              >
+                                DEFAULT
+                              </span>
+                            )}
+                          </div>
+                          <div style={{ fontSize: '0.7rem', color: 'var(--text-dim)' }}>
+                            {opt.description}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                        <span
+                          className="mono"
+                          style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--text-muted)' }}
+                        >
+                          {opt.offset}
+                        </span>
+                        {isSelected && <Check size={14} color="var(--accent-cyan)" />}
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+        </div>
+
         {/* Density Toggle Button */}
-        <button
-          onClick={cycleDensity}
-          title={`Display Density: ${activeDensity.toUpperCase()}`}
-          style={{
-            background: 'var(--surface-2)',
-            border: '1px solid var(--border-subtle)',
-            borderRadius: 'var(--radius-sm)',
-            padding: '6px 8px',
-            color: 'var(--text-secondary)',
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            gap: 4,
-            fontSize: '0.75rem',
-            fontWeight: 600,
-          }}
-        >
-          <Sliders size={14} />
-          <span style={{ textTransform: 'capitalize' }}>{activeDensity}</span>
-        </button>
+        <div style={{ position: 'relative' }}>
+          <button
+            onClick={cycleDensity}
+            title={`Terminal Density: ${activeDensity.toUpperCase()} — Click to cycle (Standard → Compact → Comfortable)`}
+            style={{
+              background:
+                activeDensity === 'compact'
+                  ? 'rgba(6, 182, 212, 0.14)'
+                  : activeDensity === 'comfortable'
+                  ? 'rgba(168, 85, 247, 0.14)'
+                  : 'var(--surface-2)',
+              border:
+                activeDensity === 'compact'
+                  ? '1px solid rgba(6, 182, 212, 0.45)'
+                  : activeDensity === 'comfortable'
+                  ? '1px solid rgba(168, 85, 247, 0.45)'
+                  : '1px solid var(--border-subtle)',
+              borderRadius: 'var(--radius-sm)',
+              padding: '6px 10px',
+              color:
+                activeDensity === 'compact'
+                  ? 'var(--accent-cyan)'
+                  : activeDensity === 'comfortable'
+                  ? '#c084fc'
+                  : 'var(--text-secondary)',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 5,
+              fontSize: '0.75rem',
+              fontWeight: 700,
+              transition: 'all 0.15s ease',
+            }}
+          >
+            <Sliders size={13} color={activeDensity === 'compact' ? 'var(--accent-cyan)' : activeDensity === 'comfortable' ? '#c084fc' : 'currentColor'} />
+            <span style={{ textTransform: 'capitalize' }}>{activeDensity}</span>
+            {activeDensity === 'compact' && (
+              <span
+                style={{
+                  width: 5,
+                  height: 5,
+                  borderRadius: '50%',
+                  background: 'var(--accent-cyan)',
+                  display: 'inline-block',
+                }}
+              />
+            )}
+            {activeDensity === 'comfortable' && (
+              <span
+                style={{
+                  width: 5,
+                  height: 5,
+                  borderRadius: '50%',
+                  background: '#c084fc',
+                  display: 'inline-block',
+                }}
+              />
+            )}
+          </button>
+
+          {/* Quick confirmation notification popover */}
+          {densityFeedback && (
+            <div
+              style={{
+                position: 'absolute',
+                top: 'calc(100% + 6px)',
+                right: 0,
+                whiteSpace: 'nowrap',
+                background: 'var(--surface-3)',
+                border: '1px solid var(--border-active)',
+                borderRadius: 4,
+                padding: '4px 8px',
+                fontSize: '0.72rem',
+                fontWeight: 700,
+                color: activeDensity === 'compact' ? 'var(--accent-cyan)' : activeDensity === 'comfortable' ? '#c084fc' : 'var(--text-primary)',
+                boxShadow: 'var(--shadow-md)',
+                zIndex: 100,
+                pointerEvents: 'none',
+              }}
+            >
+              {densityFeedback}
+            </div>
+          )}
+        </div>
 
         {/* Theme Toggle (Dark / Light) */}
         <button

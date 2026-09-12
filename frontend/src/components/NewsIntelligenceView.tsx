@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Newspaper, ExternalLink, ShieldCheck, Layers, Filter } from 'lucide-react';
 import { api } from '../services/api';
+import { useTimezone } from '../context/TimezoneContext';
 
 export const NewsIntelligenceView: React.FC<{ onSelectAsset?: (symbol: string) => void }> = ({ onSelectAsset }) => {
   const [news, setNews] = useState<any[]>([]);
@@ -8,6 +9,7 @@ export const NewsIntelligenceView: React.FC<{ onSelectAsset?: (symbol: string) =
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<'news' | 'institutional'>('news');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const { formatDateTime, formatRelativeTime, activeOption } = useTimezone();
 
   useEffect(() => {
     Promise.all([api.getNews(), api.getInstitutional()])
@@ -22,7 +24,7 @@ export const NewsIntelligenceView: React.FC<{ onSelectAsset?: (symbol: string) =
 
   const filteredNews = selectedCategory === 'all'
     ? news
-    : news.filter((item) => item.macro_category === selectedCategory);
+    : news.filter((item: any) => item.macro_category === selectedCategory);
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
@@ -104,7 +106,7 @@ export const NewsIntelligenceView: React.FC<{ onSelectAsset?: (symbol: string) =
               No articles recorded for this filter category.
             </div>
           ) : (
-            filteredNews.map((item) => {
+            filteredNews.map((item: any) => {
               const dt = new Date(item.published_at);
               return (
                 <div
@@ -163,8 +165,10 @@ export const NewsIntelligenceView: React.FC<{ onSelectAsset?: (symbol: string) =
                       )}
                     </div>
 
-                    <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-                      {dt.toLocaleDateString()} {dt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} UTC
+                    <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: 6 }}>
+                      <span className="mono" style={{ color: 'var(--text-secondary)' }}>{formatDateTime(item.published_at)}</span>
+                      <span>•</span>
+                      <span style={{ color: 'var(--accent-cyan)' }}>{formatRelativeTime(item.published_at)}</span>
                     </div>
                   </div>
 
@@ -211,7 +215,7 @@ export const NewsIntelligenceView: React.FC<{ onSelectAsset?: (symbol: string) =
           )
         ) : (
           /* Institutional Bank Research */
-          institutional.map((inst) => {
+          institutional.map((inst: any) => {
             const dt = new Date(inst.published_at);
             return (
               <div

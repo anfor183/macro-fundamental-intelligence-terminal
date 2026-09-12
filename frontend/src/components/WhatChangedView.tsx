@@ -3,26 +3,53 @@ import { History, ArrowRight, TrendingUp, TrendingDown, RefreshCw } from 'lucide
 import { WhatChangedItem } from '../types/macro';
 import { api } from '../services/api';
 import { getBiasBadgeClass } from './AssetTable';
+import { useTimezone } from '../context/TimezoneContext';
 
-export const WhatChangedView: React.FC<{ onSelectAsset?: (symbol: string) => void }> = ({ onSelectAsset }) => {
+interface WhatChangedViewProps {
+  onSelectAsset?: (symbol: string) => void;
+  onRefresh?: () => void;
+}
+
+export const WhatChangedView: React.FC<WhatChangedViewProps> = ({ onSelectAsset, onRefresh }) => {
   const [changes, setChanges] = useState<WhatChangedItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isSyncing, setIsSyncing] = useState(false);
+  const [justRefreshed, setJustRefreshed] = useState(false);
+  const { formatDateTime, formatRelativeTime, formatTime, activeOption } = useTimezone();
+  const [lastRefreshedTime, setLastRefreshedTime] = useState<string>(() => formatTime(new Date().toISOString()));
 
-  const loadData = () => {
-    setLoading(true);
-    api.getWhatChanged()
-      .then((data) => {
-        setChanges(data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error(err);
-        setLoading(false);
-      });
+  const loadData = async (triggerSync = false) => {
+    try {
+      if (triggerSync) {
+        setIsSyncing(true);
+        await api.triggerLiveSync();
+      } else {
+        setLoading(true);
+      }
+      const data = await api.getWhatChanged();
+      setChanges(data);
+      const nowStr = formatTime(new Date().toISOString());
+      setLastRefreshedTime(nowStr);
+      if (triggerSync) {
+        setJustRefreshed(true);
+        setTimeout(() => setJustRefreshed(false), 2500);
+        if (onRefresh) onRefresh();
+      }
+    } catch (err) {
+      console.error('Failed to load/sync what changed:', err);
+    } finally {
+      setLoading(false);
+      setIsSyncing(false);
+    }
   };
 
   useEffect(() => {
-    loadData();
+    loadData(false);
+    // Background polling every 30s
+    const timer = setInterval(() => {
+      api.getWhatChanged().then(setChanges).catch(console.error);
+    }, 30000);
+    return () => clearInterval(timer);
   }, []);
 
   return (
@@ -32,27 +59,35 @@ export const WhatChangedView: React.FC<{ onSelectAsset?: (symbol: string) => voi
           <h2 style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--text-primary)' }}>
             What Changed Today? — Macro Bias Transitions & Delta Log
           </h2>
-          <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
-            Chronological audit trail of fundamental score shifts, catalytic drivers, and bias threshold crossings
+          <div style={{ fontSize: '0.8rem', color: 'var(--text-dim)', marginTop: 4, display: 'flex', alignItems: 'center', gap: 6 }}>
+            <span>Chronological audit trail of fundamental score shifts, catalytic drivers, and bias threshold crossings</span>
+            <span>•</span>
+            <span style={{ color: 'var(--accent-cyan)', fontWeight: 600 }}>Timezone: {activeOption.city} ({activeOption.abbr})</span>
+            <span>•</span>
+            <span style={{ color: 'var(--text-muted)' }}>Synced {lastRefreshedTime}</span>
           </div>
         </div>
         <button
-          onClick={loadData}
+          onClick={() => loadData(true)}
+          disabled={isSyncing}
+          title={`Sync live feeds and refresh delta log (${activeOption.abbr})`}
           style={{
             display: 'flex',
             alignItems: 'center',
-            gap: 6,
-            background: 'var(--bg-card)',
-            border: '1px solid var(--border-subtle)',
-            color: 'var(--text-secondary)',
-            padding: '6px 12px',
+            gap: 7,
+            background: justRefreshed ? 'rgba(16, 185, 129, 0.15)' : 'var(--bg-card)',
+            border: `1px solid ${justRefreshed ? 'rgba(16, 185, 129, 0.3)' : 'var(--border-subtle)'}`,
+            color: justRefreshed ? '#10b981' : isSyncing ? 'var(--accent-cyan)' : 'var(--text-secondary)',
+            padding: '7px 14px',
             borderRadius: 6,
-            fontSize: '0.75rem',
-            cursor: 'pointer',
+            fontSize: '0.78rem',
+            fontWeight: 700,
+            cursor: isSyncing ? 'not-allowed' : 'pointer',
+            transition: 'all 0.15s ease',
           }}
         >
-          <RefreshCw size={14} className={loading ? 'animate-spin' : ''} />
-          Refresh
+          <RefreshCw size={14} className={isSyncing || loading ? 'animate-spin' : ''} />
+          <span>{isSyncing ? 'Syncing Live Feeds...' : justRefreshed ? 'Refreshed!' : 'Refresh'}</span>
         </button>
       </div>
 
@@ -92,8 +127,10 @@ export const WhatChangedView: React.FC<{ onSelectAsset?: (symbol: string) => voi
                     </span>
                   </div>
 
-                  <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: 4 }}>
-                    {dt.toLocaleDateString()} at {dt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })} UTC
+                  <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: 4, display: 'flex', alignItems: 'center', gap: 6 }}>
+                    <span className="mono" style={{ color: 'var(--text-secondary)' }}>{formatDateTime(item.timestamp)}</span>
+                    <span>•</span>
+                    <span style={{ color: 'var(--accent-cyan)' }}>{formatRelativeTime(item.timestamp)}</span>
                   </div>
                 </div>
 
